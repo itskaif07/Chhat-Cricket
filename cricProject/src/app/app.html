@@ -1,22 +1,61 @@
-<div class="w-full h-full bg-[#050B18] text-white">
+<div class="w-full h-full bg-[#050B18] text-white relative">
+
+  <nav id="navbar"
+    class="w-full h-16 backdrop-blur-md bg-[#050B18]/30 flex items-center justify-end px-8 sticky top-0 z-40 space-x-10">
+
+    <button class="px-4 py-2 rounded-xl
+    
+    bg-white/5
+    border border-white/10
+    
+    backdrop-blur-md
+    
+    hover:bg-white/10
+    
+    transition-all duration-300 text-sm">
+    
+      + Add Player
+    
+    </button>
+
+    <div class="space-x-2 flex items-center justify-center hover:scale-105 transition-all duration-300 cursor-pointer">
+
+      <div
+        class="w-10 h-10 rounded-full overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.15)] ">
+
+        <img src="https://images.pexels.com/photos/27774108/pexels-photo-27774108.jpeg"
+          class="w-full h-full object-cover">
+
+      </div>
+
+      <h1 class="font-bold ">Kaif</h1>
+
+
+    </div>
+  </nav>
+
 
   <div id="section1" class="w-full h-[60vh] flex bg-transparent">
 
     <!-- LEFT SIDE -->
-    <div class="w-1/2 flex flex-col justify-center px-16 bg-[#050B18] space-y-4">
+    <div class="w-full text-center lg:text-left lg:w-1/2 flex flex-col justify-center px-16 bg-[#050B18] space-y-4">
       <div class="space-y-2">
+        <h1 class="text-4xl font-bold tracking-wide uppercase">WELCOME TO,</h1>
+        <h1 class="text-5xl font-bold uppercase text-[#44d43b]">Chhat Cricket</h1>
+      </div>
+      <!-- <div class="space-y-2">
         <h1 class="text-4xl font-bold tracking-wide uppercase">Welcome Back,</h1>
         <h1 class="text-6xl font-bold uppercase text-[#44d43b]">Kaif</h1>
-      </div>
+      </div> -->
       <p class="mt-4 text-zinc-400 ">
-        Manage matches, track players and own the <br> gully records
+        Manage matches, track players and own the <br> chhat records
       </p>
 
 
     </div>
 
     <!-- RIGHT SIDE -->
-    <div class="relative w-1/2 overflow-hidden">
+    <div class="relative w-1/2 overflow-hidden hidden lg:block">
 
       <img src="https://images.pexels.com/photos/36230651/pexels-photo-36230651.jpeg"
         class="w-full h-full object-cover object-bottom" />
@@ -36,10 +75,10 @@
   </div>
 
   <div id="section2"
-    class="w-full h-[30vh] bg-transparent text-white flex items-center justify-between px-10 gap-4 relative">
+    class="w-full h-screen lg:h-[30vh] bg-transparent text-white flex flex-col lg:flex-row items-center justify-between px-10 gap-4 relative">
 
     <!-- CARD 1 -->
-    <div id="glassBox1" class="w-[24%] glass-card h-4/5 flex items-center justify-center">
+    <div id="glassBox1" class="w-11/12 sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
 
       <div id="glassBox1Left" class="w-1/3 h-full flex items-center justify-center">
 
@@ -69,7 +108,7 @@
     </div>
 
     <!-- CARD 2 -->
-    <div id="glassBox2" class="w-[24%] glass-card h-4/5 flex items-center justify-center">
+    <div id="glassBox2" class="w-11/12 sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
 
       <!-- LEFT -->
       <div id="glassBox2Left" class="w-1/3 h-full flex items-center justify-center">
@@ -109,7 +148,7 @@
     </div>
 
     <!-- CARD 3 -->
-    <div id="glassBox3" class="w-[24%] glass-card h-4/5 flex items-center justify-center">
+    <div id="glassBox3" class="w-11/12 sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
 
       <!-- LEFT -->
       <div id="glassBox3Left" class="w-1/3 h-full flex items-center justify-center">
@@ -149,7 +188,7 @@
     </div>
 
     <!-- CARD 4 -->
-    <div id="glassBox4" class="w-[24%] glass-card h-4/5 flex items-center justify-center">
+    <div id="glassBox4" class="w-11/12 sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
 
       <!-- LEFT -->
       <div id="glassBox4Left" class="w-1/3 h-full flex items-center justify-center">
@@ -190,9 +229,218 @@
 
   </div>
 
-  <div id="section3" class="w-full h-[60vh] bg-transparent text-white flex items-start justify-start px-12 py-10 relative">
+  <div id="section3"
+    class="w-full h-full lg:h-[60vh] bg-transparent text-white flex flex-col items-center lg:items-start justify-start px-12 py-10 space-y-10 lg:space-y-0">
 
     <h1 class="text-2xl font-bold">Quick Actions</h1>
+
+    <div
+      class="w-full h-full bg-transparent flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0">
+
+      <!-- Card 1 -->
+
+      <div class="group relative w-11/12 sm:w-4/5 md:w-1/2 lg:w-[30%] h-4/5 rounded-3xl overflow-hidden cursor-pointer">
+
+        <!-- BACKGROUND IMAGE -->
+        <img src="limited.png" class="absolute inset-0 w-full h-full object-cover
+    
+        transition-all duration-500
+    
+        group-hover:scale-110
+        group-hover:blur-sm">
+
+        <!-- DARK OVERLAY -->
+        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/55 transition-all duration-500">
+        </div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full w-full
+        flex flex-col justify-end
+    
+        p-6">
+
+          <p class="text-sm uppercase tracking-widest
+          text-[#ef4444] font-semibold">
+
+            Quick Match
+          </p>
+
+          <h1 class="text-3xl font-bold mt-1">
+
+            Start Limited Match
+          </h1>
+
+          <p class="text-zinc-300 mt-3 text-sm
+          leading-relaxed
+    
+          opacity-80
+          group-hover:opacity-100
+    
+          transition-all duration-300">
+
+            Begin a fast-paced rooftop cricket battle with live scoring and automatic player stats.
+
+          </p>
+
+          <button class="mt-5 w-fit px-5 py-2 rounded-xl
+    
+          bg-[#ef4444]/15
+          border border-[#ef4444]/20
+    
+          text-white
+    
+          backdrop-blur-md
+    
+          hover:bg-[#ef4444]/20
+    
+          transition-all duration-300">
+
+            Start Match →
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Card 2 -->
+
+      <div class="group relative w-11/12 sm:w-4/5 md:w-1/2 lg:w-[30%] h-4/5 rounded-3xl overflow-hidden cursor-pointer">
+
+        <!-- BACKGROUND IMAGE -->
+        <img src="unlimited.png" class="absolute inset-0 w-full h-full object-cover
+    
+        transition-all duration-500
+    
+        group-hover:scale-110
+        group-hover:blur-sm">
+
+        <!-- DARK OVERLAY -->
+        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/55 transition-all duration-500">
+        </div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full w-full
+        flex flex-col justify-end
+    
+        p-6">
+
+          <p class="text-sm uppercase tracking-widest
+          text-blue-500 font-semibold">
+
+            Endless Cricket
+          </p>
+
+          <h1 class="text-3xl font-bold mt-1">
+
+            Start Unlimited Match
+          </h1>
+
+          <p class="text-zinc-300 mt-3 text-sm
+          leading-relaxed
+    
+          opacity-80
+          group-hover:opacity-100
+    
+          transition-all duration-300">
+
+            Play without overs, pressure or limits.
+            Track every big hit, wicket and performance
+            in your endless rooftop battles.
+
+          </p>
+
+          <button class="mt-5 w-fit px-5 py-2 rounded-xl
+    
+          bg-blue-500/15
+          border border-blue-500/20
+    
+          text-white
+    
+          backdrop-blur-md
+    
+          hover:bg-blue-500/20
+    
+          transition-all duration-300">
+
+            Start Match →
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- Card 3 -->
+
+      <div class="group relative w-11/12 sm:w-4/5 md:w-1/2 lg:w-[30%] h-4/5 rounded-3xl overflow-hidden cursor-pointer">
+
+        <!-- BACKGROUND IMAGE -->
+        <img src="stats.png" class="absolute inset-0 w-full h-full object-cover
+      
+          transition-all duration-500
+      
+          group-hover:scale-110
+          group-hover:blur-sm">
+
+        <!-- DARK OVERLAY -->
+        <div class="absolute inset-0
+          bg-black/35
+      
+          group-hover:bg-black/55
+      
+          transition-all duration-500">
+        </div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full w-full
+          flex flex-col justify-end
+      
+          p-6">
+
+          <p class="text-sm uppercase tracking-widest
+            text-green-400 font-semibold">
+
+            Performance Hub
+          </p>
+
+          <h1 class="text-3xl font-bold mt-1">
+
+            Player Statistics
+          </h1>
+
+          <p class="text-zinc-300 mt-3 text-sm
+            leading-relaxed
+      
+            opacity-80
+            group-hover:opacity-100
+      
+            transition-all duration-300">
+
+            Explore batting records, match performances,
+            win impact and all-time rooftop cricket legends.
+
+          </p>
+
+          <button class="mt-5 w-fit px-5 py-2 rounded-xl
+      
+            bg-green-500/15
+            border border-green-500/20
+      
+            text-green-400
+      
+            backdrop-blur-md
+      
+            hover:bg-green-500/20
+      
+            transition-all duration-300">
+
+            View Stats →
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
