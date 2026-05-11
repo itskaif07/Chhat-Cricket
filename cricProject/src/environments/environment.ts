@@ -2,7 +2,7 @@ export const environment = {
 
   firebaseConfig: {
 
-    apiKey: "AIzaSyABFLL0lIDkkI9afqPMR8AHyryUbY1T0S4",
+    apiKey: "AIzaSyABFLL0lIDkkI9afqPMR8AHyryUbYlT0S4",
 
     authDomain: "chhat-cricket.firebaseapp.com",
 
