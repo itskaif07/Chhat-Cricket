@@ -1,0 +1,433 @@
+<div class="w-full h-full bg-[#050B18] text-white pb-10">
+
+    <!-- TOP HERO SECTION -->
+    <div class="w-full h-80 relative flex flex-col items-center justify-end pb-8">
+
+
+        <!-- PLAYER IMAGE -->
+        <div class="w-36 h-36 rounded-full overflow-hidden
+      border-2 border-[#94F505]
+      shadow-[0_0_40px_rgba(148,245,5,0.35)]">
+
+            <img [src]="player?.photoURL" class="w-full h-full object-cover">
+
+        </div>
+
+        <!-- PLAYER NAME -->
+        <h1 class="mt-5 text-3xl font-black tracking-tight">
+
+            {{ player?.displayName }}
+
+        </h1>
+
+        <!-- FULL NAME -->
+        <h2 class="text-zinc-400 mt-1 text-sm">
+
+            {{ player?.fullName }}
+
+        </h2>
+
+        <!-- STYLE -->
+        <div class="mt-4 px-4 py-2 rounded-full
+      bg-[#94F505]/10 border border-[#94F505]/20">
+
+            <h2 class="text-sm font-semibold text-[#94F505]">
+
+                {{ player?.style === 'right'
+                ? 'Right Handed'
+                : 'Left Handed'
+                }}
+
+            </h2>
+
+        </div>
+
+    </div>
+
+<!-- CAREER STATS -->
+<div class="px-5 mt-8 pb-10">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-8">
+
+        <h1 class="text-2xl font-bold">
+
+            Career Stats
+
+        </h1>
+
+        <div class="px-3 py-1 rounded-full
+        bg-white/5 border border-white/10">
+
+            <h2 class="text-xs text-zinc-400">
+
+                Lifetime
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- BATTING -->
+    <!-- ========================= -->
+
+    <div class="mb-10">
+
+        <!-- TITLE -->
+        <div class="flex items-center gap-3 mb-5">
+
+            <div class="w-2 h-8 rounded-full bg-[#94F505]"></div>
+
+            <h1 class="text-xl font-bold">
+
+                Batting
+
+            </h1>
+
+        </div>
+
+        <!-- GRID -->
+        <div class="grid grid-cols-2 gap-4">
+
+            <!-- RUNS -->
+            <div class="col-span-2 rounded-3xl p-6
+            bg-[#94F505]/10 border border-[#94F505]/20
+            backdrop-blur-xl">
+
+                <h2 class="text-zinc-300 text-sm">
+
+                    Runs
+
+                </h2>
+
+                <h1 class="text-6xl font-black
+                text-[#94F505] mt-4">
+
+                    458
+
+                </h1>
+
+            </div>
+
+            <!-- MATCHES -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Matches
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    10
+
+                </h1>
+
+            </div>
+
+            <!-- INNINGS -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Innings
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    9
+
+                </h1>
+
+            </div>
+
+            <!-- HIGHEST -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Highest Score
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    92
+
+                </h1>
+
+            </div>
+
+            <!-- BALLS -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Balls Faced
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    200
+
+                </h1>
+
+            </div>
+
+            <!-- AVERAGE -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Average
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    40.67
+
+                </h1>
+
+            </div>
+
+            <!-- SR -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Strike Rate
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    234.78
+
+                </h1>
+
+            </div>
+
+            <!-- 4s -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Fours
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    20
+
+                </h1>
+
+            </div>
+
+            <!-- 6s -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Sixes
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-[#94F505] mt-3">
+
+                    35
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- BOWLING -->
+    <!-- ========================= -->
+
+    <div>
+
+        <!-- TITLE -->
+        <div class="flex items-center gap-3 mb-5">
+
+            <div class="w-2 h-8 rounded-full bg-blue-400"></div>
+
+            <h1 class="text-xl font-bold">
+
+                Bowling
+
+            </h1>
+
+        </div>
+
+        <!-- GRID -->
+        <div class="grid grid-cols-2 gap-4">
+
+            <!-- WICKETS -->
+            <div class="col-span-2 rounded-3xl p-6
+            bg-blue-500/10 border border-blue-400/20
+            backdrop-blur-xl">
+
+                <h2 class="text-zinc-300 text-sm">
+
+                    Wickets
+
+                </h2>
+
+                <h1 class="text-6xl font-black
+                text-blue-400 mt-4">
+
+                    18
+
+                </h1>
+
+            </div>
+
+            <!-- BALLS -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Balls Bowled
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-blue-400 mt-3">
+
+                    144
+
+                </h1>
+
+            </div>
+
+            <!-- RUNS -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Runs Conceded
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-blue-400 mt-3">
+
+                    122
+
+                </h1>
+
+            </div>
+
+            <!-- ECONOMY -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Economy
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-blue-400 mt-3">
+
+                    8.5
+
+                </h1>
+
+            </div>
+
+            <!-- AVERAGE -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Bowling Average
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-blue-400 mt-3">
+
+                    20.55
+
+                </h1>
+
+            </div>
+
+            <!-- MAIDENS -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Maidens
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-blue-400 mt-3">
+
+                    6
+
+                </h1>
+
+            </div>
+
+            <!-- BEST -->
+            <div class="rounded-3xl p-5
+            bg-white/5 border border-white/10">
+
+                <h2 class="text-zinc-400 text-sm">
+
+                    Best Figures
+
+                </h2>
+
+                <h1 class="text-4xl font-black
+                text-blue-400 mt-3">
+
+                    5/18
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>

@@ -67,3 +67,93 @@
     transform: scale(1.05);
 }
 
+
+@keyframes loader {
+
+    0% {
+        background-position:
+            50% 0,
+            100% 100%,
+            0 100%,
+            0 0;
+    }
+
+    25% {
+        background-position:
+            0 0,
+            100% 50%,
+            0 100%,
+            0 0;
+    }
+
+    50% {
+        background-position:
+            0 0,
+            100% 0,
+            50% 100%,
+            0 0;
+    }
+
+    75% {
+        background-position:
+            0 0,
+            100% 0,
+            100% 100%,
+            0 50%;
+    }
+
+    75.01% {
+        background-position:
+            100% 0,
+            100% 0,
+            100% 100%,
+            0 50%;
+    }
+
+    100% {
+        background-position:
+            50% 0,
+            100% 0,
+            100% 100%,
+            0 100%;
+    }
+
+}
+
+.animate-loader {
+
+    --c:
+        #0000 calc(100%/3),
+        #94F505 0 calc(2*100%/3),
+        #0000 0;
+
+    background-image:
+        linear-gradient(90deg, var(--c)),
+        linear-gradient(0deg, var(--c)),
+        linear-gradient(90deg, var(--c)),
+        linear-gradient(0deg, var(--c));
+
+    animation: loader 1s infinite linear;
+
+}
+
+.animate-loader-delayed {
+
+    --c:
+        #0000 calc(100%/3),
+        #94F505 0 calc(2*100%/3),
+        #0000 0;
+
+    background-image:
+        linear-gradient(90deg, var(--c)),
+        linear-gradient(0deg, var(--c)),
+        linear-gradient(90deg, var(--c)),
+        linear-gradient(0deg, var(--c));
+
+    animation: loader 1s infinite linear;
+
+    animation-delay: -.25s;
+
+}
+
+

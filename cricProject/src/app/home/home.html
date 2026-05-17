@@ -61,17 +61,17 @@
                 </div>
             </div>
 
-            <div id="glassBox1Right" class="w-2/3 h-full flex flex-col justify-center items-start p-6">
+            <div routerLink="/players-list" id="glassBox1Right" class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer">
 
                 <div class="flex flex-col">
-                    <h1 class="font-bold text-4xl tracking-tight">14</h1>
+                    <h1 class="font-bold text-4xl tracking-tight">{{playersCount}}</h1>
 
                     <h2 class="text-lg font-semibold text-zinc-200">
                         Total Players
                     </h2>
                 </div>
 
-                <p class="text-[#44d43b] text-sm mt-3">
+                <p  class="text-[#44d43b] text-sm mt-3">
                     View all players →
                 </p>
 
@@ -102,7 +102,7 @@
                 <div class="flex flex-col">
 
                     <h1 class="font-bold text-4xl tracking-tight">
-                        32
+                        0
                     </h1>
 
                     <h2 class="text-lg font-semibold text-zinc-200">
@@ -143,7 +143,7 @@
                 <div class="flex flex-col">
 
                     <h1 class="font-bold text-4xl tracking-tight">
-                        4589
+                        0
                     </h1>
 
                     <h2 class="text-lg font-semibold text-zinc-200">
@@ -184,7 +184,7 @@
                 <div class="flex flex-col">
 
                     <h1 class="font-bold text-4xl tracking-tight">
-                        50
+                        0
                     </h1>
 
                     <h2 class="text-lg font-semibold text-zinc-200">
@@ -279,7 +279,7 @@
 
             <!-- Card 2 -->
 
-            <div
+            <div [routerLink]="['/unlimited/welcome']"
                 class="group relative w-11/12 sm:w-4/5 md:w-1/2 lg:w-[30%] h-4/5 rounded-3xl overflow-hidden cursor-pointer">
 
                 <!-- BACKGROUND IMAGE -->

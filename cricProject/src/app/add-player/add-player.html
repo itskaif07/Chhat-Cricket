@@ -1,32 +1,70 @@
-<div
+<form #playerForm="ngForm" (ngSubmit)="addPlayer(playerForm)"
     class="w-full h-full bg-[#050B18] text-white relative flex items-center justify-center flex-col py-10 space-y-16 px-6">
 
-    <h1 class="font-bold text-xl ">Add New Player</h1>
+    @if(isLoading){
+    <div class="w-full h-full flex items-center justify-center fixed top-0 left-0 bg-[#050B18] z-10">
 
-    <div class="flex flex-col items-center justify-center w-full  lg:w-1/2 h-full space-y-10">
+        <div class="relative w-12.5 aspect-square grid">
+
+            <!-- OUTER -->
+            <div class="absolute inset-0
+        bg-size-[300%_4px,4px_300%,300%_4px,4px_300%]
+        bg-no-repeat
+        animate-loader">
+
+            </div>
+
+            <!-- INNER -->
+            <div class="absolute inset-2.5
+        scale-x-[-1]
+        bg-bg-size-[300%_4px,4px_300%,300%_4px,4px_300%]
+        bg-no-repeat
+        animate-loader-delayed">
+
+            </div>
+        </div>
+
+    </div>
+    }
+
+    <h1 class="font-bold text-xl">
+        Add New Player
+    </h1>
+
+    <div class="flex flex-col items-center justify-center w-full lg:w-1/2 h-full space-y-10">
+
+        <!-- PHOTO -->
         <div class="w-full flex flex-col items-center justify-center">
 
-            <label for="playerPhoto" class="relative w-56 h-56 rounded-full border-2 border-dashed border-[#44d43b]
-            bg-white/5 backdrop-blur-xl
-            flex flex-col items-center justify-center
-            cursor-pointer overflow-hidden
-            hover:scale-105 hover:shadow-[0_0_40px_rgba(68,212,59,0.35)]
-            transition-all duration-300">
+            <label for="playerPhoto" class="relative w-56 h-56 rounded-full border-2
+        bg-white/5 backdrop-blur-xl
+        flex flex-col items-center justify-center
+        cursor-pointer overflow-hidden
+        hover:scale-105
+        hover:shadow-[0_0_40px_rgba(68,212,59,0.35)]
+        transition-all duration-300" [ngClass]="{
+          'border-dashed border-[#44d43b]': !previewImage,
+          'border-solid border-white/10': previewImage
+        }">
 
-                <!-- Preview Image -->
-                <img *ngIf="previewImage" [src]="previewImage" class="absolute inset-0 w-full h-full object-cover" />
+                <!-- PREVIEW -->
+                @if (previewImage != null) {
 
-                <!-- Overlay -->
-                <div class="absolute inset-0 bg-black/40" *ngIf="previewImage">
-                </div>
+                <img [src]="previewImage" class="absolute inset-0 w-full h-full object-cover">
 
-                <!-- Upload Content -->
+                <div class="absolute inset-0 bg-black/30"></div>
+
+                }
+
+                <!-- UPLOAD CONTENT -->
+                @if (!previewImage) {
+
                 <div class="relative z-10 flex flex-col items-center space-y-3">
 
-                    <!-- Icon -->
+                    <!-- ICON -->
                     <div class="w-16 h-16 rounded-full bg-[#44d43b]/15
-                flex items-center justify-center
-                shadow-[0_0_25px_rgba(68,212,59,0.25)]">
+              flex items-center justify-center
+              shadow-[0_0_25px_rgba(68,212,59,0.25)]">
 
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#44d43b]" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
@@ -38,7 +76,7 @@
 
                     </div>
 
-                    <!-- Text -->
+                    <!-- TEXT -->
                     <div class="text-center">
 
                         <h2 class="text-white font-semibold text-lg">
@@ -53,80 +91,96 @@
 
                 </div>
 
+                }
+
             </label>
 
-            <!-- Hidden Input -->
-            <input type="file" id="playerPhoto" accept="image/*" class="hidden" (change)="onImageSelect($event)" />
+            <!-- HIDDEN INPUT -->
+            <input type="file" id="playerPhoto" accept="image/*" class="hidden" (change)="onImageSelect($event)">
+
 
         </div>
 
-
+        <!-- FORM FIELDS -->
         <div class="w-full flex flex-col space-y-10">
 
-            <div class="space-y-4 w-full flex flex-col ">
-
-                <!-- Label -->
-                <div class="space-x-2 flex items-center justify-start">
-                    <!-- Icon -->
-                    <img src="icons/user.png" alt="" class="w-6">
-                    <label class="text-white font-semibold tracking-wide"> Full Name </label>
-                </div>
-
-                <!-- Input Wrapper -->
-                <div class="w-full h-16 space-x-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center px-5 transition-all duration-300 focus-within:border-[#44d43b]
-            focus-within:shadow-[0_0_30px_rgba(68,212,59,0.18)]">
-
-                    <!-- Input -->
-                    <input type="text" placeholder="Enter player name" class="w-full bg-transparent outline-none
-                text-white placeholder:text-zinc-500
-                font-medium" />
-
-                </div>
-            </div>
-
-            <div class="space-y-4 w-full flex flex-col ">
-
-                <!-- Label -->
-                <div class="space-x-2 flex items-center justify-start">
-                    <!-- Icon -->
-                    <img src="icons/user.png" alt="" class="w-6">
-                    <label class="text-white font-semibold tracking-wide"> Display Name </label>
-                </div>
-
-                <!-- Input Wrapper -->
-                <div class="w-full h-16  rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center px-5 transition-all duration-300 focus-within:border-[#44d43b]
-            focus-within:shadow-[0_0_30px_rgba(68,212,59,0.18)]">
-
-
-
-                    <!-- Input -->
-                    <input type="text" placeholder="Name that will be shown on the scorecard" class="w-full bg-transparent outline-none
-              text-white placeholder:text-zinc-500
-               font-medium" />
-
-                </div>
-            </div>
-
+            <!-- FULL NAME -->
             <div class="space-y-4 w-full flex flex-col">
 
-                <!-- Label -->
                 <div class="space-x-2 flex items-center justify-start">
-                    <!-- Icon -->
-                    <img src="icons/hand.png" alt="" class="w-6">
-                    <label class="text-white font-semibold tracking-wide"> Style </label>
+
+                    <img src="icons/user.png" class="w-6">
+
+                    <label class="text-white font-semibold tracking-wide">
+                        Full Name
+                    </label>
+
+                </div>
+
+                <div class="w-full h-16 rounded-2xl bg-white/5 border border-white/10
+        backdrop-blur-xl flex items-center px-5 transition-all duration-300
+        focus-within:border-[#44d43b]
+        focus-within:shadow-[0_0_30px_rgba(68,212,59,0.18)]">
+
+                    <input type="text" name="fullName" [(ngModel)]="player.fullName" placeholder="Enter player name"
+                        class="w-full bg-transparent outline-none
+            text-white placeholder:text-zinc-500 font-medium" required>
+
+                </div>
+
+            </div>
+
+            <!-- DISPLAY NAME -->
+            <div class="space-y-4 w-full flex flex-col">
+
+                <div class="space-x-2 flex items-center justify-start">
+
+                    <img src="icons/user.png" class="w-6">
+
+                    <label class="text-white font-semibold tracking-wide">
+                        Display Name
+                    </label>
+
+                </div>
+
+                <div class="w-full h-16 rounded-2xl bg-white/5 border border-white/10
+        backdrop-blur-xl flex items-center px-5 transition-all duration-300
+        focus-within:border-[#44d43b]
+        focus-within:shadow-[0_0_30px_rgba(68,212,59,0.18)]">
+
+                    <input type="text" name="displayName" [(ngModel)]="player.displayName"
+                        placeholder="Name shown on scorecard" class="w-full bg-transparent outline-none
+            text-white placeholder:text-zinc-500 font-medium" required>
+
+                </div>
+
+            </div>
+
+            <!-- STYLE -->
+            <div class="space-y-4 w-full flex flex-col">
+
+                <div class="space-x-2 flex items-center justify-start">
+
+                    <img src="icons/hand.png" class="w-6">
+
+                    <label class="text-white font-semibold tracking-wide">
+                        Style
+                    </label>
+
                 </div>
 
                 <div class="w-full min-h-32 flex items-center justify-between">
 
                     <!-- LEFT -->
                     <label class="w-[49%] h-32 rounded-xl border cursor-pointer
-      flex flex-col items-start justify-center px-5
-      transition-all duration-300
-      bg-white/5 backdrop-blur-xl" [class.border-[#44d43b]]="handedness === 'left'"
-                        [class.shadow-[0_0_30px_rgba(68,212,59,0.18)]]="handedness === 'left'"
-                        [class.border-white/10]="handedness !== 'left'">
+            flex flex-col items-start justify-center px-5
+            transition-all duration-300
+            bg-white/5 backdrop-blur-xl" [class.border-[#44d43b]]="player.style === 'left'"
+                        [class.shadow-[0_0_30px_rgba(68,212,59,0.18)]]="player.style === 'left'"
+                        [class.border-white/10]="player.style !== 'left'">
 
-                        <input type="radio" name="handedness" value="left" class="hidden" [(ngModel)]="handedness" />
+                        <input type="radio" name="style" value="left" class="hidden" [(ngModel)]="player.style"
+                            required>
 
                         <h1 class="font-semibold text-white text-lg">
                             Left Handed
@@ -140,13 +194,14 @@
 
                     <!-- RIGHT -->
                     <label class="w-[49%] h-32 rounded-xl border cursor-pointer
-      flex flex-col items-start justify-center px-5
-      transition-all duration-300
-      bg-white/5 backdrop-blur-xl" [class.border-[#44d43b]]="handedness === 'right'"
-                        [class.shadow-[0_0_30px_rgba(68,212,59,0.18)]]="handedness === 'right'"
-                        [class.border-white/10]="handedness !== 'right'">
+            flex flex-col items-start justify-center px-5
+            transition-all duration-300
+            bg-white/5 backdrop-blur-xl" [class.border-[#44d43b]]="player.style === 'right'"
+                        [class.shadow-[0_0_30px_rgba(68,212,59,0.18)]]="player.style === 'right'"
+                        [class.border-white/10]="player.style !== 'right'">
 
-                        <input type="radio" name="handedness" value="right" class="hidden" [(ngModel)]="handedness" />
+                        <input type="radio" name="style" value="right" class="hidden" [(ngModel)]="player.style"
+                            required>
 
                         <h1 class="font-semibold text-white text-lg">
                             Right Handed
@@ -164,8 +219,14 @@
 
         </div>
 
-        <button type="submit" class="font-bold bg-[#94F505] text-black w-full py-3 rounded"> + Save Player</button>
+        <!-- BUTTON -->
+        <button type="submit" [disabled]="playerForm.invalid" class="font-bold bg-[#94F505] text-black w-full py-3 rounded
+      disabled:opacity-50 disabled:cursor-not-allowed">
+
+            + Save Player
+
+        </button>
+
     </div>
 
-
-</div>
+</form>

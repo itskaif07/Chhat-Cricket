@@ -1,4 +1,4 @@
-import { Component, signal, NgZone, OnDestroy } from '@angular/core';
+import { Component, signal, NgZone, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RouterOutlet, RouterLinkWithHref, Router } from '@angular/router';
 import {Auth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User} from '@angular/fire/auth'
 
@@ -18,19 +18,14 @@ export class App implements OnDestroy{
  constructor(
 
   private auth: Auth,
-  private ngZone: NgZone,
-  private router: Router
+  private router: Router,
+  private cdr: ChangeDetectorRef
 
 ) {
 
   onAuthStateChanged(this.auth, (user) => {
-
-    this.ngZone.run(() => {
-
       this.user = user;
-
-    });
-
+      cdr.detectChanges()
   });
 
 }
@@ -69,6 +64,12 @@ closeSidebar() {
 
   navigateToAddPlayer(){
      this.router.navigate(['/add-player']);
+     this.isSidebarOpen = false
+  document.body.style.overflow = 'auto';
+
+  }
+  navigateToAbout(){
+     this.router.navigate(['/about']);
      this.isSidebarOpen = false
   document.body.style.overflow = 'auto';
 
