@@ -1,19 +1,22 @@
-<div class="w-full h-full bg-[#050B18] overflow-hidden relative">
+<div class="w-full min-h-screen bg-[#050B18] overflow-y-auto relative">
 
     <!-- BACKGROUND GLOW -->
     <div class="absolute -top-30 left-1/2 -translate-x-1/2
     w-125 h-125
-    bg-[#38BDF8]/10 blur-[140px] rounded-full">
+    bg-linear-to-b
+    from-[#38BDF8]
+    to-[#0EA5E9]
+    blur-[140px] rounded-full opacity-20">
 
     </div>
 
     <!-- CONTENT -->
     <div class="relative z-10 w-full min-h-screen
     flex flex-col justify-between
-    px-6 py-10 space-y-6">
+    px-6 py-10 space-y-12">
 
         <!-- TOP -->
-        <div class="flex flex-col items-center mt-6">
+        <div class="flex flex-col items-center mt-6 space-y-6">
 
             <!-- MODE BADGE -->
             <div class="px-4 py-2 rounded-full
@@ -41,35 +44,36 @@
 
             <!-- SUBTEXT -->
             <p class="text-zinc-400 text-center
-            mt-5 leading-relaxed max-w-sm">
+            mt-2 leading-relaxed max-w-sm">
 
-                No over limits.
-                No pressure.
-                Just pure rooftop cricket chaos.
+                No over limits. No pressure. Just pure rooftop cricket chaos.
 
             </p>
 
         </div>
 
         <!-- CENTER -->
-        <div class="flex flex-col items-center">
+        <div class="flex flex-col items-center space-y-10">
 
             <!-- COIN AREA -->
-            <div (click)="tossCoin()" class="relative">
+            <div class="relative">
 
                 <!-- GLOW -->
                 <div class="absolute inset-0
-                bg-[#38BDF8]/20 blur-3xl rounded-full">
+                bg-[#0EA5E9]/20 blur-3xl rounded-full">
 
                 </div>
 
                 <!-- COIN -->
-                <button class="relative w-44 h-44 rounded-full
+                <button (click)="tossCoin()"
+                [disabled]="isTossing"
+                class="relative w-44 h-44 rounded-full
                 bg-linear-to-b from-[#38BDF8] to-[#0EA5E9]
                 border border-[#38BDF8]/30
-                shadow-[0_0_40px_rgba(56,189,248,0.2)]
+                shadow-[0_0_70px_rgba(56,189,248,0.35)]
                 flex items-center justify-center
                 active:scale-95
+                disabled:opacity-80
                 transition-all duration-300">
 
                     <!-- INNER -->
@@ -79,7 +83,7 @@
 
                         <h1 class="text-black text-6xl font-black" [class.tossing]="isTossing">
 
-                            {{ tossResult || '₹' }}
+                            {{ tossResult || '?' }}
 
                         </h1>
 
@@ -90,19 +94,44 @@
             </div>
 
             <!-- TEXT -->
-            <h1 class="text-white text-2xl font-black mt-10">
+            <div class="text-center flex flex-col items-center">
 
-                Toss For First Pick
+                <p class="text-zinc-500 text-sm uppercase tracking-[0.25em] font-bold">
+                    First Pick Toss
+                </p>
 
-            </h1>
+                <h1 class="text-white text-2xl font-black mt-3">
 
-            <p class="text-zinc-500 text-center
-            mt-3 max-w-xs leading-relaxed">
+                    Toss For First Pick
 
-                Winning team selects
-                the first player.
+                </h1>
 
-            </p>
+                @if(tossResult === ''){
+
+                <p class="text-zinc-500 text-center
+                mt-3 max-w-xs leading-relaxed">
+
+                    Tap the coin to decide which team gets the first player pick.
+
+                </p>
+
+                }
+                @else {
+
+                <p class="text-zinc-400 text-center
+                mt-3 max-w-xs leading-relaxed">
+
+                    Toss landed on
+                    <span class="text-[#38BDF8] font-bold">
+                        {{ tossResult === 'H' ? 'Heads' : 'Tails' }}
+                    </span>.
+                    Winner gets the first pick.
+
+                </p>
+
+                }
+
+            </div>
 
         </div>
 
@@ -110,7 +139,25 @@
         <div class="w-full flex flex-col gap-4">
 
             @if(tossResult === ''){
-            <!-- SECONDARY -->
+
+            <button (click)="tossCoin()"
+            [disabled]="isTossing"
+            class="w-full h-16 rounded-3xl
+            bg-linear-to-b
+            from-[#38BDF8]
+            to-[#0EA5E9]
+            border border-[#38BDF8]/30
+            text-black text-lg font-black
+            shadow-[0_0_40px_rgba(56,189,248,0.2)]
+            active:scale-[0.98]
+            disabled:opacity-40
+            disabled:shadow-none
+            transition-all duration-300">
+
+                {{ isTossing ? 'TOSSING...' : 'RUN TOSS' }}
+
+            </button>
+
             <button [routerLink]="['/unlimited/select-players']" class="w-full h-16 rounded-3xl
             bg-white/5 border border-white/10
             backdrop-blur-xl
@@ -121,18 +168,32 @@
                 SKIP TOSS
 
             </button>
+
             }
             @else {
 
             <button [routerLink]="['/unlimited/select-players']" class="w-full h-16 rounded-3xl
-                         bg-linear-to-b from-[#b8ff4f] to-[#94F505]
-                border border-[#d9ff9b]/30
-                        backdrop-blur-xl
-                        text-black text-lg font-semibold
-                        active:scale-[0.98]
-                        transition-all duration-300">
+            bg-linear-to-b
+            from-[#38BDF8]
+            to-[#0EA5E9]
+            border border-[#38BDF8]/30
+            text-black text-lg font-black
+            shadow-[0_0_40px_rgba(56,189,248,0.2)]
+            active:scale-[0.98]
+            transition-all duration-300">
 
-                Continue
+                CONTINUE
+
+            </button>
+
+            <button (click)="tossCoin()" class="w-full h-16 rounded-3xl
+            bg-white/5 border border-white/10
+            backdrop-blur-xl
+            text-white text-lg font-semibold
+            active:scale-[0.98]
+            transition-all duration-300">
+
+                TOSS AGAIN
 
             </button>
 

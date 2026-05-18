@@ -106,7 +106,7 @@ async addPlayer(playerForm: NgForm) {
   finally {
 
     this.isLoading = false;
-    this.router.navigate(['/player-list'])
+    this.router.navigate(['/players-list'])
     this.cdr.detectChanges();
 
   }
