@@ -71,7 +71,7 @@
         <div class="flex items-center justify-center md:justify-end md:px-4 w-full ">
             @if(selectedPlayers.length > 1){
 
-            <div [routerLink]="['/unlimited/toss']" class="w-4/5 md:w-1/2 lg:w-1/4 h-12 rounded-3xl
+            <button (click)="goToTossPage()" class="w-4/5 md:w-1/2 lg:w-1/4 h-12 rounded-3xl
                       bg-white/10
                       border border-white/15
                       backdrop-blur-2xl
@@ -103,7 +103,7 @@
 
                 </h1>
 
-            </div>
+            </button>
 
 
             }
@@ -112,7 +112,7 @@
 
 
         <div
-            class="w-full h-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 py-10 px-6 row-auto">
+            class="w-full h-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 py-10 px-6 row-auto">
 
 
             @for (player of players; track $index) {

@@ -46,9 +46,7 @@ async retrievePlayers() {
       
     }));
     
-    console.log(players);
     this.playersCount = players.length
-    console.log(this.playersCount)
     this.cdr.detectChanges()
     
 

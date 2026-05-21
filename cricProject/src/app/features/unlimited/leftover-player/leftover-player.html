@@ -1,16 +1,17 @@
-<div class="w-full h-full bg-[#050B18] text-white overflow-hidden relative">
+<div class="w-full h-full bg-[#050B18] text-white overflow-hidden relative ">
 
     <!-- BACKGROUND GLOW -->
     <div class="absolute -top-37.5 left-1/2 -translate-x-1/2
     w-125 h-125
-    bg-[#38BDF8]/10 blur-[140px] rounded-full">
+    bg-[#38BDF8]/10 blur-[140px] rounded-full
+    pointer-events-none">
 
     </div>
 
     @if (reservedPlayerExist) {
 
     <!-- BADGE -->
-    <div class="px-4 py-2 rounded-full w-1/2 mx-auto mt-10
+    <div class="px-4 py-2 rounded-full w-1/2 lg:w-1/4 mx-auto mt-10
                     bg-[#38BDF8]/10 border border-[#38BDF8]/20
                     backdrop-blur-xl text-center">
 
@@ -23,39 +24,81 @@
 
     </div>
 
-    <!-- TITLE -->
-    <h1 class="text-4xl font-black
+
+    <div class="flex flex-col items-center justify-center ">
+
+        <!-- TITLE -->
+        <h1 class="text-4xl font-black
                     text-center leading-tight mt-10">
 
         Select The Toss Player
 
     </h1>
-
+    
     <!-- SUBTEXT -->
     <p class="text-zinc-500 text-center
-                    mt-5 max-w-sm leading-relaxed">
+    mt-5 max-w-sm leading-relaxed">
 
         The toss winner will receive this player
         automatically.
 
     </p>
 
+    <div class="w-full flex flex-col sm:flex-row sm:space-x-4 justify-center space-y-3  mt-8 px-6">
+
+        <button (click)="startMatch()" class="h-14 w-full lg:w-1/4 flex items-center justify-center rounded
+        bg-linear-to-b
+        from-[#38BDF8]
+        to-[#0EA5E9]
+        border border-[#38BDF8]/30
+        text-black text-sm font-black
+        shadow-[0_0_40px_rgba(56,189,248,0.2)]
+        active:scale-[0.98]
+        transition-all duration-300">
+
+            START MATCH
+
+        </button>
+
+        <button (click)="reservedPlayerExist = false" class="h-14 w-full lg:w-1/4 rounded
+        bg-white/5
+        border border-white/10
+        backdrop-blur-xl
+        text-white min-[350px]:text-sm font-semibold
+        active:scale-[0.98]
+        transition-all duration-300">
+
+            CANCEL TOSS PLAYER
+
+        </button>
+
+    </div>
+</div>
+
+<div class="flex flex-col items-center justify-center w-full h-full">
+    
+</div>
+
 
 
     <div class="w-full h-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 py-10 px-6 row-auto">
 
 
-        @for (player of players; track player.id) {
+        @for (player of leftOverPlayers; track player.id) {
 
         <!-- CARD -->
-        <div class="relative rounded-3xl overflow-hidden
+        <div (click)="selectLeftOverPlayer(player)" class="relative rounded-3xl overflow-hidden
                     aspect-3/4
                     cursor-pointer
                     group
                     hover:scale-[1.03]
                     active:scale-[0.98]
                     transition-all duration-300
-                    shadow-[0_0_40px_rgba(0,0,0,0.4)]">
+                    shadow-[0_0_40px_rgba(0,0,0,0.4)]"
+                    
+                   [ngClass]="{'border-4 border-[#94F505]': selectedLeftOverPlayer?.id === player.id,
+                                'opacity-50': selectedLeftOverPlayer && selectedLeftOverPlayer.id !== player.id}"
+                    >
 
             <!-- IMAGE -->
             <img [src]="player.photoURL || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'" class="absolute inset-0

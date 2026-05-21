@@ -1,19 +1,20 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Player } from '../../../shared/models/player.model';
-import { collection, Firestore, getDocs, orderBy, query } from '@angular/fire/firestore';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from "@angular/router";
+import { Router } from "@angular/router";
+import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
+import { MatchSetupService } from '../../../services/MatchSetup/match-setup-service';
 
 @Component({
   selector: 'app-select-players',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './select-players.html',
   styleUrl: './select-players.css',
 })
 export class SelectPlayers implements OnInit
 {
 
-  constructor(private firestore: Firestore, private cdr: ChangeDetectorRef){}
+  constructor(private RetrievePlayersService: RetrievePlayersService, private cdr: ChangeDetectorRef, private matchSetupService: MatchSetupService, private router: Router){}
 
   players: Player[] = []
 
@@ -26,6 +27,19 @@ export class SelectPlayers implements OnInit
 
   ngOnInit(){
     this.getPlayers()
+  }
+
+   async getPlayers(){
+
+  try{
+    
+   this.players = await this.RetrievePlayersService.getAllPlayers()
+    this.cdr.detectChanges()
+    
+  }
+  catch(e){
+    console.log(e)
+  }
   }
 
 selectPlayer(player: Player) {
@@ -97,28 +111,12 @@ selectPlayer(player: Player) {
 
 }
 
- async getPlayers(){
+goToTossPage(){
+  if (this.selectedPlayers.length < 2) return;
 
-  try{
-    
-    const playersRef = collection(this.firestore, 'players')
+  this.matchSetupService.setTeams(this.teamA, this.teamB)
+  this.router.navigate(['/unlimited/toss'])
+}
 
-    const q = query(playersRef, orderBy('displayName', 'asc'))
-
-    const snapshot = await getDocs(q)
-
-    this.players = snapshot.docs.map(doc =>({
-      id: doc.id,
-      ...doc.data()
-      
-    })) as Player[]
-  
-    this.cdr.detectChanges()
-    
-  }
-  catch(e){
-    console.log(e)
-  }
-  }
 
 }

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { MatchSetupService } from '../../../services/MatchSetup/match-setup-service';
+import { Player } from '../../../shared/models/player.model';
 
 @Component({
   selector: 'app-toss-page',
@@ -10,7 +12,7 @@ import { RouterLink } from '@angular/router';
 })
 export class TossPage {
 
-  constructor(private cdr: ChangeDetectorRef){}
+  constructor(private cdr: ChangeDetectorRef, private matchSetupService: MatchSetupService){}
 
   tossResult:string = ''
   isTossing:boolean = false
@@ -20,6 +22,9 @@ export class TossPage {
   decisionTeam: "A" | "B" | "" = ""
   tossDecision: "bat" | "bowl" | "" = ""
   battingTeam: "A" | "B" | "" = ""
+
+  totalPlayers: Player[] = []
+
 
   tossCoin(){
     if (!this.TeamAChoice || this.isTossing) return;
@@ -34,6 +39,8 @@ export class TossPage {
     setTimeout(() => {
       this.tossResult = Math.random() > 0.5 ? 'H' : 'T'
       this.tossWinner = this.tossResult === this.TeamAChoice ? 'A' : 'B'
+        this.matchSetupService
+    .setMatchTossWinner(this.tossWinner)
       this.decisionTeam = this.tossWinner
       this.isTossing = false
       this.cdr.detectChanges()
@@ -51,20 +58,40 @@ export class TossPage {
     this.battingTeam = ''
   }
 
-  chooseDecision(decision: "bat" | "bowl") {
-    if (!this.decisionTeam) return;
+chooseDecision(
+  decision: "bat" | "bowl"
+) {
 
-    this.tossDecision = decision
+  if (!this.decisionTeam) return;
 
-    if (decision === 'bat') {
-      this.battingTeam = this.decisionTeam
-      return;
-    }
+  this.tossDecision = decision
 
-    this.battingTeam = this.decisionTeam === 'A' ? 'B' : 'A'
+  if (decision === 'bat') {
+
+    this.battingTeam =
+      this.decisionTeam
+
   }
+
+  else {
+
+    this.battingTeam =
+      this.decisionTeam === 'A'
+      ? 'B'
+      : 'A'
+
+  }
+
+  this.matchSetupService
+    .setFirstBattingTeam(
+      this.battingTeam
+    )
+
+}
 
   selectBattingTeam(team: "A" | "B") {
     this.battingTeam = team
+    this.matchSetupService.firstBattingTeam = team
   }
+
 }
