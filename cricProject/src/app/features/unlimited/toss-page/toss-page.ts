@@ -24,6 +24,9 @@ export class TossPage {
   battingTeam: "A" | "B" | "" = ""
 
   totalPlayers: Player[] = []
+  tossWinnerTeam: Player[] = []
+
+  
 
 
   tossCoin(){
@@ -93,5 +96,6 @@ chooseDecision(
     this.battingTeam = team
     this.matchSetupService.firstBattingTeam = team
   }
+
 
 }

@@ -10,6 +10,7 @@ export class MatchSetupService {
   teamB: Player[] = []
   tossWinner: 'A' | 'B' | '' = '';
   firstBattingTeam: 'A' | 'B' | '' = '';
+  firstBowlingTeam: 'A' | 'B' | '' = '';
 
   selectedPlayers: Player[] = []
 
@@ -18,8 +19,9 @@ export class MatchSetupService {
   }
 
   setFirstBattingTeam(team: 'A'|'B'|''){
-    this.firstBattingTeam = team
+    this.firstBattingTeam = team 
   }
+
 
 
   setTeams(teamA:Player[], teamB:Player[]){
@@ -41,10 +43,13 @@ export class MatchSetupService {
   }
 
   setLeftOverPlayerInTeamA(player: Player){
-    const alreadyExists = this.teamA.some(teamPlayer => teamPlayer.id === player.id)
+
+    const targetTeam = this.tossWinner === 'A' ? this.teamA : this.teamB
+
+    const alreadyExists = targetTeam.some(teamPlayer => teamPlayer.id === player.id)
 
     if (!alreadyExists) {
-      this.teamA.push(player)
+      targetTeam.push(player)
     }
 
     this.selectedPlayers = [...this.teamA, ...this.teamB]

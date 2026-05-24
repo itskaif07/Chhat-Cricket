@@ -30,7 +30,7 @@
 
             <!-- TEAM -->
             <p class="text-sm uppercase tracking-[0.3em] text-[#FBBF24] font-bold">
-                Team {{currentBattingTeam}}
+                Team {{battingFirst}}
             </p>
 
             <!-- SCORE -->
@@ -96,7 +96,7 @@
                     <h1 class="text-5xl font-black
             text-[#FBBF24]">
 
-                        0
+                        {{playerStats[currentBatsman?.id!]?.runs}}
 
                     </h1>
 
@@ -104,13 +104,13 @@
 
                         <p class="text-zinc-400 text-sm">
 
-                            0 Balls
+                            {{playerStats[currentBatsman?.id!]?.ballsFaced}} Balls
 
                         </p>
 
                         <p class="text-zinc-500 text-xs mt-1">
 
-                            SR 0.00
+                            SR {{currentBatsmanStrikeRate }}
 
                         </p>
 
@@ -132,7 +132,7 @@
                 </p>
 
                 <h1 class="text-3xl font-black mt-2">
-                    Bowler
+                    {{selectedBowler?.displayName || 'Bowler' }}
                 </h1>
 
                 <div class="flex items-end justify-end gap-3 mt-2">
@@ -141,22 +141,23 @@
 
                         <p class="text-zinc-400 text-sm">
 
-                            0.00 Overs
+                            {{currentBowlerOvers}} Overs
 
                         </p>
 
                         <p class="text-zinc-500 text-xs mt-1">
 
-                            Eco 0.0
+                            Eco {{currentBowlerEconomy || 0}}
 
                         </p>
 
                     </div>
 
-                    <h1 class="text-5xl font-black
+                    <h1 class="text-4xl font-black
             text-blue-400">
 
-                        0
+                        {{playerStats[currentBowler?.id!]?.runsConceded ||
+                        0}}/{{playerStats[currentBowler?.id!]?.wickets || 0}}
 
                     </h1>
 
@@ -170,7 +171,7 @@
         <!-- RECENT BALLS -->
         <!-- ========================= -->
 
-        @if(recentDeliveries){
+        @if(recentDeliveries.length > 0){
 
         <div class="w-full rounded-3xl border border-white/10 bg-white/3 backdrop-blur-2xl px-4 py-2 overflow-x-auto">
 
@@ -258,26 +259,11 @@
     <!-- STRIKER DIALOG -->
     @if(showBatsmenDialog){
 
-    <div class="fixed inset-0 z-50
-    
-    bg-black/70 backdrop-blur-md
-    
-    flex items-center justify-center
-    
-    p-4">
+    <div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
 
         <!-- MODAL -->
-        <div class="w-full max-w-2xl
-    
-        rounded-4xl
-    
-        bg-[#09111F]/90
-    
-        border border-white/10
-    
-        shadow-[0_0_80px_rgba(0,0,0,0.6)]
-    
-        overflow-hidden">
+        <div
+            class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
 
             <!-- HEADER -->
             <div class="p-6 border-b border-white/10">
@@ -287,13 +273,8 @@
                 <div class="flex items-center justify-between">
 
                     <!-- LABEL -->
-                    <p class="text-sm uppercase
-            tracking-[0.25em]
-        
-            font-bold" [ngClass]="{
-              'text-[#FBBF24]': !isWicketFallen,
-              'text-red-400': isWicketFallen
-            }">
+                    <p class="text-sm uppercase tracking-[0.25em] font-bold"
+                        [ngClass]="{'text-[#FBBF24]': !isWicketFallen, 'text-red-400': isWicketFallen}">
 
                         {{ isWicketFallen
                         ? 'WICKET FALLEN'
@@ -306,7 +287,6 @@
               'text-[#94F505]': battingFirst === 'A',
               'text-purple-400': battingFirst === 'B'
             }">
-
                         Team {{ battingFirst }}
 
                     </h1>
@@ -332,48 +312,20 @@
 
                     </p>
 
-                    @if(selectedBatsman){
-                    <button (click)="showBatsmenDialog = !showBatsmenDialog" class="relative overflow-hidden
-                        
-                        px-8 py-3 rounded-2xl
-                        
-                        bg-[#FBBF24]/15
-                        border border-[#FBBF24]/20
-                        
-                        backdrop-blur-xl
-                        
-                        text-[#FBBF24]
-                        font-black tracking-wide
-                        
-                        shadow-[0_0_30px_rgba(251,191,36,0.12)]
-                        
-                        hover:bg-[#FBBF24]/20
-                        hover:shadow-[0_0_40px_rgba(251,191,36,0.25)]
-                        hover:scale-[1.03]
-                        
-                        active:scale-[0.98]
-                        
-                        transition-all duration-300">
+                    @if(selectedBatsman != null){
+                    <button (click)="confirmBatsman()"
+                        class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20
+                        backdrop-blur-xl text-[#FBBF24] font-black tracking-wide shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20
+                        hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
 
                         <!-- GLOW -->
-                        <div class="absolute inset-0
-                        
-                            opacity-0 hover:opacity-100
-                        
-                            bg-linear-to-r
-                            from-[#FBBF24]/0
-                            via-[#FBBF24]/10
-                            to-[#F59E0B]/0
-                        
+                        <div class="absolute inset-0  opacity-0 hover:opacity-100  bg-linear-to-r  from-[#FBBF24]/0  via-[#FBBF24]/10 to-[#F59E0B]/0
                             transition-all duration-500">
-
                         </div>
 
                         <!-- TEXT -->
                         <span class="relative z-10">
-
                             Continue →
-
                         </span>
 
                     </button>
@@ -383,10 +335,9 @@
             </div>
 
             <!-- PLAYERS -->
-            <div class="grid grid-cols-2 sm:grid-cols-3
-            gap-4 p-6 max-h-[60vh] overflow-y-auto">
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-6 max-h-[60vh] overflow-y-auto">
 
-                @for(player of showOpeningTeam;
+                @for(player of availableBatsmen;
                 track player.id){
 
                 <div (click)="selectBatsman(player)" class="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer hover:scale-[1.03]
@@ -432,30 +383,14 @@
     <!-- Bowler DIALOG -->
     @if(showBowlerDialog){
 
-    <div class="fixed inset-0 z-50
-    
-    bg-black/70 backdrop-blur-md
-    
-    flex items-center justify-center
-    
-    p-4">
+    <div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
 
         <!-- MODAL -->
-        <div class="w-full max-w-2xl
-    
-        rounded-4xl
-    
-        bg-[#09111F]/90
-    
-        border border-white/10
-    
-        shadow-[0_0_80px_rgba(0,0,0,0.6)]
-    
-        overflow-hidden">
+        <div
+            class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
 
             <!-- HEADER -->
             <div class="p-6 border-b border-white/10">
-
 
                 <!-- TOP ROW -->
                 <div class="flex items-center justify-between">
@@ -465,11 +400,11 @@
             tracking-[0.25em]
         
             font-bold" [ngClass]="{
-              'text-[#FBBF24]': !isWicketFallen,
-              'text-red-400': isWicketFallen
+              'text-[#FBBF24]': !isOverComplete,
+              'text-green-500': isOverComplete
             }">
 
-                        {{ isWicketFallen
+                        {{ isOverComplete
                         ? 'NEXT OVER'
                         : 'OPENING BOWLER' }}
 
@@ -477,11 +412,11 @@
 
                     <!-- TEAM -->
                     <h1 class="font-black text-lg" [ngClass]="{
-              'text-[#94F505]': battingFirst === 'A',
-              'text-purple-400': battingFirst === 'B'
+              'text-[#94F505]': battingFirst === 'B',
+              'text-purple-400': battingFirst === 'A'
             }">
 
-                        Team {{ battingFirst }}
+                        Team {{ battingFirst === "A" ? "B" : "A" }}
 
                     </h1>
 
@@ -490,24 +425,24 @@
                 <!-- TITLE -->
                 <h1 class="text-2xl font-black mt-2 text-white">
 
-                    {{ isWicketFallen
-                    ? 'Select Next Batsman'
-                    : 'Select Opening Batsman' }}
+                    {{ isOverComplete
+                    ? 'Select Next Bowler'
+                    : 'Select Opening Bowler' }}
 
                 </h1>
 
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col sm:flex-row sm:space-y-0 space-y-4 items-start justify-between">
                     <!-- DESCRIPTION -->
                     <p class="text-zinc-400 mt-2">
 
-                        {{ isWicketFallen
-                        ? 'Choose who comes to the crease next.'
-                        : 'Choose who will open the innings.' }}
+                        {{ isOverComplete
+                        ? 'Choose who comes to bowl next.'
+                        : 'Choose who will bowl the opening over.' }}
 
                     </p>
 
-                    @if(selectedBatsman){
-                    <button (click)="showBatsmenDialog = !showBatsmenDialog"
+                    @if(selectedBowler){
+                    <button (click)="confirmBowler()"
                         class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20 backdrop-blur-xl text-[#FBBF24]
                         font-black tracking-wide  shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20
                         hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
@@ -535,12 +470,12 @@
             <div class="grid grid-cols-2 sm:grid-cols-3
             gap-4 p-6 max-h-[60vh] overflow-y-auto">
 
-                @for(player of showOpeningTeam;
+                @for(player of availableBowlers;
                 track player.id){
 
                 <div (click)="selectBowler(player)" class="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer hover:scale-[1.03]
                     active:scale-[0.98] transition-all duration-300"
-                    [ngClass]="{'border-[#FBBF24] bg-[#FBBF24]/10 border-4 shadow-[0_0_30px_rgba(251,191,36,0.25)]': selectedBatsman?.id === player.id, 'opacity-50': selectedBatsman?.id !== player.id}">
+                    [ngClass]="{'border-[#FBBF24] bg-[#FBBF24]/10 border-4 shadow-[0_0_30px_rgba(251,191,36,0.25)]': selectedBowler?.id === player.id, 'opacity-50': selectedBowler?.id !== player.id}">
 
                     <!-- IMAGE -->
                     <img [src]="player.photoURL" class="absolute inset-0
@@ -579,3 +514,6 @@
     }
 
 </div>
+
+
+// Start from creating second innings start overlay
