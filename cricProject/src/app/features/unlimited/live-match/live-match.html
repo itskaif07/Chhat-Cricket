@@ -244,15 +244,13 @@
             </button>
 
             <!-- UNDO -->
-            <button (click)="undo()" class="score-btn-undo w-1/2 h-20" [ngClass]="{'opacity-50':lastAction === ''}">
+            <button (click)="undo()" [disabled]="!canUndo" class="score-btn-undo w-1/2 h-20"
+                [ngClass]="{'opacity-50':lastAction === '' || !canUndo}">
                 Undo
             </button>
 
         </div>
 
-        <div class="flex items-center justify-center w-full h-32 score-btn-wicket text-2xl">
-            End Innings
-        </div>
 
     </section>
 
@@ -516,4 +514,314 @@
 </div>
 
 
-// Start from creating second innings start overlay
+
+<!-- Innings break overlay -->
+
+@if(totalWickets >= maxWickets){
+
+<div class="fixed inset-0 z-50
+  bg-[#050B18]/95 backdrop-blur-2xl
+  flex items-center justify-center p-6">
+
+    <!-- CARD -->
+    <div class="w-full max-w-xl rounded-[2.5rem]
+    border border-white/10
+    bg-linear-to-b from-[#0B1220] to-[#07101C]
+    shadow-[0_0_80px_rgba(0,0,0,0.7)]
+    overflow-hidden">
+
+        <!-- TOP GLOW -->
+        <div class="h-2 w-full
+      bg-linear-to-r
+      from-amber-400
+      via-orange-500
+      to-amber-400">
+        </div>
+
+        <!-- CONTENT -->
+        <div class="p-8 sm:p-10 text-center">
+
+            <!-- LABEL -->
+            <p class="uppercase tracking-[0.4em]
+        text-xs font-black text-amber-400">
+
+                Innings Break
+
+            </p>
+
+            <!-- TITLE -->
+            <h1 class="mt-4 text-5xl sm:text-6xl
+        font-black text-white">
+
+                Chase Begins
+
+            </h1>
+
+            <!-- SCORE -->
+            <div class="mt-8 rounded-4xl
+        border border-white/10
+        bg-white/5 p-6">
+
+                <p class="text-zinc-400 text-lg font-semibold">
+
+                    Team
+                    {{ currentBattingTeamName }}
+
+                    scored:
+
+                </p>
+
+                <h1 class="mt-3 text-7xl
+          font-black text-amber-400">
+
+                    {{ totalRuns }}
+
+                </h1>
+
+                <p class="mt-2 text-zinc-500">
+
+                    Runs
+
+                </p>
+
+            </div>
+
+            <!-- TARGET -->
+            <div class="mt-6 flex items-center
+        justify-center gap-3">
+
+                <p class="text-zinc-400 text-xl">
+
+                    Target:
+
+                </p>
+
+                <h1 class="text-4xl font-black
+          text-green-400">
+
+                    {{ totalRuns + 1 }}
+
+                </h1>
+
+            </div>
+
+            <!-- BUTTON -->
+            <button (click)="startSecondInnings()" class="mt-10 relative overflow-hidden cursor-pointer
+        px-10 py-4 rounded-3xl
+        bg-amber-400/15
+        border border-amber-400/20
+        text-amber-400
+        font-black text-lg tracking-wide
+        hover:scale-[1.03]
+        active:scale-[0.98]
+        transition-all duration-300
+        shadow-[0_0_30px_rgba(251,191,36,0.18)]">
+
+                <!-- GLOW -->
+                <div class="absolute inset-0
+          bg-linear-to-r
+          from-transparent
+          via-amber-400/10
+          to-transparent">
+                </div>
+
+                <span class="relative z-10">
+
+                    Start Second Innings →
+
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+}
+
+
+@if(matchResult){
+<!-- MATCH RESULT OVERLAY -->
+<div class="fixed inset-0 z-50
+  bg-[#050B18]/95 backdrop-blur-2xl
+  flex items-center justify-center p-6">
+
+    <!-- CARD -->
+    <div class="relative overflow-hidden
+    w-full max-w-2xl rounded-[2.8rem]
+    border border-white/10
+    bg-linear-to-b from-[#0B1220] to-[#07101C]
+    shadow-[0_0_100px_rgba(0,0,0,0.7)]">
+
+        <!-- TOP STRIP -->
+        <div class="h-2 w-full" [ngClass]="{
+  'text-green-400': matchResult === 'won',
+  'text-red-400': matchResult === 'lost',
+  'text-amber-400': matchResult === 'tie'
+}">
+        </div>
+
+        <!-- GLOW ORB -->
+        <div class="absolute -top-24 left-1/2
+      -translate-x-1/2 w-72 h-72
+      rounded-full blur-3xl opacity-20" [ngClass]="{
+  'text-green-400': matchResult === 'won',
+  'text-red-400': matchResult === 'lost',
+  'text-amber-400': matchResult === 'tie'
+}">
+        </div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10
+      px-8 py-12 sm:px-14
+      text-center">
+
+            <!-- SMALL LABEL -->
+            <p class="uppercase tracking-[0.45em]
+        text-xs font-black"  [ngClass]="{
+  'text-green-400': matchResult === 'won',
+  'text-red-400': matchResult === 'lost',
+  'text-amber-400': matchResult === 'tie'
+}">
+
+                MATCH RESULT
+
+            </p>
+
+            <!-- BIG RESULT -->
+            <h1 class="mt-5 text-6xl sm:text-7xl
+        font-black leading-none" [ngClass]="{
+  'text-green-400': matchResult === 'won',
+  'text-red-400': matchResult === 'lost',
+  'text-amber-400': matchResult === 'tie'
+}">
+
+        {{matchResultTitle}}
+
+            </h1>
+
+            <!-- MESSAGE -->
+            <p class="mt-6 text-xl text-zinc-300
+        leading-relaxed">
+
+                {{ matchResultMessage}}
+
+            </p>
+
+            <!-- SCORE BLOCK -->
+            <div class="mt-10 rounded-4xl
+        border border-white/10
+        bg-white/5 backdrop-blur-xl
+        p-7">
+
+                <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs font-bold">
+
+                    Final Score
+
+                </p>
+
+                <h1 class="mt-4 text-7xl
+          font-black text-white">
+
+                    {{ totalRuns }}
+
+                    <span class="text-zinc-500">
+
+                        /{{ totalWickets }}
+
+                    </span>
+
+                </h1>
+
+                <p class="mt-3 text-zinc-400 text-lg">
+
+                    in {{ overs }} Overs
+
+                </p>
+
+            </div>
+
+            <!-- MOTM
+            <div class="mt-8 rounded-4xl
+        border border-white/10
+        bg-linear-to-r from-white/5 to-white/3
+        p-6">
+
+                <p class="uppercase tracking-[0.35em]
+          text-xs font-black text-amber-400">
+
+                    MAN OF THE MATCH
+
+                </p>
+
+                <div class="mt-5 flex items-center
+          justify-center gap-5">
+
+                    PHOTO
+                    <img [src]="manOfTheMatch.photoURL" class="w-20 h-20 rounded-full
+            object-cover border-4 border-amber-400">
+
+                    INFO
+                    <div class="text-left">
+
+                        <h1 class="text-3xl font-black
+              text-white">
+
+                            {{ manOfTheMatch.displayName }}
+
+                        </h1>
+
+                        <p class="mt-1 text-zinc-400">
+
+                            Match Winning Performance
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div> -->
+
+            <!-- BUTTONS -->
+            <div class="mt-10 flex flex-col sm:flex-row
+        items-center justify-center gap-4">
+
+                <!-- SCORECARD -->
+                <button class="px-8 py-4 rounded-3xl
+          bg-white/8 border border-white/10
+          text-white font-black tracking-wide
+          hover:bg-white/12
+          hover:scale-[1.03]
+          active:scale-[0.98]
+          transition-all duration-300">
+
+                    View Scorecard
+
+                </button>
+
+                <!-- HOME -->
+                <button class="px-8 py-4 rounded-3xl
+          font-black tracking-wide
+          transition-all duration-300
+          hover:scale-[1.03]
+          active:scale-[0.98]" [ngClass]="{
+  'text-green-400': matchResult === 'won',
+  'text-red-400': matchResult === 'lost',
+  'text-amber-400': matchResult === 'tie'
+}">
+
+                    Finish Match
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+}

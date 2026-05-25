@@ -3,8 +3,6 @@ import { MatchSetupService } from '../../../services/MatchSetup/match-setup-serv
 import { Player } from '../../../shared/models/player.model';
 import { CommonModule } from '@angular/common';
 import { PlayerStats } from '../../../shared/models/playerStats.model'
-import se from '@angular/common/locales/se';
-import fa from '@angular/common/locales/fa';
 
 @Component({
   selector: 'app-live-match',
@@ -25,13 +23,17 @@ export class LiveMatch implements OnInit {
   tossWinner: 'A' | 'B' | '' = ''
   battingFirst: 'A' | 'B' | '' = ''
   bowlingFirst: 'A' | 'B' | '' = ''
-  currentInnings: 1 | 2 = 1
-  isInningsOver: boolean = false
 
+  currentInnings: 1 | 2 = 1
+  firstInningRuns:number = 0
+  
+  isInningsOver: boolean = false
   showBatsmenDialog:boolean = true
   showBowlerDialog:boolean = false
   isWicketFallen = false
   isOverComplete = false
+  canUndo:boolean = false
+  matchResult:'won'|'lost'|'tie'|null = null
 
 
   currentBatsman:Player | null = null
@@ -104,7 +106,6 @@ export class LiveMatch implements OnInit {
 }
 
 
-//To show the dialog box of players of the team that is batting and bowling first
 
 get currentBattingTeam():Player[]{
  if(this.currentInnings === 1){
@@ -122,6 +123,14 @@ get currentBowlingTeam():Player[]{
  return this.battingFirst === 'A'? this.teamA : this.teamB
 }
 
+get currentBattingTeamName(): "A" | "B"{
+  if(this.currentInnings === 1){
+    return this.battingFirst === 'A' ? 'A' : 'B'
+  }
+
+  return this.battingFirst === 'A' ? 'B' : 'A' 
+}
+
 get availableBowlers(): Player[]{
  return this.currentBowlingTeam.filter(player => player?.id !== this.currentBowler?.id)
 }
@@ -137,208 +146,6 @@ get maxWickets(){
   return this.currentBattingTeam.length
 }
 
- selectBatsman(player: Player){
-  this.selectedBatsman = player
- }
-
- selectBowler(player: Player){
-  if(player === this.selectedBowler){
-    return
-  }
-  this.selectedBowler = player 
- }
-
-
- //confirm selection
-
- confirmBatsman(){
-  this.currentBatsman = this.selectedBatsman
-  this.showBatsmenDialog = false
-  
-  if(!this.isWicketFallen){
-    this.showBowlerDialog = true
-  }
-  this.isWicketFallen = false
-  if(this.selectedBatsman?.id){
-  this.playerStats[this.selectedBatsman?.id].innings += 1
-  }
- }
-
- confirmBowler(){
-  this.currentBowler = this.selectedBowler
-  this.showBowlerDialog = false
-  this.isOverComplete = false
- }
-
- // Score
-
-
- addDot(){
-   this.totalDeliveries += 1
-   this.currentBatsmanBalls += 1
-   this.currentBowlerBalls += 1
-   this.lastAction = '0'
-   this.recentDeliveries.unshift({value:'0', type:'dot'})
-
-   if(this.currentBatsman?.id && this.currentBowler?.id){
-    
-  this.playerStats[this.currentBatsman?.id].ballsFaced += 1
-  this.playerStats[this.currentBowler?.id].ballsDelivered += 1
-   }
-
-   this.manageRecentDeliveries()
-   this.manageOversChange()
-   console.log(this.playerStats)
-  }
-  
-  addFour(){
-    this.totalRuns += 4
-    this.totalDeliveries += 1
-    this.currentBatsmanRuns += 4
-    this.currentBatsmanBalls += 1
-    this.currentBowlerBalls += 1
-    this.currentBowlerRunsConceded += 4
-    this.lastAction = '4'
-    this.recentDeliveries.unshift({value:'4', type:'four'})
-
-    if(this.currentBatsman?.id && this.currentBowler?.id){
-      this.playerStats[this.currentBatsman?.id].runs += 4
-      
-      this.playerStats[this.currentBatsman?.id].ballsFaced += 1
-      this.playerStats[this.currentBatsman?.id].fours += 1
-      
-      this.playerStats[this.currentBowler?.id].ballsDelivered += 1
-      this.playerStats[this.currentBowler?.id].runsConceded += 4
-    }
-
-    this.manageRecentDeliveries()
-    this.manageOversChange()
-}
-
-addSix(){
-  this.totalRuns += 6
-  this.totalDeliveries += 1
-  this.currentBatsmanRuns += 6
-  this.currentBatsmanBalls += 1
-  this.currentBowlerBalls += 1
-  this.currentBowlerRunsConceded += 6
-  this.lastAction = '6'
-  this.recentDeliveries.unshift({value:'6', type:'six'})
-
-    if(this.currentBatsman?.id && this.currentBowler?.id){
-      this.playerStats[this.currentBatsman?.id].runs += 6
-      
-this.playerStats[this.currentBatsman?.id].ballsFaced += 1
-      this.playerStats[this.currentBatsman?.id].sixes += 1
-      
-this.playerStats[this.currentBowler?.id].ballsDelivered += 1
-      this.playerStats[this.currentBowler?.id].runsConceded += 6
-    }
-  
-   this.manageRecentDeliveries()
-   this.manageOversChange()
-  }
-  
-  
-  addWicket(){
-    this.totalWickets += 1
-    this.totalDeliveries += 1
-    this.currentBatsmanBalls = 0
-    this.currentBatsmanRuns = 0
-    this.currentBowlerBalls += 1
-    this.lastAction = 'W'
-    this.showBatsmenDialog = true
-    this.isWicketFallen = true
-    this.selectedBatsman = null
-    this.recentDeliveries.unshift({value:'W', type:'wicket'})
-    this.manageRecentDeliveries()
-    this.manageOversChange()
-
-      if(this.currentBatsman?.id && this.currentBowler?.id){
-      this.playerStats[this.currentBowler?.id].wickets += 1
-      
-        this.playerStats[this.currentBowler?.id].ballsDelivered += 1
-        this.playerStats[this.currentBatsman?.id].ballsFaced += 1
-    }
-
-    if(this.currentBatsman){
-    this.outPlayersIds.push(this.currentBatsman.id!)
-    }
-
-    if(this.totalWickets >= this.maxWickets){
-      this.isInningsOver = true
-    }
-}
-
-addWide(){
-  this.recentDeliveries.unshift({value:'WD', type:'wide'})
-  this.lastAction = 'WD'
-  if(this.recentDeliveries.length > 12){
-    this.recentDeliveries.pop()
-    
-  }
-}
-
-addNoBall(){
-  this.recentDeliveries.unshift({value:'NB', type:'noball'})
-  this.lastAction = 'NB'
-  if(this.recentDeliveries.length > 12){
-  this.recentDeliveries.pop()
-}
-}
-
-
-
-undo(){
-  if(this.lastAction === '4'){
-    this.totalDeliveries -= 1
-    this.totalRuns -= 4
-    this.recentDeliveries.shift()
-  }
-  else if(this.lastAction === '6'){
-     this.totalDeliveries -= 1
-    this.totalRuns -= 6
-    this.recentDeliveries.shift()
-  }
-  else if(this.lastAction === 'W'){
-     this.totalDeliveries -= 1
-    this.totalWickets -= 1
-    this.recentDeliveries.shift()
-  }
-  else if(this.lastAction === '0'){
-    this.totalDeliveries -= 1
-    this.totalRuns -= 0
-    this.recentDeliveries.shift()
-  }
-  else if(this.lastAction === 'WD'){
-    this.recentDeliveries.shift()
-  }
-  else if(this.lastAction === 'NB'){
-    this.recentDeliveries.shift()
-  }
-
-  this.lastAction = ''
-
-}
-
-manageRecentDeliveries(){
-  if(this.recentDeliveries.length > 12){
-    this.recentDeliveries.pop()
-  }
-}
-
-manageOversChange(){
-
-  if(this.totalDeliveries % 6 === 0 &&
-     this.totalDeliveries > 0){
-
-    this.isOverComplete = true
-    this.showBowlerDialog = true
-    this.selectedBowler = null
-
-  }
-
-}
 
 get currentBowlerOvers(): string {
 
@@ -420,6 +227,331 @@ get currentRunRate():string {
   const crr = this.totalRuns/overs
 
   return crr.toFixed(2)
+}
+
+get matchResultMessage(){
+
+  if(this.matchResult === 'won'){
+    return 'Target chased successfully.'
+  }
+
+  if(this.matchResult === 'lost'){
+    return 'The chase fell short.'
+  }
+
+  return 'Both teams finished level.'
+
+}
+
+get matchResultTitle(){
+
+  if(this.matchResult === 'won'){
+    return 'VICTORY'
+  }
+
+  if(this.matchResult === 'lost'){
+    return 'DEFEAT'
+  }
+
+  return 'TIED'
+
+}
+
+
+ selectBatsman(player: Player){
+  this.selectedBatsman = player
+ }
+
+ selectBowler(player: Player){
+  if(player === this.selectedBowler){
+    return
+  }
+  this.selectedBowler = player 
+ }
+
+
+ //confirm selection
+
+ confirmBatsman(){
+  this.currentBatsman = this.selectedBatsman
+  this.showBatsmenDialog = false
+  
+  if(!this.isWicketFallen){
+    this.showBowlerDialog = true
+  }
+  this.isWicketFallen = false
+  if(this.selectedBatsman?.id){
+  this.playerStats[this.selectedBatsman?.id].innings += 1
+  }
+ }
+
+ confirmBowler(){
+  this.currentBowler = this.selectedBowler
+  this.showBowlerDialog = false
+  this.isOverComplete = false
+ }
+
+ // Score
+
+
+ addDot(){
+   this.totalDeliveries += 1
+   this.currentBatsmanBalls += 1
+   this.currentBowlerBalls += 1
+   this.lastAction = '0'
+   this.recentDeliveries.unshift({value:'0', type:'dot'})
+
+   if(this.currentBatsman?.id && this.currentBowler?.id){
+    
+  this.playerStats[this.currentBatsman?.id].ballsFaced += 1
+  this.playerStats[this.currentBowler?.id].ballsDelivered += 1
+   }
+
+   this.manageRecentDeliveries()
+   this.manageOversChange()
+   console.log(this.playerStats)
+  }
+  
+  addFour(){
+    this.totalRuns += 4
+    this.totalDeliveries += 1
+    this.currentBatsmanRuns += 4
+    this.currentBatsmanBalls += 1
+    this.currentBowlerBalls += 1
+    this.currentBowlerRunsConceded += 4
+    this.lastAction = '4'
+    this.recentDeliveries.unshift({value:'4', type:'four'})
+
+    if(this.currentBatsman?.id && this.currentBowler?.id){
+      this.playerStats[this.currentBatsman?.id].runs += 4
+      
+      this.playerStats[this.currentBatsman?.id].ballsFaced += 1
+      this.playerStats[this.currentBatsman?.id].fours += 1
+      
+      this.playerStats[this.currentBowler?.id].ballsDelivered += 1
+      this.playerStats[this.currentBowler?.id].runsConceded += 4
+    }
+
+    this.manageRecentDeliveries()
+    this.manageOversChange()
+    this.checkMatchResult()
+}
+
+addSix(){
+  this.totalRuns += 6
+  this.totalDeliveries += 1
+  this.currentBatsmanRuns += 6
+  this.currentBatsmanBalls += 1
+  this.currentBowlerBalls += 1
+  this.currentBowlerRunsConceded += 6
+  this.lastAction = '6'
+  this.recentDeliveries.unshift({value:'6', type:'six'})
+
+    if(this.currentBatsman?.id && this.currentBowler?.id){
+      this.playerStats[this.currentBatsman?.id].runs += 6
+      
+this.playerStats[this.currentBatsman?.id].ballsFaced += 1
+      this.playerStats[this.currentBatsman?.id].sixes += 1
+      
+this.playerStats[this.currentBowler?.id].ballsDelivered += 1
+      this.playerStats[this.currentBowler?.id].runsConceded += 6
+    }
+  
+   this.manageRecentDeliveries()
+   this.manageOversChange()
+   this.checkMatchResult()
+  }
+  
+  
+  addWicket(){
+    this.totalWickets += 1
+    this.totalDeliveries += 1
+    this.currentBatsmanBalls = 0
+    this.currentBatsmanRuns = 0
+    this.currentBowlerBalls += 1
+    this.lastAction = 'W'
+    this.showBatsmenDialog = true
+    this.isWicketFallen = true
+    this.selectedBatsman = null
+    this.recentDeliveries.unshift({value:'W', type:'wicket'})
+    this.manageRecentDeliveries()
+    this.manageOversChange()
+    this.checkMatchResult()
+
+      if(this.currentBatsman?.id && this.currentBowler?.id){
+      this.playerStats[this.currentBowler?.id].wickets += 1
+      
+        this.playerStats[this.currentBowler?.id].ballsDelivered += 1
+        this.playerStats[this.currentBatsman?.id].ballsFaced += 1
+    }
+
+    if(this.currentBatsman){
+    this.outPlayersIds.push(this.currentBatsman.id!)
+    }
+
+    if(this.totalWickets >= this.maxWickets){
+      this.isInningsOver = true
+    }
+}
+
+addWide(){
+  this.recentDeliveries.unshift({value:'WD', type:'wide'})
+  this.lastAction = 'WD'
+  if(this.recentDeliveries.length > 12){
+    this.recentDeliveries.pop()
+    
+  }
+}
+
+addNoBall(){
+  this.recentDeliveries.unshift({value:'NB', type:'noball'})
+  this.lastAction = 'NB'
+  if(this.recentDeliveries.length > 12){
+  this.recentDeliveries.pop()
+}
+}
+
+
+
+undo(){
+  if(this.lastAction === '4'){
+    this.totalDeliveries -= 1
+    this.totalRuns -= 4
+    this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1
+    this.playerStats[this.currentBatsman?.id!].runs -= 4
+    this.playerStats[this.currentBowler?.id!].runsConceded -= 4
+    this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1
+    this.recentDeliveries.shift()
+  }
+  else if(this.lastAction === '6'){
+     this.totalDeliveries -= 1
+    this.totalRuns -= 6
+    this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1
+    this.playerStats[this.currentBatsman?.id!].runs -= 6
+    this.playerStats[this.currentBowler?.id!].runsConceded -= 6
+    this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1
+    this.recentDeliveries.shift()
+  }
+  else if(this.lastAction === 'W'){
+     this.totalDeliveries -= 1
+    this.totalWickets -= 1
+    this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1
+    this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1
+    this.playerStats[this.currentBowler?.id!].wickets -= 1
+    this.recentDeliveries.shift()
+  }
+  else if(this.lastAction === '0'){
+    this.totalDeliveries -= 1
+    this.totalRuns -= 0
+    this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1
+    this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1
+    this.recentDeliveries.shift()
+  }
+  else if(this.lastAction === 'WD'){
+    this.recentDeliveries.shift()
+  }
+  else if(this.lastAction === 'NB'){
+    this.recentDeliveries.shift()
+  }
+
+  this.lastAction = ''
+
+}
+
+manageRecentDeliveries(){
+  if(this.recentDeliveries.length > 15){
+    this.recentDeliveries.pop()
+  }
+}
+
+manageOversChange(){
+
+  if(this.totalDeliveries % 6 === 0 &&
+     this.totalDeliveries > 0){
+
+    this.isOverComplete = true
+    this.showBowlerDialog = true
+    this.selectedBowler = null
+    this.canUndo = false
+  }
+
+  if(this.totalDeliveries%6 === 1){
+    this.canUndo = true
+  }
+
+}
+
+startSecondInnings(){
+
+  this.firstInningRuns =
+    this.totalRuns
+
+  this.currentInnings = 2
+
+  this.totalRuns = 0
+  this.totalWickets = 0
+  this.totalDeliveries = 0
+
+  this.currentBatsman = null
+  this.currentBowler = null
+
+  this.selectedBatsman = null
+  this.selectedBowler = null
+
+  this.outPlayersIds = []
+
+  this.recentDeliveries = []
+
+  this.isWicketFallen = false
+  this.isOverComplete = false
+
+  this.showBowlerDialog = false
+  this.showBatsmenDialog = true
+
+}
+
+checkMatchResult(){
+
+  if(this.currentInnings !== 2){
+    return
+  }
+
+  // WIN
+
+  if(this.totalRuns > this.firstInningRuns){
+
+    this.matchResult = 'won'
+
+    return
+
+  }
+
+  // LOSS
+
+  if(
+    this.totalRuns < this.firstInningRuns
+    &&
+    this.totalWickets >= this.maxWickets
+  ){
+
+    this.matchResult = 'lost'
+
+    return
+
+  }
+
+  // TIE
+
+  if(
+    this.totalRuns === this.firstInningRuns
+    &&
+    this.totalWickets >= this.maxWickets
+  ){
+
+    this.matchResult = 'tie'
+
+  }
+
 }
  
 }
