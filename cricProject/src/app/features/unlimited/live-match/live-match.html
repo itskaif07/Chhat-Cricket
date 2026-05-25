@@ -69,104 +69,133 @@
         <!-- ========================= -->
         <!-- MATCH PLAYERS -->
         <!-- ========================= -->
+<div class="w-full rounded-4xl
+    border border-white/10
+    bg-white/3 backdrop-blur-2xl
+    relative overflow-hidden
+    flex items-center
+    px-4 py-5 sm:px-6 sm:py-6
+    gap-4">
 
-        <div
-            class="w-full h-[20vh] sm:h-[24vh] rounded-4xl border border-white/10 bg-white/3 backdrop-blur-2xl relative overflow-hidden flex items-center justify-between px-2">
+    <!-- BATTER -->
+    <div class="flex-1 min-w-0">
 
-            <!-- BATTER -->
-            <div class="w-[45%]">
+        <!-- LABEL -->
+        <p class="text-[10px] sm:text-xs
+            uppercase tracking-[0.18em]
+            sm:tracking-[0.25em]
+            text-zinc-500 font-black">
 
-                <p class="text-xs uppercase
-        tracking-[0.25em]
+            Current Batsman
 
-        text-zinc-500 font-bold">
+        </p>
 
-                    Current Batsman
+        <!-- NAME -->
+        <h1 class="text-2xl sm:text-3xl
+            font-black mt-2 truncate">
+
+            {{selectedBatsman?.displayName || 'Batsman'}}
+
+        </h1>
+
+        <!-- STATS -->
+        <div class="flex items-end gap-3 mt-3">
+
+            <!-- RUNS -->
+            <h1 class="text-4xl sm:text-5xl
+                font-black text-[#FBBF24]
+                leading-none">
+
+                {{playerStats[currentBatsman?.id!]?.runs || 0}}
+
+            </h1>
+
+            <!-- BALLS / SR -->
+            <div class="pb-1">
+
+                <p class="text-zinc-400 text-xs sm:text-sm">
+
+                    {{playerStats[currentBatsman?.id!]?.ballsFaced || 0}}
+                    Balls
 
                 </p>
 
-                <h1 class="text-3xl font-black mt-2">
+                <p class="text-zinc-500 text-xs sm:text-sm mt-1">
 
-                    {{selectedBatsman?.displayName || 'Batsman'}}
+                    SR {{currentBatsmanStrikeRate}}
 
-                </h1>
-
-                <div class="flex items-end gap-3 mt-2">
-
-                    <h1 class="text-5xl font-black
-            text-[#FBBF24]">
-
-                        {{playerStats[currentBatsman?.id!]?.runs}}
-
-                    </h1>
-
-                    <div class="mb-1">
-
-                        <p class="text-zinc-400 text-sm">
-
-                            {{playerStats[currentBatsman?.id!]?.ballsFaced}} Balls
-
-                        </p>
-
-                        <p class="text-zinc-500 text-xs mt-1">
-
-                            SR {{currentBatsmanStrikeRate }}
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- DIVIDER -->
-            <div class="h-20 w-px bg-linear-to-b from-transparent via-white/10 to-transparent">
-            </div>
-
-            <!-- BOWLER -->
-            <div class="w-[45%] text-right">
-
-                <p class="text-xs uppercase tracking-[0.25em] text-zinc-500 font-bold">
-                    Current Bowler
                 </p>
-
-                <h1 class="text-3xl font-black mt-2">
-                    {{selectedBowler?.displayName || 'Bowler' }}
-                </h1>
-
-                <div class="flex items-end justify-end gap-3 mt-2">
-
-                    <div class="mb-1 text-right">
-
-                        <p class="text-zinc-400 text-sm">
-
-                            {{currentBowlerOvers}} Overs
-
-                        </p>
-
-                        <p class="text-zinc-500 text-xs mt-1">
-
-                            Eco {{currentBowlerEconomy || 0}}
-
-                        </p>
-
-                    </div>
-
-                    <h1 class="text-4xl font-black
-            text-blue-400">
-
-                        {{playerStats[currentBowler?.id!]?.runsConceded ||
-                        0}}/{{playerStats[currentBowler?.id!]?.wickets || 0}}
-
-                    </h1>
-
-                </div>
 
             </div>
 
         </div>
 
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="self-stretch w-px
+        bg-linear-to-b
+        from-transparent
+        via-white/10
+        to-transparent">
+    </div>
+
+    <!-- BOWLER -->
+    <div class="flex-1 min-w-0 text-right">
+
+        <!-- LABEL -->
+        <p class="text-[10px] sm:text-xs
+            uppercase tracking-[0.18em]
+            sm:tracking-[0.25em]
+            text-zinc-500 font-black">
+
+            Current Bowler
+
+        </p>
+
+        <!-- NAME -->
+        <h1 class="text-2xl sm:text-3xl
+            font-black mt-2 truncate">
+
+            {{selectedBowler?.displayName || 'Bowler'}}
+
+        </h1>
+
+        <!-- STATS -->
+        <div class="flex items-end
+            justify-end gap-3 mt-3">
+
+            <!-- OVERS / ECO -->
+            <div class="pb-1 text-right shrink-0">
+
+                <p class="text-zinc-400 text-xs sm:text-sm">
+
+                    {{currentBowlerOvers}} Overs
+
+                </p>
+
+                <p class="text-zinc-500 text-xs sm:text-sm mt-1">
+
+                    Eco {{currentBowlerEconomy || 0}}
+
+                </p>
+
+            </div>
+
+            <!-- FIGURES -->
+            <h1 class="text-3xl sm:text-4xl
+                font-black text-blue-400
+                leading-none shrink-0">
+
+                {{playerStats[currentBowler?.id!]?.runsConceded || 0}}/{{playerStats[currentBowler?.id!]?.wickets || 0}}
+
+            </h1>
+
+        </div>
+
+    </div>
+
+</div>
         <!-- ========================= -->
         <!-- RECENT BALLS -->
         <!-- ========================= -->
@@ -646,11 +675,11 @@
 <!-- MATCH RESULT OVERLAY -->
 <div class="fixed inset-0 z-50
   bg-[#050B18]/95 backdrop-blur-2xl
-  flex items-center justify-center p-6">
+  flex items-center justify-center w-full h-full min-[400px]:p-6">
 
     <!-- CARD -->
-    <div class="relative overflow-hidden
-    w-full max-w-2xl rounded-[2.8rem]
+    <div class="relative
+    w-full h-full overflow-auto max-w-2xl rounded-[2.8rem]
     border border-white/10
     bg-linear-to-b from-[#0B1220] to-[#07101C]
     shadow-[0_0_100px_rgba(0,0,0,0.7)]">
@@ -680,7 +709,7 @@
 
             <!-- SMALL LABEL -->
             <p class="uppercase tracking-[0.45em]
-        text-xs font-black"  [ngClass]="{
+        text-xs font-black" [ngClass]="{
   'text-green-400': matchResult === 'won',
   'text-red-400': matchResult === 'lost',
   'text-amber-400': matchResult === 'tie'
@@ -693,12 +722,17 @@
             <!-- BIG RESULT -->
             <h1 class="mt-5 text-6xl sm:text-7xl
         font-black leading-none" [ngClass]="{
-  'text-green-400': matchResult === 'won',
-  'text-red-400': matchResult === 'lost',
-  'text-amber-400': matchResult === 'tie'
-}">
+                    'text-[#94F505]':
+                        winningTeam === 'A',
 
-        {{matchResultTitle}}
+                    'text-purple-400':
+                     winningTeam === 'B',
+
+                    'text-amber-400':
+                        matchResult === 'tie'
+
+                    }">
+                {{ resultMessage }}
 
             </h1>
 
@@ -743,7 +777,7 @@
 
             </div>
 
-            <!-- MOTM
+            <!-- MOTM -->
             <div class="mt-8 rounded-4xl
         border border-white/10
         bg-linear-to-r from-white/5 to-white/3
@@ -757,25 +791,25 @@
                 </p>
 
                 <div class="mt-5 flex items-center
-          justify-center gap-5">
+          justify-center w-full space-x-3 min-[450px]:space-x-6">
 
-                    PHOTO
-                    <img [src]="manOfTheMatch.photoURL" class="w-20 h-20 rounded-full
-            object-cover border-4 border-amber-400">
+                    <!-- PHOTO -->
+                    <img [src]="Motm?.playerPhoto" class="w-24 h-24 rounded-full
+            object-cover border-2 border-amber-400">
 
-                    INFO
+                    <!-- INFO -->
                     <div class="text-left">
 
                         <h1 class="text-3xl font-black
               text-white">
 
-                            {{ manOfTheMatch.displayName }}
+                            {{ Motm?.playerName }}
 
                         </h1>
 
-                        <p class="mt-1 text-zinc-400">
+                        <p class="mt-1 text-sm text-zinc-400">
 
-                            Match Winning Performance
+                            {{Motm?.runs}} Runs & {{Motm?.wickets}} Wickets
 
                         </p>
 
@@ -783,7 +817,7 @@
 
                 </div>
 
-            </div> -->
+            </div>
 
             <!-- BUTTONS -->
             <div class="mt-10 flex flex-col sm:flex-row
@@ -803,7 +837,7 @@
                 </button>
 
                 <!-- HOME -->
-                <button class="px-8 py-4 rounded-3xl
+                <button [routerLink]="['/']" class="px-8 py-4 rounded-3xl
           font-black tracking-wide
           transition-all duration-300
           hover:scale-[1.03]

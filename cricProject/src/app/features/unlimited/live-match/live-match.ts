@@ -3,10 +3,11 @@ import { MatchSetupService } from '../../../services/MatchSetup/match-setup-serv
 import { Player } from '../../../shared/models/player.model';
 import { CommonModule } from '@angular/common';
 import { PlayerStats } from '../../../shared/models/playerStats.model'
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-live-match',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './live-match.html',
   styleUrl: './live-match.css',
 })
@@ -87,6 +88,7 @@ export class LiveMatch implements OnInit {
 
         playerId: player.id,
         playerName: player.displayName,
+        playerPhoto: player.photoURL || '',
         matches: 1,
         innings: 0,
         runs: 0,
@@ -254,6 +256,74 @@ get matchResultTitle(){
   }
 
   return 'TIED'
+
+}
+
+get resultMessage(){
+
+  const firstBattingTeam =
+    this.battingFirst
+
+  const secondBattingTeam =
+    this.battingFirst === 'A'
+    ? 'B'
+    : 'A'
+
+  // CHASING TEAM WON
+
+  if(this.matchResult === 'won'){
+
+    const wicketsLeft =
+      this.maxWickets -
+      this.totalWickets
+
+    return `
+      Team ${secondBattingTeam}
+      won by
+      ${wicketsLeft} wickets
+    `
+
+  }
+
+  // DEFENDING TEAM WON
+
+  if(this.matchResult === 'lost'){
+
+    const runMargin =
+      this.firstInningRuns -
+      this.totalRuns
+
+    return `
+      Team ${firstBattingTeam}
+      won by
+      ${runMargin} runs
+    `
+
+  }
+
+  return 'Match Tied'
+
+}
+
+get winningTeam(){
+
+  if(this.matchResult === 'tie'){
+    return null
+  }
+
+  // chasing team won
+
+  if(this.matchResult === 'won'){
+
+    return this.battingFirst === 'A'
+      ? 'B'
+      : 'A'
+
+  }
+
+  // defending team won
+
+  return this.battingFirst
 
 }
 
@@ -552,6 +622,25 @@ checkMatchResult(){
 
   }
 
+}
+
+get Motm(){
+  let bestPlayer = null
+  let bestScore = 0
+
+  for (const playerId in this.playerStats) {
+    let player = this.playerStats[playerId]
+
+    const score = (player.runs + player.wickets * 25)
+
+    if(score > bestScore){
+      bestScore = score
+      bestPlayer = player
+    }
+    
+  }
+
+  return bestPlayer
 }
  
 }

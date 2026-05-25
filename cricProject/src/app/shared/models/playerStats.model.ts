@@ -4,6 +4,8 @@ export interface PlayerStats {
 
   playerName: string
 
+  playerPhoto: string
+
   matches: number
 
   innings: number
