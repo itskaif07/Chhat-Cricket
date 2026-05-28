@@ -69,7 +69,7 @@
         </div>
 
         <div class="flex items-center justify-center md:justify-end md:px-4 w-full ">
-            @if(selectedPlayers.length > 1){
+            @if(selectedPlayers.length > 3){
 
         <button (click)="goToTossPage()" class="group w-11/12 md:w-1/2 lg:w-[28%] h-15 px-6 rounded-[1.7rem] bg-[#38BDF8]/10 border border-[#38BDF8]/20
         backdrop-blur-2xl flex items-center justify-center gap-4 shadow-[0_0_40px_rgba(56,189,248,0.12)] hover:bg-[#38BDF8]/15  hover:scale-[1.02]
@@ -88,7 +88,7 @@
             </svg>
         
             <!-- TEXT -->
-            <h1 class="text-white text-lg font-black tracking-wide">
+            <h1 class="text-white text-lg font-black tracking-wide cursor-pointer">
                 Go to Match Toss
             </h1>
         

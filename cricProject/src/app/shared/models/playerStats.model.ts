@@ -24,5 +24,21 @@ export interface PlayerStats {
 
   runsConceded: number
 
+  dismissalType: 'caught' | 'bowled' | 'offside' | null 
+
+  dismissedBy: string
+
+  caughtBy?: string
+
+  fifty: number
+
+  hundred: number
+
+  maiden: number
+
+  hasScoredFifty: boolean
+  
+hasScoredHundred: boolean
+
 
 }

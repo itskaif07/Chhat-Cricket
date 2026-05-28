@@ -60,6 +60,15 @@
 
                 </p>
 
+                @if(currentInnings===2){
+
+                <p class="text-zinc-400 text-sm">
+
+                    Required {{runsNeeded}} runs
+
+                </p>
+                }
+
             </div>
 
         </div>
@@ -69,133 +78,134 @@
         <!-- ========================= -->
         <!-- MATCH PLAYERS -->
         <!-- ========================= -->
-<div class="w-full rounded-4xl
-    border border-white/10
-    bg-white/3 backdrop-blur-2xl
-    relative overflow-hidden
-    flex items-center
-    px-4 py-5 sm:px-6 sm:py-6
-    gap-4">
+        <div class="w-full rounded-4xl
+                border border-white/10
+                 bg-white/3 backdrop-blur-2xl
+                        relative overflow-hidden
+                        flex items-center
+                    px-4 py-5 sm:px-6 sm:py-6
+                gap-4">
 
-    <!-- BATTER -->
-    <div class="flex-1 min-w-0">
+            <!-- BATTER -->
+            <div class="flex-1 min-w-0">
 
-        <!-- LABEL -->
-        <p class="text-[10px] sm:text-xs
+                <!-- LABEL -->
+                <p class="text-[10px] sm:text-xs
             uppercase tracking-[0.18em]
             sm:tracking-[0.25em]
             text-zinc-500 font-black">
 
-            Current Batsman
+                    Current Batsman
 
-        </p>
+                </p>
 
-        <!-- NAME -->
-        <h1 class="text-2xl sm:text-3xl
+                <!-- NAME -->
+                <h1 class="text-2xl sm:text-3xl
             font-black mt-2 truncate">
 
-            {{selectedBatsman?.displayName || 'Batsman'}}
+                    {{selectedBatsman?.displayName || 'Batsman'}}
 
-        </h1>
+                </h1>
 
-        <!-- STATS -->
-        <div class="flex items-end gap-3 mt-3">
+                <!-- STATS -->
+                <div class="flex items-end gap-3 mt-3">
 
-            <!-- RUNS -->
-            <h1 class="text-4xl sm:text-5xl
+                    <!-- RUNS -->
+                    <h1 class="text-4xl sm:text-5xl
                 font-black text-[#FBBF24]
                 leading-none">
 
-                {{playerStats[currentBatsman?.id!]?.runs || 0}}
+                        {{playerStats[currentBatsman?.id!]?.runs || 0}}
 
-            </h1>
+                    </h1>
 
-            <!-- BALLS / SR -->
-            <div class="pb-1">
+                    <!-- BALLS / SR -->
+                    <div class="pb-1">
 
-                <p class="text-zinc-400 text-xs sm:text-sm">
+                        <p class="text-zinc-400 text-xs sm:text-sm">
 
-                    {{playerStats[currentBatsman?.id!]?.ballsFaced || 0}}
-                    Balls
+                            {{playerStats[currentBatsman?.id!]?.ballsFaced || 0}}
+                            Balls
 
-                </p>
+                        </p>
 
-                <p class="text-zinc-500 text-xs sm:text-sm mt-1">
+                        <p class="text-zinc-500 text-xs sm:text-sm mt-1">
 
-                    SR {{currentBatsmanStrikeRate}}
+                            SR {{currentBatsmanStrikeRate}}
 
-                </p>
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
-
-    </div>
-
-    <!-- DIVIDER -->
-    <div class="self-stretch w-px
+            <!-- DIVIDER -->
+            <div class="self-stretch w-px
         bg-linear-to-b
         from-transparent
         via-white/10
         to-transparent">
-    </div>
+            </div>
 
-    <!-- BOWLER -->
-    <div class="flex-1 min-w-0 text-right">
+            <!-- BOWLER -->
+            <div class="flex-1 min-w-0 text-right">
 
-        <!-- LABEL -->
-        <p class="text-[10px] sm:text-xs
+                <!-- LABEL -->
+                <p class="text-[10px] sm:text-xs
             uppercase tracking-[0.18em]
             sm:tracking-[0.25em]
             text-zinc-500 font-black">
 
-            Current Bowler
+                    Current Bowler
 
-        </p>
+                </p>
 
-        <!-- NAME -->
-        <h1 class="text-2xl sm:text-3xl
+                <!-- NAME -->
+                <h1 class="text-2xl sm:text-3xl
             font-black mt-2 truncate">
 
-            {{selectedBowler?.displayName || 'Bowler'}}
+                    {{selectedBowler?.displayName || 'Bowler'}}
 
-        </h1>
+                </h1>
 
-        <!-- STATS -->
-        <div class="flex items-end
+                <!-- STATS -->
+                <div class="flex items-end
             justify-end gap-3 mt-3">
 
-            <!-- OVERS / ECO -->
-            <div class="pb-1 text-right shrink-0">
+                    <!-- OVERS / ECO -->
+                    <div class="pb-1 text-right shrink-0">
 
-                <p class="text-zinc-400 text-xs sm:text-sm">
+                        <p class="text-zinc-400 text-xs sm:text-sm">
 
-                    {{currentBowlerOvers}} Overs
+                            {{currentBowlerOvers}} Overs
 
-                </p>
+                        </p>
 
-                <p class="text-zinc-500 text-xs sm:text-sm mt-1">
+                        <p class="text-zinc-500 text-xs sm:text-sm mt-1">
 
-                    Eco {{currentBowlerEconomy || 0}}
+                            Eco {{currentBowlerEconomy || 0}}
 
-                </p>
+                        </p>
 
-            </div>
+                    </div>
 
-            <!-- FIGURES -->
-            <h1 class="text-3xl sm:text-4xl
+                    <!-- FIGURES -->
+                    <h1 class="text-3xl sm:text-4xl
                 font-black text-blue-400
                 leading-none shrink-0">
 
-                {{playerStats[currentBowler?.id!]?.runsConceded || 0}}/{{playerStats[currentBowler?.id!]?.wickets || 0}}
+                        {{playerStats[currentBowler?.id!]?.runsConceded ||
+                        0}}/{{playerStats[currentBowler?.id!]?.wickets || 0}}
 
-            </h1>
+                    </h1>
+
+                </div>
+
+            </div>
 
         </div>
-
-    </div>
-
-</div>
         <!-- ========================= -->
         <!-- RECENT BALLS -->
         <!-- ========================= -->
@@ -221,6 +231,384 @@
 
         </div>
         }
+
+
+
+        <!-- DISMISSAL TYPE DIALOG -->
+        @if(isDismissalDialogOpen){
+
+        <div class="fixed inset-0 z-50
+            bg-black/70 backdrop-blur-md
+            flex items-start justify-center
+            pt-16 p-4">
+
+            <!-- CARD -->
+            <div class="w-full max-w-md
+                rounded-[2.5rem]
+                border border-white/10
+                bg-[#09111F]/95
+                overflow-hidden
+                shadow-[0_0_80px_rgba(0,0,0,0.7)]">
+
+                <!-- HEADER -->
+
+                <div class="w-full flex items-center justify-between px-2">
+
+                    <div class="px-7 pt-7 pb-5
+                    border-b border-white/10">
+
+                        <p class="uppercase tracking-[0.35em]
+                        text-xs text-zinc-500
+                        font-black">
+
+                            Wicket Fallen
+
+                        </p>
+
+                        <h1 class="text-4xl font-black
+                    text-white mt-3">
+
+                            Select Dismissal
+
+                        </h1>
+
+                        <p class="text-zinc-400 mt-3
+                leading-relaxed">
+
+                            How did the batter get out?
+
+                        </p>
+
+                    </div>
+
+                    <!-- CLOSE -->
+                    <button (click)="isDismissalDialogOpen=false" class="w-11 h-11 rounded-2xl cursor-pointer
+                                bg-white/5 border border-white/10
+                                text-zinc-400 text-xl
+                                hover:bg-white/10 transition-all">
+
+                        ✕
+
+                    </button>
+                </div>
+
+                <!-- OPTIONS -->
+                <div class="p-6 space-y-4 bg-[#09111F]/80 backdrop-blur-xl">
+
+                    <!-- BOWLED -->
+                    <button (click)="selectDismissalType('bowled')" class="w-full rounded-3xl cursor-pointer
+                        px-5 py-5
+                        flex items-center justify-between
+                        transition-all duration-300
+                        border" [ngClass]="{
+        
+                        'border-red-400 bg-red-400/20 scale-[1.02]':
+                        dismissalType === 'bowled',
+        
+                        'border-red-400/15 bg-red-400/10':
+                        dismissalType !== 'bowled'
+        
+                        }">
+
+                        <div class="text-left ">
+
+                            <p class="text-red-400
+                                font-black text-xl">
+
+                                Bowled
+
+                            </p>
+
+                            <p class="text-zinc-400
+                                text-sm mt-1">
+
+                                Cleaned up by the bowler
+
+                            </p>
+
+                        </div>
+
+                        <div class="flex items-center gap-3">
+
+                            @if(dismissalType === 'bowled'){
+
+                            <div class="w-8 h-8 rounded-full
+                                bg-red-400 text-black
+                                flex items-center justify-center
+                                font-black">
+
+                                ✓
+
+                            </div>
+
+                            }
+
+                            <h1 class="text-3xl">
+
+                                🎯
+
+                            </h1>
+
+                        </div>
+
+                    </button>
+
+                    <!-- CAUGHT -->
+                    <button (click)="selectDismissalType('caught')" class="w-full rounded-3xl cursor-pointer
+                        px-5 py-5
+                        flex items-center justify-between
+                        transition-all duration-300
+                        border" [ngClass]="{
+        
+                        'border-blue-400 bg-blue-400/20 scale-[1.02]':
+                        dismissalType === 'caught',
+        
+                        'border-blue-400/15 bg-blue-400/10':
+                        dismissalType !== 'caught'
+        
+                        }">
+
+                        <div class="text-left">
+
+                            <p class="text-blue-400
+                                font-black text-xl">
+
+                                Caught
+
+                            </p>
+
+                            <p class="text-zinc-400
+                                text-sm mt-1">
+
+                                Ball caught by a fielder
+
+                            </p>
+
+                        </div>
+
+                        <div class="flex items-center gap-3">
+
+                            @if(dismissalType === 'caught'){
+
+                            <div class="w-8 h-8 rounded-full
+                                bg-blue-400 text-black
+                                flex items-center justify-center
+                                font-black">
+
+                                ✓
+
+                            </div>
+
+                            }
+
+                            <h1 class="text-3xl">
+
+                                🧤
+
+                            </h1>
+
+                        </div>
+
+                    </button>
+
+
+                    <!-- OFFSIDE -->
+                    <button (click)="selectDismissalType('offside')" class="w-full rounded-3xl cursor-pointer px-5 py-5
+                        flex items-center justify-between
+                        transition-all duration-300
+                        border" [ngClass]="{
+        
+                        'border-amber-400 bg-amber-400/20 scale-[1.02]':
+                        dismissalType === 'offside',
+        
+                        'border-amber-400/15 bg-amber-400/10':
+                        dismissalType !== 'offside'
+        
+                        }">
+
+                        <div class="text-left">
+
+                            <p class="text-amber-400
+                                font-black text-xl">
+
+                                Offside
+
+                            </p>
+
+                            <p class="text-zinc-400
+                                text-sm mt-1">
+
+                                Hit the offside wall zone
+
+                            </p>
+
+                        </div>
+
+                        <div class="flex items-center gap-3">
+
+                            @if(dismissalType === 'offside'){
+
+                            <div class="w-8 h-8 rounded-full
+                                bg-amber-400 text-black
+                                flex items-center justify-center
+                                font-black">
+
+                                ✓
+
+                            </div>
+
+                            }
+
+                            <h1 class="text-3xl">
+
+                                🧱
+
+                            </h1>
+
+                        </div>
+
+                    </button>
+
+
+                    <!-- CONTINUE -->
+                    <button (click)="continueAfterDismissal()" [disabled]="!dismissalType" class="w-full rounded-3xl
+                        mt-6 py-4 cursor-pointer
+                        font-black text-lg
+                        transition-all duration-300" [ngClass]="{
+        
+                        'bg-white text-black hover:scale-[1.02]':
+                        dismissalType,
+        
+                        'bg-white/10 text-zinc-500 cursor-not-allowed':
+                        !dismissalType
+        
+                        }">
+
+                        Continue
+
+                    </button>
+
+
+                    <!-- CATCHING DIALOG -->
+                    @if(isShowingCatchingDialog){
+                    
+                    <div class="fixed inset-0 z-130
+                    
+                    bg-black/60
+                    backdrop-blur-sm
+                    
+                    flex items-center justify-center
+                    
+                    p-4">
+                    
+                        <!-- DIALOG -->
+                        <div class="w-full max-w-sm
+                    
+                        rounded-[2.2rem]
+                    
+                        border border-white/10
+                    
+                        bg-[#09111F]/95
+                    
+                        shadow-[0_0_60px_rgba(0,0,0,0.6)]
+                    
+                        overflow-hidden">
+                    
+                            <!-- HEADER -->
+                            <div class="px-5 pt-5 pb-4
+                    
+                            border-b border-white/10">
+                    
+                                <p class="uppercase tracking-[0.3em]
+                    
+                                text-[10px]
+                    
+                                text-zinc-500
+                                font-black">
+                    
+                                    Caught Out
+                    
+                                </p>
+                    
+                                <h1 class="text-2xl
+                    
+                                font-black text-white
+                    
+                                mt-2">
+                    
+                                    Who Took The Catch?
+                    
+                                </h1>
+                    
+                            </div>
+                    
+                            <!-- PLAYERS -->
+                            <div class="p-4
+                    
+                            grid grid-cols-2 gap-3
+                    
+                            max-h-[45vh]
+                            overflow-y-auto">
+                    
+                                @for(player of currentBowlingTeam; track player.id){
+                    
+                                <button (click)="selectCaughtBy(player)" class="flex items-center gap-3
+                    
+                                p-3 rounded-2xl
+                    
+                                bg-white/5
+                                border border-white/5
+                    
+                                hover:bg-white/10
+                    
+                                transition-all duration-200">
+                    
+                                    <!-- PHOTO -->
+                                    <img [src]="player.photoURL" class="w-11 h-11
+                    
+                                    rounded-full
+                    
+                                    object-cover
+                    
+                                    border border-white/10">
+                    
+                                    <!-- NAME -->
+                                    <div class="min-w-0">
+                    
+                                        <p class="text-white
+                    
+                                        text-sm
+                    
+                                        font-bold
+                    
+                                        truncate">
+                    
+                                            {{player.displayName}}
+                    
+                                        </p>
+                    
+                                    </div>
+                    
+                                </button>
+                    
+                                }
+                    
+                            </div>
+                    
+                        </div>
+                    
+                    </div>
+                    
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        }
+
 
 
 
@@ -268,7 +656,7 @@
         justify-between gap-3 mt-3">
 
             <!-- STATS -->
-            <button class="score-btn w-1/2 h-20">
+            <button (click)="isShowingScoreCard = true" class="score-btn w-1/2 h-20">
                 Stats
             </button>
 
@@ -343,7 +731,7 @@
                     <button (click)="confirmBatsman()"
                         class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20
                         backdrop-blur-xl text-[#FBBF24] font-black tracking-wide shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20
-                        hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
+                        hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 cursor-pointer">
 
                         <!-- GLOW -->
                         <div class="absolute inset-0  opacity-0 hover:opacity-100  bg-linear-to-r  from-[#FBBF24]/0  via-[#FBBF24]/10 to-[#F59E0B]/0
@@ -548,7 +936,7 @@
 
 @if(totalWickets >= maxWickets){
 
-<div class="fixed inset-0 z-50
+<div class="fixed inset-0 z-40
   bg-[#050B18]/95 backdrop-blur-2xl
   flex items-center justify-center p-6">
 
@@ -670,6 +1058,7 @@
 
 }
 
+<!-- Match results overlay -->
 
 @if(matchResult){
 <!-- MATCH RESULT OVERLAY -->
@@ -809,7 +1198,28 @@
 
                         <p class="mt-1 text-sm text-zinc-400">
 
-                            {{Motm?.runs}} Runs & {{Motm?.wickets}} Wickets
+                            @if(
+                            (Motm?.runs || 0) > 0
+                            &&
+                            (Motm?.wickets || 0) > 0
+                            ){
+                            
+                            {{Motm?.runs}} Runs &
+                            {{Motm?.wickets}} Wickets
+                            
+                            }
+                            
+                            @else if((Motm?.runs || 0) > 0){
+                            
+                            {{Motm?.runs}} Runs
+                            
+                            }
+                            
+                            @else if((Motm?.wickets || 0) > 0){
+                            
+                            {{Motm?.wickets}} Wickets
+                            
+                            }
 
                         </p>
 
@@ -824,7 +1234,7 @@
         items-center justify-center gap-4">
 
                 <!-- SCORECARD -->
-                <button class="px-8 py-4 rounded-3xl
+                <button (click)="isShowingScoreCard=true" class="px-8 py-4 rounded-3xl
           bg-white/8 border border-white/10
           text-white font-black tracking-wide
           hover:bg-white/12
@@ -837,7 +1247,7 @@
                 </button>
 
                 <!-- HOME -->
-                <button [routerLink]="['/']" class="px-8 py-4 rounded-3xl
+                <button (click)="saveCompletedMatch()" class="px-8 py-4 rounded-3xl
           font-black tracking-wide
           transition-all duration-300
           hover:scale-[1.03]
@@ -858,4 +1268,485 @@
     </div>
 
 </div>
+}
+
+
+
+@if(isShowingScoreCard){
+
+<!-- SCORECARD OVERLAY -->
+<div class="fixed inset-0 z-120
+
+bg-black/70
+backdrop-blur-md
+
+flex items-center justify-center
+
+p-3 sm:p-4">
+
+    <!-- PANEL -->
+    <div class="w-full max-w-5xl
+
+    max-h-[92vh]
+    overflow-hidden
+
+    rounded-[2.5rem]
+
+    border border-white/10
+
+    bg-[#09111F]/95
+
+    shadow-[0_0_80px_rgba(0,0,0,0.7)]
+
+    flex flex-col">
+
+        <!-- HEADER -->
+        <div class="p-5 sm:p-6
+
+        border-b border-white/10
+
+        flex items-center justify-between">
+
+            <!-- LEFT -->
+            <div>
+
+                <p class="uppercase tracking-[0.35em]
+
+                text-[10px] sm:text-xs
+
+                text-zinc-500
+                font-black">
+
+                    Live Match Stats
+
+                </p>
+
+                <h1 class="text-4xl sm:text-3xl
+
+                font-black text-white
+
+                mt-2">
+
+                    Scorecard
+
+                </h1>
+
+            </div>
+
+            <!-- CLOSE -->
+            <button (click)="isShowingScoreCard=false" class="w-14 h-14
+            sm:w-11 sm:h-11
+
+            rounded-3xl sm:rounded-2xl
+
+            bg-white/5
+            border border-white/10
+
+            text-zinc-400
+            text-2xl sm:text-xl
+
+            hover:bg-white/10
+
+            transition-all">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <!-- CONTENT -->
+        <div class="flex-1 overflow-y-auto
+
+        p-4 sm:p-6
+
+        space-y-10">
+
+            <!-- ========================= -->
+            <!-- BATTING -->
+            <!-- ========================= -->
+
+            <div>
+
+                <!-- TITLE -->
+                <div class="flex items-center justify-between
+
+                mb-5">
+
+                    <h1 class="text-3xl sm:text-2xl
+
+                    font-black text-white">
+
+                        Batting
+
+                    </h1>
+
+                    <div class="px-4 py-2 rounded-2xl
+
+                    bg-amber-400/10
+
+                    border border-amber-400/20">
+
+                        <p class="text-amber-400
+
+                        text-2xl sm:text-xl
+
+                        font-black">
+
+                            {{totalRuns}}/{{totalWickets}}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <!-- CARD -->
+                <div class="rounded-4xl
+
+                border border-white/10
+
+                overflow-hidden
+
+                bg-white/2">
+
+                    @for(player of currentBattingTeam; track player.id){
+
+                    <!-- PLAYER -->
+                    <div class="px-5 py-5
+
+                    border-t border-white/5
+                    first:border-t-0
+
+                    flex items-center
+                    justify-between gap-4">
+
+                        <!-- LEFT -->
+                        <div class="min-w-0 flex-1">
+
+                            <!-- NAME -->
+                            <div class="flex items-center gap-3">
+
+                                <h1 class="text-white
+
+                                font-black
+
+                                text-xl sm:text-lg
+
+                                truncate">
+
+                                    {{player.displayName}}
+
+                                </h1>
+
+                                @if(
+                                playerStats[player.id!].hasScoredHundred
+                                ){
+
+                                <span class="text-xs
+
+                                px-2 py-1
+
+                                rounded-full
+
+                                bg-purple-400/15
+                                text-purple-300
+
+                                font-black">
+
+                                    100
+
+                                </span>
+
+                                }
+
+                                @else if(
+                                playerStats[player.id!].hasScoredFifty
+                                ){
+
+                                <span class="text-xs
+
+                                px-2 py-1
+
+                                rounded-full
+
+                                bg-amber-400/15
+                                text-amber-300
+
+                                font-black">
+
+                                    50
+
+                                </span>
+
+                                }
+
+                            </div>
+
+                            <!-- DISMISSAL -->
+                            <p class="text-zinc-400
+
+                            text-sm sm:text-xs
+
+                            mt-2 leading-relaxed">
+
+                                @if(playerStats[player.id!].dismissalType === 'bowled'){
+
+                                b {{playerStats[player.id!].dismissedBy}}
+
+                                }
+
+                                @else if(playerStats[player.id!].dismissalType === 'caught'){
+
+                                c {{playerStats[player.id!].caughtBy}} b {{playerStats[player.id!].dismissedBy}}
+
+                                }
+
+                                @else if(playerStats[player.id!].dismissalType === 'offside'){
+
+                                offside b {{playerStats[player.id!].dismissedBy}}
+
+                                }
+
+                                @else {
+
+                                not out
+
+                                }
+
+                            </p>
+
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div class="text-right
+
+                        shrink-0">
+
+                            <!-- RUNS -->
+                            <h1 class="text-[#FBBF24]
+
+                            font-black
+
+                            text-3xl sm:text-2xl">
+
+                                {{playerStats[player.id!].runs}}
+
+                            </h1>
+
+                            <!-- DETAILS -->
+                            <p class="text-zinc-400
+
+                            text-sm mt-1">
+
+                                {{playerStats[player.id!].ballsFaced}}
+                                balls
+
+                                •
+
+                                SR
+
+                                {{
+
+                                playerStats[player.id!].ballsFaced
+
+                                ?
+
+                                (
+                                (
+                                playerStats[player.id!].runs
+                                /
+                                playerStats[player.id!].ballsFaced
+                                ) * 100
+                                ).toFixed(1)
+
+                                :
+
+                                '0.0'
+
+                                }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    }
+
+                </div>
+
+            </div>
+
+            <!-- ========================= -->
+            <!-- BOWLING -->
+            <!-- ========================= -->
+
+            <div>
+
+                <!-- TITLE -->
+                <div class="mb-5">
+
+                    <h1 class="text-3xl sm:text-2xl
+
+                    font-black text-white">
+
+                        Bowling
+
+                    </h1>
+
+                </div>
+
+                <!-- CARD -->
+                <div class="rounded-4xl
+
+                border border-white/10
+
+                overflow-hidden
+
+                bg-white/2">
+
+                    @for(player of currentBowlingTeam; track player.id){
+
+                    <!-- PLAYER -->
+                    <div class="px-5 py-5
+
+                    border-t border-white/5
+                    first:border-t-0
+
+                    flex items-center
+                    justify-between gap-4">
+
+                        <!-- LEFT -->
+                        <div class="min-w-0 flex-1">
+
+                            <!-- NAME -->
+                            <h1 class="text-white
+
+                            font-black
+
+                            text-xl sm:text-lg">
+
+                                {{player.displayName}}
+
+                            </h1>
+
+                            <!-- DETAILS -->
+                            <div class="flex items-center
+
+                            gap-3 flex-wrap
+
+                            mt-2">
+
+                                <p class="text-zinc-400
+                                text-sm">
+
+                                    Ov
+
+                                    {{
+
+                                    Math.floor(
+                                    playerStats[player.id!].ballsDelivered / 6
+                                    )
+
+                                    }}.
+
+                                    {{
+
+                                    playerStats[player.id!].ballsDelivered % 6
+
+                                    }}
+
+                                </p>
+
+                                <p class="text-zinc-400
+                                text-sm">
+
+                                    M
+
+                                    {{playerStats[player.id!].maiden}}
+
+                                </p>
+
+                                <p class="text-red-400
+                                text-sm font-bold">
+
+                                    W
+
+                                    {{playerStats[player.id!].wickets}}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div class="text-right
+
+                        shrink-0">
+
+                            <!-- RUNS -->
+                            <h1 class="text-white
+
+                            font-black
+
+                            text-2xl">
+
+                                {{playerStats[player.id!].runsConceded}}
+
+                            </h1>
+
+                            <!-- ECO -->
+                            <p class="text-blue-400
+
+                            text-sm mt-1
+
+                            font-bold">
+
+                                Eco
+
+                                {{
+
+                                playerStats[player.id!].ballsDelivered
+
+                                ?
+
+                                (
+
+                                playerStats[player.id!].runsConceded
+
+                                /
+
+                                (
+                                playerStats[player.id!].ballsDelivered / 6
+                                )
+
+                                ).toFixed(2)
+
+                                :
+
+                                '0.00'
+
+                                }}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 }

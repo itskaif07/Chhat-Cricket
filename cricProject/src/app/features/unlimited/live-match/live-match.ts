@@ -3,30 +3,34 @@ import { MatchSetupService } from '../../../services/MatchSetup/match-setup-serv
 import { Player } from '../../../shared/models/player.model';
 import { CommonModule } from '@angular/common';
 import { PlayerStats } from '../../../shared/models/playerStats.model'
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { MatchService } from '../../../services/matchService/match-service';
 
 @Component({
   selector: 'app-live-match',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './live-match.html',
   styleUrl: './live-match.css',
 })
 export class LiveMatch implements OnInit {
 
-  constructor(private matchSetupService: MatchSetupService, private cdr: ChangeDetectorRef){}
+  constructor(private matchSetupService: MatchSetupService, private cdr: ChangeDetectorRef, private matchService: MatchService, private router:Router){}
 
   allSelectedPlayers: Player[] = []
   teamA: Player[] = []
   teamB:Player[] = []
   outPlayersIds:string[] = []
   playerStats:{[playerId:string]:PlayerStats} = {}
-
+  
   tossWinner: 'A' | 'B' | '' = ''
   battingFirst: 'A' | 'B' | '' = ''
   bowlingFirst: 'A' | 'B' | '' = ''
-
+  
   currentInnings: 1 | 2 = 1
   firstInningRuns:number = 0
+  firstInningsBalls:number = 0
+  firstInningsWickets:number = 0
+  firstInningsPlayerStats:Record<string, PlayerStats> = {}
   
   isInningsOver: boolean = false
   showBatsmenDialog:boolean = true
@@ -34,7 +38,13 @@ export class LiveMatch implements OnInit {
   isWicketFallen = false
   isOverComplete = false
   canUndo:boolean = false
-  matchResult:'won'|'lost'|'tie'|null = null
+  isShowingScoreCard:boolean = false
+  isDismissalDialogOpen:boolean = false
+  isShowingCatchingDialog:boolean = false
+
+
+  dismissalType:'caught'|'bowled'|'offside'| null = null
+  matchResult:'won'|'lost'|'tie'| null = null
 
 
   currentBatsman:Player | null = null
@@ -58,6 +68,9 @@ export class LiveMatch implements OnInit {
   currentBowlerWickets:number = 0
   currentBowlerBalls:number = 0
   currentBowlerRunsConceded:number = 0
+
+  Math = Math
+
 
   ngOnInit(){
     this.getAllSelectedPlayers()
@@ -97,8 +110,15 @@ export class LiveMatch implements OnInit {
         ballsDelivered:0,
         fours: 0,
         sixes: 0,
-        runsConceded: 0
-
+        runsConceded: 0,
+        dismissalType: null,
+        caughtBy: '',
+        dismissedBy:'',
+        maiden:0,
+        hasScoredFifty:false,
+        fifty: 0,
+        hasScoredHundred:false,
+        hundred:0,
       }
 
     }
@@ -231,6 +251,18 @@ get currentRunRate():string {
   return crr.toFixed(2)
 }
 
+get runsNeeded(){
+
+  if(this.currentInnings !== 2){
+    return 0
+  }
+
+  return (
+    this.firstInningRuns + 1
+  ) - this.totalRuns
+
+}
+
 get matchResultMessage(){
 
   if(this.matchResult === 'won'){
@@ -327,6 +359,25 @@ get winningTeam(){
 
 }
 
+get Motm(){
+  let bestPlayer = null
+  let bestScore = 0
+
+  for (const playerId in this.playerStats) {
+    let player = this.playerStats[playerId]
+
+    const score = ((player.runs) + (player.wickets * 20) - (player.runsConceded/2))
+
+    if(score > bestScore){
+      bestScore = score
+      bestPlayer = player
+    }
+    
+  }
+
+  return bestPlayer
+}
+
 
  selectBatsman(player: Player){
   this.selectedBatsman = player
@@ -379,7 +430,6 @@ get winningTeam(){
 
    this.manageRecentDeliveries()
    this.manageOversChange()
-   console.log(this.playerStats)
   }
   
   addFour(){
@@ -403,6 +453,7 @@ get winningTeam(){
     }
 
     this.manageRecentDeliveries()
+    this.manageBattingMilestone()
     this.manageOversChange()
     this.checkMatchResult()
 }
@@ -428,41 +479,158 @@ this.playerStats[this.currentBowler?.id].ballsDelivered += 1
     }
   
    this.manageRecentDeliveries()
+   this.manageBattingMilestone()
    this.manageOversChange()
    this.checkMatchResult()
   }
   
   
-  addWicket(){
-    this.totalWickets += 1
-    this.totalDeliveries += 1
-    this.currentBatsmanBalls = 0
-    this.currentBatsmanRuns = 0
-    this.currentBowlerBalls += 1
-    this.lastAction = 'W'
-    this.showBatsmenDialog = true
-    this.isWicketFallen = true
-    this.selectedBatsman = null
-    this.recentDeliveries.unshift({value:'W', type:'wicket'})
-    this.manageRecentDeliveries()
-    this.manageOversChange()
-    this.checkMatchResult()
+addWicket(){
 
-      if(this.currentBatsman?.id && this.currentBowler?.id){
-      this.playerStats[this.currentBowler?.id].wickets += 1
-      
-        this.playerStats[this.currentBowler?.id].ballsDelivered += 1
-        this.playerStats[this.currentBatsman?.id].ballsFaced += 1
-    }
+  this.totalWickets += 1
+  this.totalDeliveries += 1
 
-    if(this.currentBatsman){
-    this.outPlayersIds.push(this.currentBatsman.id!)
-    }
+  this.currentBatsmanBalls = 0
+  this.currentBatsmanRuns = 0
 
-    if(this.totalWickets >= this.maxWickets){
-      this.isInningsOver = true
-    }
+  this.currentBowlerBalls += 1
+
+  this.lastAction = 'W'
+
+  this.isWicketFallen = true
+
+  this.selectedBatsman = null
+
+  this.recentDeliveries.unshift({
+    value:'W',
+    type:'wicket'
+  })
+
+  this.manageRecentDeliveries()
+
+  this.manageOversChange()
+
+  this.isDismissalDialogOpen = true
+
+  if(
+    this.currentBatsman?.id
+    &&
+    this.currentBowler?.id
+  ){
+
+    this.playerStats[
+      this.currentBowler.id
+    ].wickets += 1
+
+    this.playerStats[
+      this.currentBowler.id
+    ].ballsDelivered += 1
+
+    this.playerStats[
+      this.currentBatsman.id
+    ].ballsFaced += 1
+
+  }
+
+  if(this.currentBatsman){
+
+    this.outPlayersIds.push(
+      this.currentBatsman.id!
+    )
+
+  }
+
+  this.dismissalType = null
+
 }
+
+selectDismissalType(type:'caught' | 'bowled' | 'offside' | null){
+
+  this.dismissalType = type
+
+    if(type === 'caught'){
+
+    this.isShowingCatchingDialog = true
+    return
+
+  }
+
+  if(this.currentBatsman?.id && this.currentBowler){
+
+    this.playerStats[
+      this.currentBatsman.id
+    ].dismissalType = type
+
+    this.playerStats[this.currentBatsman?.id].dismissedBy = this.currentBowler?.displayName || ''
+    
+  }
+  
+  this.continueAfterDismissal()
+}
+
+selectCaughtBy(player:Player){
+
+  if(
+    this.currentBatsman?.id
+    &&
+    this.currentBowler
+  ){
+
+    // SAVE DISMISSAL TYPE
+
+    this.playerStats[
+      this.currentBatsman.id
+    ].dismissalType = 'caught'
+
+    // SAVE BOWLER
+
+    this.playerStats[
+      this.currentBatsman.id
+    ].dismissedBy =
+    this.currentBowler.displayName || ''
+
+    // SAVE FIELDER
+
+    this.playerStats[
+      this.currentBatsman.id
+    ].caughtBy =
+    player.displayName
+
+  }
+
+  // CLOSE DIALOG
+
+  this.isShowingCatchingDialog = false
+
+  // CONTINUE
+
+  this.continueAfterDismissal()
+
+}
+
+continueAfterDismissal(){
+
+
+  this.isDismissalDialogOpen = false
+
+  this.checkMatchResult()
+
+  // LAST WICKET
+
+  if(this.totalWickets >= this.maxWickets){
+
+    this.isInningsOver = true
+
+    return
+
+  }
+
+  // OTHERWISE
+
+  this.showBatsmenDialog = true
+
+}
+
 
 addWide(){
   this.recentDeliveries.unshift({value:'WD', type:'wide'})
@@ -481,7 +649,22 @@ addNoBall(){
 }
 }
 
+manageBattingMilestone(){
+  if(this.currentBatsman?.id){
+  const currentBatter = this.playerStats[this.currentBatsman?.id]
 
+    if(currentBatter.runs >= 50 && !currentBatter.hasScoredFifty){
+      currentBatter.hasScoredFifty = true
+      currentBatter.fifty += 1
+    }
+
+    if(currentBatter.runs >= 100 && !currentBatter.hasScoredHundred){
+      currentBatter.hasScoredHundred = true
+      currentBatter.hundred += 1
+    }
+
+  }
+}
 
 undo(){
   if(this.lastAction === '4'){
@@ -536,17 +719,44 @@ manageRecentDeliveries(){
 
 manageOversChange(){
 
-  if(this.totalDeliveries % 6 === 0 &&
-     this.totalDeliveries > 0){
+  if(
+    this.totalDeliveries % 6 === 0
+    &&
+    this.totalDeliveries > 0
+  ){
 
     this.isOverComplete = true
+
     this.showBowlerDialog = true
+
     this.selectedBowler = null
+
     this.canUndo = false
+
+    // MAIDEN OVER
+
+    if(
+      this.currentBowler?.id
+      &&
+      this.currentBowlerRunsConceded === 0
+    ){
+
+      this.playerStats[
+        this.currentBowler.id
+      ].maiden += 1
+
+    }
+
+    // RESET FOR NEXT OVER
+
+    this.currentBowlerRunsConceded = 0
+
   }
 
-  if(this.totalDeliveries%6 === 1){
+  if(this.totalDeliveries % 6 === 1){
+
     this.canUndo = true
+
   }
 
 }
@@ -556,8 +766,14 @@ startSecondInnings(){
   this.firstInningRuns =
     this.totalRuns
 
+    this.firstInningsBalls = this.totalDeliveries
+    this.firstInningsWickets = this.totalWickets
+
+    this.firstInningsPlayerStats = structuredClone(this.playerStats)
+
   this.currentInnings = 2
 
+  this.isDismissalDialogOpen = false
   this.totalRuns = 0
   this.totalWickets = 0
   this.totalDeliveries = 0
@@ -577,6 +793,8 @@ startSecondInnings(){
 
   this.showBowlerDialog = false
   this.showBatsmenDialog = true
+  this.isShowingCatchingDialog = false
+  this.dismissalType = null
 
 }
 
@@ -624,23 +842,81 @@ checkMatchResult(){
 
 }
 
-get Motm(){
-  let bestPlayer = null
-  let bestScore = 0
+ buildMatchObject(){
 
-  for (const playerId in this.playerStats) {
-    let player = this.playerStats[playerId]
+  return {
 
-    const score = (player.runs + player.wickets * 25)
+    createdAt: Date.now(),
 
-    if(score > bestScore){
-      bestScore = score
-      bestPlayer = player
-    }
-    
+    year: new Date().getFullYear(),
+    teamA: this.teamA,
+    teamB: this.teamB,
+    winner: this.matchResult,
+    motm: this.Motm,
+
+    innings: [
+
+      {
+
+        inning: 1,
+
+        totalRuns:
+        this.firstInningRuns,
+        totalBalls: this.totalDeliveries,
+        totalWickets: this.totalWickets,
+
+        playerStats:
+        this.firstInningsPlayerStats
+
+      },
+
+      {
+
+        inning: 2,
+
+        totalRuns:
+        this.totalRuns,
+        totalWickets: this.totalWickets,
+        totalBalls: this.totalDeliveries,
+
+        playerStats:
+        this.playerStats
+
+      }
+
+    ]
+
   }
 
-  return bestPlayer
+}
+
+async saveCompletedMatch(){
+
+  try{
+
+    const matchData =
+      this.buildMatchObject()
+
+    await this.matchService
+    .saveMatch(matchData)
+
+    console.log(
+      'Match Saved Successfully'
+    )
+
+    this.router.navigate(['/'])
+
+  }
+
+  catch(error){
+
+    console.log(
+      'Error Saving Match',
+      error
+    )
+
+  }
+
 }
  
 }

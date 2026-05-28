@@ -9,6 +9,7 @@ import { About } from './about/about';
 import { TossPage } from './features/unlimited/toss-page/toss-page';
 import { LiveMatch } from './features/unlimited/live-match/live-match';
 import { LeftoverPlayer } from './features/unlimited/leftover-player/leftover-player';
+import { MainPage } from './match-history/main-page/main-page';
 
 export const routes: Routes = [
 
@@ -36,6 +37,11 @@ export const routes: Routes = [
     {
         path: 'player-info/:id',
         component: PlayerInfo
+    },
+
+    {
+        path: 'matches-history',
+        component: MainPage
     },
 
     // Unlimited
