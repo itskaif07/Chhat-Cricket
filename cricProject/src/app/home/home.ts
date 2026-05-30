@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import {Auth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User} from '@angular/fire/auth'
 import { collection, Firestore, getDoc, getDocs } from '@angular/fire/firestore';
 import { RouterLink } from '@angular/router';
+import { MatchService } from '../services/matchService/match-service';
 
 
 @Component({
@@ -14,9 +15,10 @@ export class Home implements OnInit {
 
   user: User | null = null
   playersCount: number = 0
+  matchesCount:number = 0
 
 
-  constructor( private auth: Auth, private ngZone: NgZone, private firestore: Firestore, private cdr: ChangeDetectorRef) {
+  constructor( private auth: Auth, private ngZone: NgZone, private firestore: Firestore, private cdr: ChangeDetectorRef, private matchService:MatchService) {
 
   onAuthStateChanged(this.auth, (user) => {
       this.user = user;
@@ -27,6 +29,7 @@ export class Home implements OnInit {
 ngOnInit(){
   setTimeout(() => {
     this.retrievePlayers()
+    this.retrieveMatches()
   });
 }
 
@@ -35,28 +38,34 @@ async retrievePlayers() {
   try {
 
     const playersRef = collection(this.firestore, 'players');
-
     const snapshot = await getDocs(playersRef);
-    
     const players = snapshot.docs.map(doc => ({
-      
       id: doc.id,
-      
       ...doc.data()
-      
     }));
     
     this.playersCount = players.length
     this.cdr.detectChanges()
-    
-
   }
 
   catch(error) {
-
     console.log(error);
-
   }
+
+}
+
+retrieveMatches(){
+
+  this.matchService
+  .retrieveMatches()
+  .subscribe((data)=>{
+
+    this.matchesCount =
+    data.length
+
+    this.cdr.detectChanges()
+
+  })
 
 }
 

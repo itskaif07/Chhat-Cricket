@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, Firestore, orderBy, query } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, doc, docData, Firestore, orderBy, query } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class MatchService {
 }
 
 
-  retrieveMatches(){
+retrieveMatches(){
 
   const matchRef =
   collection(
@@ -30,7 +30,20 @@ export class MatchService {
     )
   )
 
-  return collectionData(q)
+  return collectionData(q, {
+    idField: 'id'
+  })
+
+}
+
+getMatchById(id:string){
+
+  const matchDoc = doc(
+    this.fireStore,
+    `matches/${id}`
+  )
+
+  return docData(matchDoc)
 
 }
 }

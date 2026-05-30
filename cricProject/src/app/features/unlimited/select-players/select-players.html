@@ -49,6 +49,48 @@
 
                 </p>
 
+                @if(teamA[0] || teamB[0]){
+
+                <div class="flex flex-col sm:flex-row gap-2 mt-4">
+
+                    @if(teamA[0]){
+
+                    <div class="px-3 py-2 rounded-2xl
+                    bg-[#94F505]/10 border border-[#94F505]/20">
+
+                        <p class="text-xs text-zinc-500 font-semibold">
+                            Team A Captain
+                        </p>
+
+                        <h2 class="text-[#94F505] text-sm font-black">
+                            {{ teamA[0].displayName }}
+                        </h2>
+
+                    </div>
+
+                    }
+
+                    @if(teamB[0]){
+
+                    <div class="px-3 py-2 rounded-2xl
+                    bg-purple-400/10 border border-purple-400/20">
+
+                        <p class="text-xs text-zinc-500 font-semibold">
+                            Team B Captain
+                        </p>
+
+                        <h2 class="text-purple-400 text-sm font-black">
+                            {{ teamB[0].displayName }}
+                        </h2>
+
+                    </div>
+
+                    }
+
+                </div>
+
+                }
+
 
 
             </div>
@@ -126,6 +168,23 @@
             selectedPlayers.includes(player.id!)
 
         }">
+
+                @if(teamA[0]?.id === player.id || teamB[0]?.id === player.id){
+
+                <div class="absolute top-3 left-3 z-10 px-3 py-1 rounded-full
+                bg-black/55 border border-white/15 backdrop-blur-xl">
+
+                    <p class="text-[10px] font-black tracking-widest"
+                    [ngClass]="{
+                        'text-[#94F505]': teamA[0]?.id === player.id,
+                        'text-purple-300': teamB[0]?.id === player.id
+                    }">
+                        CAPTAIN
+                    </p>
+
+                </div>
+
+                }
 
                 <!-- IMAGE -->
                 <img [src]="player.photoURL || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'"

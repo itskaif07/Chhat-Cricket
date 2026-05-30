@@ -1,0 +1,348 @@
+<div class="min-h-screen bg-[#050816] text-white px-4 py-5">
+
+    <!-- MATCH HEADER -->
+    <div class="rounded-[2.5rem]
+border border-[#1E3A8A]/30
+bg-linear-to-br from-[#081A3D] to-[#030D24]
+overflow-hidden px-4 py-12 lg:w-4/5 lg:mx-auto my-10"> 
+
+        <!-- STATUS -->
+        <div class="flex justify-center">
+
+            <div class="px-5 py-2 rounded-full
+bg-[#2563EB]/10
+border border-[#3B82F6]/20">
+
+                <p class="text-[#60A5FA] text-sm font-black tracking-[0.2em]">
+
+                    MATCH RESULT
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- TEAMS -->
+        <div class="grid grid-cols-3 items-center mt-8">
+
+            <!-- TEAM A -->
+            <div class="text-center">
+
+                <h1 class="text-2xl font-black">
+
+                    TEAM A
+
+                </h1>
+
+                <h1 class="text-5xl font-black
+                text-blue-300 mt-3">
+
+                    {{matchData?.innings?.[0]?.firstInningsTotalRuns}}/{{matchData?.innings?.[0]?.firstInningsTotalWickets}}
+
+                </h1>
+
+                <p class="text-blue-200 lowercase mt-6  text-center font-bold text-lg ">
+                
+                    {{getOvers(matchData?.innings?.[0]?.firstInningsTotalBalls)}} Overs
+                
+                </p>
+            </div>
+
+            <!-- VS -->
+            <div class="flex justify-center">
+
+                <div class="w-20 h-20 rounded-full
+                bg-white/5
+                border border-white/10
+                flex items-center justify-center">
+
+                    <h1 class="text-2xl font-black">
+                        VS
+                    </h1>
+
+
+                </div>
+
+            </div>
+
+            <!-- TEAM B -->
+            <div class="text-center">
+
+                <h1 class="text-2xl font-black">
+
+                    TEAM B
+
+                </h1>
+
+                <h1 class="text-5xl font-black
+                text-blue-300 mt-3">
+
+                    {{matchData?.innings?.[1]?.secondInningsTotalRuns}}/{{matchData?.innings?.[1]?.secondInningsTotalWickets}}
+
+                </h1>
+
+                
+                <p class="text-blue-200 lowercase mt-6  text-center font-bold text-lg ">
+        
+                    {{getOvers(matchData?.innings?.[1]?.secondInningsTotalBalls)}} Overs
+        
+                </p>
+            </div>
+
+            
+        </div>
+
+    </div>
+
+    <!-- INNINGS BUTTONS -->
+    <div class="flex gap-3 mt-6 lg:w-4/5 lg:mx-auto">
+
+        <!-- INNINGS 1 -->
+        <button (click)="setInnings(0)" [class]="selectedInnings?.inning === 1
+        ? 'bg-linear-to-r from-cyan-400 to-blue-400 text-black'
+        : 'bg-white/5 border border-white/10 text-white'"
+            class="flex-1 h-14 rounded-2xl font-black transition-all duration-300 cursor-pointer">
+
+            1st Innings
+
+        </button>
+
+        <!-- INNINGS 2 -->
+        <button (click)="setInnings(1)" [class]="selectedInnings?.inning === 2
+        ? 'bg-linear-to-r from-cyan-400 to-blue-400 text-black'
+        : 'bg-white/5 border border-white/10 text-white'"
+            class="flex-1 h-14 rounded-2xl font-black transition-all duration-50 cursor-pointer">
+
+            2nd Innings
+
+        </button>
+
+    </div>
+
+<h1 class="text-3xl uppercase font-black my-10 text-center text-[#93C5FD] tracking-[0.25em]">
+    Batting
+</h1>
+
+<div class="space-y-3">
+
+    @for(
+    player of getPlayers(selectedInnings?.playerStats);
+    track $index
+    ){
+
+    @if(
+    player.runs > 0 ||
+    player.ballsFaced > 0 ||
+    player.dismissalType
+    ){
+
+    <div class="rounded-3xl
+    bg-white/5
+    border border-white/10
+    p-4 lg:w-4/5 mx-auto">
+
+        <!-- TOP -->
+        <div class="flex items-center justify-between">
+
+            <div class="flex items-center gap-3">
+
+                <img [src]="player.playerPhoto" class="w-12 h-12 rounded-full object-cover">
+
+                <div>
+
+                    <h1 class="font-black text-lg">
+                        {{player.playerName}}
+                    </h1>
+
+                    <p class="text-zinc-500 text-sm">
+                        {{player.dismissalType || 'Not Out'}}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="text-right">
+
+                <h1 class="text-3xl font-black text-cyan-300">
+                    {{player.runs}}
+                </h1>
+
+                <p class="text-zinc-500">
+                    {{player.ballsFaced}} balls
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- STATS -->
+        <div class="grid grid-cols-4 gap-3 mt-4">
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-zinc-500 text-xs">4s</p>
+
+                <h1 class="font-black">
+                    {{player.fours}}
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-zinc-500 text-xs">6s</p>
+
+                <h1 class="font-black">
+                    {{player.sixes}}
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-zinc-500 text-xs">SR</p>
+
+                <h1 class="font-black">
+
+                    {{
+                    player.ballsFaced > 0
+                    ? ((player.runs/player.ballsFaced)*100).toFixed(1)
+                    : 0
+                    }}
+
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-zinc-500 text-xs">B</p>
+
+                <h1 class="font-black">
+                    {{player.ballsFaced}}
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    }
+
+    }
+
+</div>
+
+
+<h1 class="text-3xl uppercase font-black my-10 text-center text-[#93C5FD] tracking-[0.25em]">
+    Bowling
+</h1>
+
+<div class="space-y-3">
+
+    @for(
+    player of getPlayers(selectedInnings?.playerStats);
+    track $index
+    ){
+
+    @if(player.ballsDelivered > 0){
+
+    <div class="rounded-3xl lg:w-4/5 mx-auto
+    bg-white/5
+    border border-white/10
+    p-4">
+
+        <div class="flex items-center justify-between">
+
+            <div class="flex items-center gap-3">
+
+                <img [src]="player.playerPhoto" class="w-12 h-12 rounded-full object-cover">
+
+                <h1 class="font-black text-lg">
+                    {{player.playerName}}
+                </h1>
+
+            </div>
+
+            <div class="text-right">
+
+                <h1 class="text-3xl font-black text-blue-300">
+                    {{player.wickets}}/{{player.runsConceded}}
+                </h1>
+
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-5 gap-3 mt-4">
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-xs text-zinc-500">O</p>
+
+                <h1 class="font-black">
+                    {{ getOvers(player.ballsDelivered) }}
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-xs text-zinc-500">M</p>
+
+                <h1 class="font-black">
+                    {{player.maiden}}
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-xs text-zinc-500">R</p>
+
+                <h1 class="font-black">
+                    {{player.runsConceded}}
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-xs text-zinc-500">W</p>
+
+                <h1 class="font-black text-blue-300">
+                    {{player.wickets}}
+                </h1>
+
+            </div>
+
+            <div class="bg-black/20 rounded-2xl p-3 text-center">
+
+                <p class="text-xs text-zinc-500">ECO</p>
+
+                <h1 class="font-black">
+
+                    {{
+                    player.ballsDelivered > 0
+                    ? ((player.runsConceded/player.ballsDelivered)*6).toFixed(1)
+                    : 0
+                    }}
+
+                </h1>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    }
+
+    }
+
+</div>
+
+</div>

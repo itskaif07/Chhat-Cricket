@@ -8,6 +8,8 @@ export class MatchSetupService {
 
   teamA: Player[] = []
   teamB: Player[] = []
+  teamACaptain: Player | null = null
+  teamBCaptain: Player | null = null
   tossWinner: 'A' | 'B' | '' = '';
   firstBattingTeam: 'A' | 'B' | '' = '';
   firstBowlingTeam: 'A' | 'B' | '' = '';
@@ -22,11 +24,17 @@ export class MatchSetupService {
     this.firstBattingTeam = team 
   }
 
+  setFirstBowlingTeam(team: 'A'|'B'|''){
+    this.firstBowlingTeam = team
+  }
+
 
 
   setTeams(teamA:Player[], teamB:Player[]){
     this.teamA = teamA
     this.teamB = teamB
+    this.teamACaptain = teamA[0] || null
+    this.teamBCaptain = teamB[0] || null
 
     this.selectedPlayers = [...teamA, ...teamB]
   }
@@ -42,9 +50,9 @@ export class MatchSetupService {
     this.selectedPlayers = [...this.teamA, ...this.teamB]
   }
 
-  setLeftOverPlayerInTeamA(player: Player){
+  setLeftOverPlayerToBattingTeam(player: Player){
 
-    const targetTeam = this.tossWinner === 'A' ? this.teamA : this.teamB
+    const targetTeam = this.firstBattingTeam === 'A' ? this.teamA : this.teamB
 
     const alreadyExists = targetTeam.some(teamPlayer => teamPlayer.id === player.id)
 
@@ -54,6 +62,10 @@ export class MatchSetupService {
 
     this.selectedPlayers = [...this.teamA, ...this.teamB]
   }
+
+  setLeftOverPlayerInTeamA(player: Player){
+    this.setLeftOverPlayerToBattingTeam(player)
+  }
  
 
   getTeamA(){
@@ -62,6 +74,14 @@ export class MatchSetupService {
 
   getTeamB(){
     return this.teamB
+  }
+
+  getTeamACaptain(){
+    return this.teamACaptain
+  }
+
+  getTeamBCaptain(){
+    return this.teamBCaptain
   }
 
   getSelectedPlayers(){

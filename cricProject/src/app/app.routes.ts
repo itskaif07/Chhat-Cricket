@@ -10,6 +10,7 @@ import { TossPage } from './features/unlimited/toss-page/toss-page';
 import { LiveMatch } from './features/unlimited/live-match/live-match';
 import { LeftoverPlayer } from './features/unlimited/leftover-player/leftover-player';
 import { MainPage } from './match-history/main-page/main-page';
+import { Scorecard } from './match-history/scorecard/scorecard';
 
 export const routes: Routes = [
 
@@ -39,12 +40,19 @@ export const routes: Routes = [
         component: PlayerInfo
     },
 
+    // Matches History
+
     {
         path: 'matches-history',
         component: MainPage
     },
 
-    // Unlimited
+    {
+        path:'match-scorecard/:id',
+        component:Scorecard
+    },
+
+    // Unlimited Match
 
     {
         path: 'unlimited/welcome',

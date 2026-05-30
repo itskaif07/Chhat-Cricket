@@ -59,7 +59,7 @@ export class LeftoverPlayer implements OnInit {
 
   startMatch(){
     if (this.selectedLeftOverPlayer) {
-      this.matchSetupService.setLeftOverPlayerInTeamA(this.selectedLeftOverPlayer)
+      this.matchSetupService.setLeftOverPlayerToBattingTeam(this.selectedLeftOverPlayer)
     }
 
     this.router.navigate(['/unlimited/live-match'])

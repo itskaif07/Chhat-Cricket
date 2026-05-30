@@ -360,22 +360,34 @@ get winningTeam(){
 }
 
 get Motm(){
+
   let bestPlayer = null
   let bestScore = 0
 
-  for (const playerId in this.playerStats) {
-    let player = this.playerStats[playerId]
+  const matchStats =
+    this.buildMatchStats()
 
-    const score = ((player.runs) + (player.wickets * 20) - (player.runsConceded/2))
+  for(const playerId in matchStats){
+
+    const player =
+      matchStats[playerId]
+
+    const score =
+      player.runs +
+      (player.wickets * 20) -
+      (player.runsConceded / 2)
 
     if(score > bestScore){
+
       bestScore = score
       bestPlayer = player
+
     }
-    
+
   }
 
   return bestPlayer
+
 }
 
 
@@ -761,42 +773,7 @@ manageOversChange(){
 
 }
 
-startSecondInnings(){
 
-  this.firstInningRuns =
-    this.totalRuns
-
-    this.firstInningsBalls = this.totalDeliveries
-    this.firstInningsWickets = this.totalWickets
-
-    this.firstInningsPlayerStats = structuredClone(this.playerStats)
-
-  this.currentInnings = 2
-
-  this.isDismissalDialogOpen = false
-  this.totalRuns = 0
-  this.totalWickets = 0
-  this.totalDeliveries = 0
-
-  this.currentBatsman = null
-  this.currentBowler = null
-
-  this.selectedBatsman = null
-  this.selectedBowler = null
-
-  this.outPlayersIds = []
-
-  this.recentDeliveries = []
-
-  this.isWicketFallen = false
-  this.isOverComplete = false
-
-  this.showBowlerDialog = false
-  this.showBatsmenDialog = true
-  this.isShowingCatchingDialog = false
-  this.dismissalType = null
-
-}
 
 checkMatchResult(){
 
@@ -842,7 +819,78 @@ checkMatchResult(){
 
 }
 
+startSecondInnings(){
+
+  this.firstInningRuns =
+    this.totalRuns
+
+    this.firstInningsBalls = this.totalDeliveries
+    this.firstInningsWickets = this.totalWickets
+
+    this.firstInningsPlayerStats = structuredClone(this.playerStats)
+
+    this.playerStats = {}
+    this.initializePlayerStats()
+
+  this.currentInnings = 2
+
+  this.isDismissalDialogOpen = false
+  this.totalRuns = 0
+  this.totalWickets = 0
+  this.totalDeliveries = 0
+
+  this.currentBatsman = null
+  this.currentBowler = null
+
+  this.selectedBatsman = null
+  this.selectedBowler = null
+
+  this.outPlayersIds = []
+
+  this.recentDeliveries = []
+
+  this.isWicketFallen = false
+  this.isOverComplete = false
+
+  this.showBowlerDialog = false
+  this.showBatsmenDialog = true
+  this.isShowingCatchingDialog = false
+  this.dismissalType = null
+
+}
+
+buildMatchStats(){
+
+  const matchStats =
+    structuredClone(
+      this.firstInningsPlayerStats
+    )
+
+  for(const playerId in this.playerStats){
+
+    const first =
+      matchStats[playerId]
+
+    const second =
+      this.playerStats[playerId]
+
+    first.runs += second.runs
+    first.wickets += second.wickets
+    first.ballsFaced += second.ballsFaced
+    first.ballsDelivered += second.ballsDelivered
+    first.runsConceded += second.runsConceded
+    first.fours += second.fours
+    first.sixes += second.sixes
+
+  }
+
+  return matchStats
+
+}
+
  buildMatchObject(){
+
+  
 
   return {
 
@@ -860,10 +908,10 @@ checkMatchResult(){
 
         inning: 1,
 
-        totalRuns:
+        firstInningsTotalRuns:
         this.firstInningRuns,
-        totalBalls: this.totalDeliveries,
-        totalWickets: this.totalWickets,
+        firstInningsTotalBalls: this.firstInningsBalls,
+        firstInningsTotalWickets: this.firstInningsWickets,
 
         playerStats:
         this.firstInningsPlayerStats
@@ -874,10 +922,10 @@ checkMatchResult(){
 
         inning: 2,
 
-        totalRuns:
+        secondInningsTotalRuns:
         this.totalRuns,
-        totalWickets: this.totalWickets,
-        totalBalls: this.totalDeliveries,
+        secondInningsTotalWickets: this.totalWickets,
+        secondInningsTotalBalls: this.totalDeliveries,
 
         playerStats:
         this.playerStats

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatchSetupService } from '../../../services/MatchSetup/match-setup-service';
 import { Player } from '../../../shared/models/player.model';
@@ -12,90 +12,28 @@ import { Player } from '../../../shared/models/player.model';
 })
 export class TossPage {
 
-  constructor(private cdr: ChangeDetectorRef, private matchSetupService: MatchSetupService){}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private matchSetupService: MatchSetupService
+  ) {
+    this.teamACaptain =
+      this.matchSetupService.getTeamACaptain()
 
-  tossResult:string = ''
-  isTossing:boolean = false
-  isTossSkipped:boolean = false
-  TeamAChoice: "H" | "T" | "" = ""
-  tossWinner: "A" | "B" | "" = ""
-  decisionTeam: "A" | "B" | "" = ""
-  tossDecision: "bat" | "bowl" | "" = ""
-  battingTeam: "A" | "B" | "" = ""
+    this.teamBCaptain =
+      this.matchSetupService.getTeamBCaptain()
+  }
 
-  totalPlayers: Player[] = []
-  tossWinnerTeam: Player[] = []
+  battingTeam: 'A' | 'B' | '' = ''
 
-  
+  teamACaptain: Player | null = null
 
+  teamBCaptain: Player | null = null
 
-  tossCoin(){
-    if (!this.TeamAChoice || this.isTossing) return;
-
-    this.isTossing = true
-    this.tossResult = ''
-    this.tossWinner = ''
-    this.decisionTeam = ''
-    this.tossDecision = ''
-    this.battingTeam = ''
-
-    setTimeout(() => {
-      this.tossResult = Math.random() > 0.5 ? 'H' : 'T'
-      this.tossWinner = this.tossResult === this.TeamAChoice ? 'A' : 'B'
-        this.matchSetupService
-    .setMatchTossWinner(this.tossWinner)
-      this.decisionTeam = this.tossWinner
-      this.isTossing = false
-      this.cdr.detectChanges()
-    }, 1000);
-    
+  selectBattingTeam(team: 'A' | 'B') {
+    this.battingTeam = team
+    this.matchSetupService.setFirstBattingTeam(team)
+    this.matchSetupService.setFirstBowlingTeam(team === 'A' ? 'B' : 'A')
     this.cdr.detectChanges()
   }
-
-  skipToss() {
-    this.isTossSkipped = true
-    this.tossResult = ''
-    this.tossWinner = ''
-    this.decisionTeam = ''
-    this.tossDecision = ''
-    this.battingTeam = ''
-  }
-
-chooseDecision(
-  decision: "bat" | "bowl"
-) {
-
-  if (!this.decisionTeam) return;
-
-  this.tossDecision = decision
-
-  if (decision === 'bat') {
-
-    this.battingTeam =
-      this.decisionTeam
-
-  }
-
-  else {
-
-    this.battingTeam =
-      this.decisionTeam === 'A'
-      ? 'B'
-      : 'A'
-
-  }
-
-  this.matchSetupService
-    .setFirstBattingTeam(
-      this.battingTeam
-    )
-
-}
-
-  selectBattingTeam(team: "A" | "B") {
-    this.battingTeam = team
-    this.matchSetupService.firstBattingTeam = team
-  }
-
 
 }
