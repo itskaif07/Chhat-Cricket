@@ -23,7 +23,6 @@ ngOnInit(){
    this.matchService.retrieveMatches().subscribe((data:any)=>{
   this.matches = data
   this.cdr.detectChanges()
-  console.log(data)
 })
 }
 

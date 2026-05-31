@@ -238,11 +238,20 @@ py-8 ">
 
                                 text-sm">
 
+                                @if(match.motm.runs > 0 && match.motm.wickets > 0){
+
                                     {{match.motm.runs}} Runs
 
                                     •
 
                                     {{match.motm.wickets}} Wickets
+                                }
+                                @else if(match.motm.runs > 0 && match.motm.wickets == 0){
+                                    {{match.motm.runs}} Runs
+                                }
+                                @else if(match.motm.runs == 0 && match.motm.wickets > 0){
+                                    {{match.motm.wickets}} Wickets
+                                }
 
                                 </p>
 

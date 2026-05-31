@@ -1,22 +1,15 @@
 <div class="min-h-screen bg-[#050816] text-white px-4 py-5">
 
     <!-- MATCH HEADER -->
-    <div class="rounded-[2.5rem]
-border border-[#1E3A8A]/30
-bg-linear-to-br from-[#081A3D] to-[#030D24]
-overflow-hidden px-4 py-12 lg:w-4/5 lg:mx-auto my-10"> 
+    <div class="rounded-[2.5rem] border border-[#1E3A8A]/30 bg-linear-to-br from-[#081A3D] to-[#030D24] overflow-hidden px-4 py-12 lg:w-4/5 lg:mx-auto my-10"> 
 
         <!-- STATUS -->
         <div class="flex justify-center">
 
-            <div class="px-5 py-2 rounded-full
-bg-[#2563EB]/10
-border border-[#3B82F6]/20">
+            <div class="px-5 py-2 rounded-full bg-[#2563EB]/10 border border-[#3B82F6]/20">
 
-                <p class="text-[#60A5FA] text-sm font-black tracking-[0.2em]">
-
-                    MATCH RESULT
-
+                <p class="text-[#60A5FA] text-sm font-black tracking-[0.2em] uppercase">
+                    Scorecard
                 </p>
 
             </div>
@@ -24,14 +17,14 @@ border border-[#3B82F6]/20">
         </div>
 
         <!-- TEAMS -->
-        <div class="grid grid-cols-3 items-center mt-8">
+        <div class="flex flex-col space-y-10 lg:space-y-0 lg:flex-row lg:justify-around items-center justify-center mt-8 relative">
 
             <!-- TEAM A -->
-            <div class="text-center">
+            <div class="text-center lg:text-left">
 
                 <h1 class="text-2xl font-black">
 
-                    TEAM A
+                    {{matchData && matchData.innings?.[0] ? '1st Innings' : '2nd Innings'}}
 
                 </h1>
 
@@ -42,36 +35,33 @@ border border-[#3B82F6]/20">
 
                 </h1>
 
-                <p class="text-blue-200 lowercase mt-6  text-center font-bold text-lg ">
+                <p class="text-blue-200 lowercase mt-6 font-bold text-lg ">
                 
                     {{getOvers(matchData?.innings?.[0]?.firstInningsTotalBalls)}} Overs
                 
                 </p>
             </div>
 
-            <!-- VS -->
-            <div class="flex justify-center">
-
-                <div class="w-20 h-20 rounded-full
-                bg-white/5
-                border border-white/10
-                flex items-center justify-center">
-
-                    <h1 class="text-2xl font-black">
-                        VS
-                    </h1>
-
-
-                </div>
-
-            </div>
+<!-- Mobile Divider -->
+    <div class="h-px w-2/3 mx-auto
+             bg-linear-to-r
+             from-transparent
+             via-white/20
+             to-transparent lg:hidden">
+    </div>
+        
+        <!-- Desktop Divider -->
+        <div class="hidden lg:block absolute left-1/2 top-1/2
+                 -translate-x-1/2 -translate-y-1/2
+                 w-px h-32 bg-white/10">
+        </div>
 
             <!-- TEAM B -->
-            <div class="text-center">
+            <div class="text-center lg:text-left">
 
                 <h1 class="text-2xl font-black">
 
-                    TEAM B
+                    {{matchData && matchData.innings?.[1] ? '2nd Innings' : '1st Innings'}}
 
                 </h1>
 
@@ -83,7 +73,7 @@ border border-[#3B82F6]/20">
                 </h1>
 
                 
-                <p class="text-blue-200 lowercase mt-6  text-center font-bold text-lg ">
+                <p class="text-blue-200 lowercase mt-6 font-bold text-lg ">
         
                     {{getOvers(matchData?.innings?.[1]?.secondInningsTotalBalls)}} Overs
         
@@ -267,7 +257,7 @@ border border-[#3B82F6]/20">
 
         </div>
 
-        <div class="grid grid-cols-5 gap-3 mt-4">
+        <div class="grid grid-cols-3 grid-rows-2 lg:grid-cols-4 lg:grid-rows-1  gap-3 mt-4">
 
             <div class="bg-black/20 rounded-2xl p-3 text-center">
 

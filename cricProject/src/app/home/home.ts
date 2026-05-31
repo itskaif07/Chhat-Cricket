@@ -16,6 +16,9 @@ export class Home implements OnInit {
   user: User | null = null
   playersCount: number = 0
   matchesCount:number = 0
+  matches:any = 0
+  totalRuns = 0
+  totalWickets = 0
 
 
   constructor( private auth: Auth, private ngZone: NgZone, private firestore: Firestore, private cdr: ChangeDetectorRef, private matchService:MatchService) {
@@ -60,13 +63,59 @@ retrieveMatches(){
   .retrieveMatches()
   .subscribe((data)=>{
 
-    this.matchesCount =
-    data.length
-
+    this.matchesCount = data.length
+    this.matches = data
+    this.aggregateTotalRuns()
+    this.aggregateTotalWickets()
     this.cdr.detectChanges()
 
   })
 
 }
+
+aggregateTotalRuns(){
+
+  this.totalRuns = 0
+
+  if(this.matches){
+
+    this.matches.forEach((match:any) => {
+
+      match.innings.forEach((innings:any) => {
+
+        if(innings.inning === 1){
+          this.totalRuns += innings.firstInningsTotalRuns || 0
+        }
+
+        if(innings.inning === 2){
+          this.totalRuns += innings.secondInningsTotalRuns || 0
+        }
+
+      })
+
+    })
+
+  }
+
+}
+
+
+aggregateTotalWickets(){
+  if(this.matches){
+    this.matches.forEach((match:any) =>{
+      match.innings.forEach((innings:any)=>{
+        if(innings.inning == 1){
+          this.totalWickets += innings.firstInningsTotalWickets || 0
+        }
+
+        if(innings.inning == 2){
+          this.totalWickets += innings.firstInningsTotalWickets || 0
+        }
+      })
+    })
+  }
+}
+
+
 
 }
