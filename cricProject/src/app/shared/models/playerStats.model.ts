@@ -30,6 +30,8 @@ export interface PlayerStats {
 
   caughtBy?: string
 
+  hatTricks: number
+
   fifty: number
 
   hundred: number

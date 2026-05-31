@@ -100,4 +100,31 @@ getBowlers(playerStats:any){
 
 }
 
+
+getDismissalText(player: any): string {
+
+  if (!player.dismissalType) {
+    return 'Not Out';
+  }
+
+  if (player.dismissalType === 'caught') {
+
+    if (player.caughtBy === player.dismissedBy) {
+      return `c & b ${player.dismissedBy}`;
+    }
+
+    return `c ${player.caughtBy} b ${player.dismissedBy}`;
+  }
+
+  if (player.dismissalType === 'bowled') {
+    return `b ${player.dismissedBy}`;
+  }
+
+  if(player.dismissalType === 'offside'){
+    return `b ${player.dismissedBy}`
+  }
+
+  return player.dismissalType;
+}
+
 }

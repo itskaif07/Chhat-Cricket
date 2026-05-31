@@ -41,6 +41,10 @@ export class LiveMatch implements OnInit {
   isShowingScoreCard:boolean = false
   isDismissalDialogOpen:boolean = false
   isShowingCatchingDialog:boolean = false
+  showHatTrickAnimation = false
+
+  captainA:Player | null = null
+  captainB:Player | null = null
 
 
   dismissalType:'caught'|'bowled'|'offside'| null = null
@@ -75,6 +79,7 @@ export class LiveMatch implements OnInit {
   ngOnInit(){
     this.getAllSelectedPlayers()
     this.initializePlayerStats()
+    this.getCaptains()
   }
 
   getAllSelectedPlayers(){
@@ -114,6 +119,7 @@ export class LiveMatch implements OnInit {
         dismissalType: null,
         caughtBy: '',
         dismissedBy:'',
+        hatTricks:0,
         maiden:0,
         hasScoredFifty:false,
         fifty: 0,
@@ -210,6 +216,8 @@ get currentBowlerEconomy(): string {
   return economy.toFixed(2)
 
 }
+
+
 
 get currentBatsmanStrikeRate(): string {
 
@@ -391,6 +399,11 @@ get Motm(){
 }
 
 
+getCaptains(){
+  this.captainA = this.matchSetupService.getTeamACaptain()
+  this.captainB = this.matchSetupService.getTeamBCaptain()
+}
+
  selectBatsman(player: Player){
   this.selectedBatsman = player
  }
@@ -401,6 +414,8 @@ get Motm(){
   }
   this.selectedBowler = player 
  }
+
+
 
 
  //confirm selection
@@ -440,7 +455,7 @@ get Motm(){
   this.playerStats[this.currentBowler?.id].ballsDelivered += 1
    }
 
-   this.manageRecentDeliveries()
+     
    this.manageOversChange()
   }
   
@@ -464,7 +479,6 @@ get Motm(){
       this.playerStats[this.currentBowler?.id].runsConceded += 4
     }
 
-    this.manageRecentDeliveries()
     this.manageBattingMilestone()
     this.manageOversChange()
     this.checkMatchResult()
@@ -490,7 +504,6 @@ this.playerStats[this.currentBowler?.id].ballsDelivered += 1
       this.playerStats[this.currentBowler?.id].runsConceded += 6
     }
   
-   this.manageRecentDeliveries()
    this.manageBattingMilestone()
    this.manageOversChange()
    this.checkMatchResult()
@@ -518,7 +531,14 @@ addWicket(){
     type:'wicket'
   })
 
-  this.manageRecentDeliveries()
+  if (this.currentBowler?.id && this.isHatTrick()) {
+    this.playerStats[this.currentBowler.id!].hatTricks++;
+}
+
+ if(this.isHatTrick()){
+  this.showHatTrickAnimation = true;
+}
+
 
   this.manageOversChange()
 
@@ -678,6 +698,20 @@ manageBattingMilestone(){
   }
 }
 
+isHatTrick():boolean{
+  if(this.recentDeliveries.length < 3){
+    return false
+  }
+
+  const lastThreeDeliveries = this.recentDeliveries.slice(-3)
+
+  return lastThreeDeliveries.every(delivery => delivery.type === 'W')
+
+  setTimeout(()=>{
+  this.showHatTrickAnimation = false
+},3000)
+}
+
 undo(){
   if(this.lastAction === '4'){
     this.totalDeliveries -= 1
@@ -723,11 +757,6 @@ undo(){
 
 }
 
-manageRecentDeliveries(){
-  if(this.recentDeliveries.length > 15){
-    this.recentDeliveries.pop()
-  }
-}
 
 manageOversChange(){
 
@@ -899,8 +928,9 @@ buildMatchStats(){
     year: new Date().getFullYear(),
     teamA: this.teamA,
     teamB: this.teamB,
-    winner: this.matchResult,
     motm: this.Motm,
+    teamACaptain: this.captainA,
+    teamBCaptain: this.captainB,
 
     innings: [
 
@@ -948,10 +978,7 @@ async saveCompletedMatch(){
     await this.matchService
     .saveMatch(matchData)
 
-    console.log(
-      'Match Saved Successfully'
-    )
-
+    this.saveMatchSetup()
     this.router.navigate(['/'])
 
   }
@@ -965,6 +992,15 @@ async saveCompletedMatch(){
 
   }
 
+}
+
+saveMatchSetup(){
+  localStorage.setItem('lastMatchSetup', JSON.stringify({
+    teamA: this.teamA,
+    teamB: this.teamB,
+    teamACaptain: this.captainA,
+    teamBCaptain: this.captainB
+  }))
 }
  
 }

@@ -39,6 +39,23 @@ export class MatchSetupService {
     this.selectedPlayers = [...teamA, ...teamB]
   }
 
+  restoreTeams(
+    teamA: Player[],
+    teamB: Player[],
+    teamACaptain: Player | null,
+    teamBCaptain: Player | null
+  ){
+    this.teamA = teamA
+    this.teamB = teamB
+    this.teamACaptain = teamACaptain || teamA[0] || null
+    this.teamBCaptain = teamBCaptain || teamB[0] || null
+    this.tossWinner = ''
+    this.firstBattingTeam = ''
+    this.firstBowlingTeam = ''
+
+    this.selectedPlayers = [...teamA, ...teamB]
+  }
+
   setLeftOverPlayer(player: Player){
     if(this.tossWinner ==='A'){
       this.teamA.push(player)

@@ -155,10 +155,9 @@ border border-[#3B82F6]/20">
                         {{player.playerName}}
                     </h1>
 
-                    <p class="text-zinc-500 text-sm">
-                        {{player.dismissalType || 'Not Out'}}
-                    </p>
-
+                <p class="text-zinc-500 text-sm">
+                    {{ getDismissalText(player) }}
+                </p>
                 </div>
 
             </div>
@@ -178,7 +177,7 @@ border border-[#3B82F6]/20">
         </div>
 
         <!-- STATS -->
-        <div class="grid grid-cols-4 gap-3 mt-4">
+        <div class="grid grid-cols-3 gap-3 mt-4">
 
             <div class="bg-black/20 rounded-2xl p-3 text-center">
 
@@ -216,15 +215,6 @@ border border-[#3B82F6]/20">
 
             </div>
 
-            <div class="bg-black/20 rounded-2xl p-3 text-center">
-
-                <p class="text-zinc-500 text-xs">B</p>
-
-                <h1 class="font-black">
-                    {{player.ballsFaced}}
-                </h1>
-
-            </div>
 
         </div>
 
