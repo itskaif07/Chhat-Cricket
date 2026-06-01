@@ -19,6 +19,9 @@ export class Home implements OnInit {
   matches:any = 0
   totalRuns = 0
   totalWickets = 0
+  careerStats:any = {}
+  orangeCap:any
+  purpleCap:any
 
 
   constructor( private auth: Auth, private firestore: Firestore, private cdr: ChangeDetectorRef, private matchService:MatchService) {
@@ -67,6 +70,7 @@ retrieveMatches(){
     this.matches = data
     this.aggregateTotalRuns()
     this.aggregateTotalWickets()
+    this.aggregateCareerStats()
     this.cdr.detectChanges()
 
   })
@@ -117,5 +121,82 @@ aggregateTotalWickets(){
 }
 
 
+aggregateCareerStats(){
+
+  this.matches.forEach((match:any)=>{
+
+    match.innings.forEach((innings:any)=>{
+
+      Object.entries(
+        innings.playerStats || {}
+      ).forEach(([playerId, stats]:any)=>{
+
+        if(!this.careerStats[playerId]){
+
+          this.careerStats[playerId] = {
+
+            playerId,
+
+            playerName: stats.playerName,
+
+            playerPhoto: stats.playerPhoto,
+
+            totalRuns: 0,
+
+            totalWickets: 0,
+
+            totalBallsFaced: 0,
+
+            totalMatches: 0
+
+          }
+
+        }
+
+        this.careerStats[playerId].totalRuns +=
+          stats.runs || 0
+
+        this.careerStats[playerId].totalWickets +=
+          stats.wickets || 0
+
+        this.careerStats[playerId].totalBallsFaced +=
+          stats.balls || 0
+
+        this.careerStats[playerId].totalMatches +=
+          stats.matches || 0
+
+
+
+      })
+
+    })
+
+  })
+
+  this.getOrangeCap()
+  this.getPurpleCap()
+ 
+
+}
+
+getOrangeCap(){
+
+  this.orangeCap = Object.values(this.careerStats)
+    .sort(
+      (a:any,b:any)=>
+      b.totalRuns - a.totalRuns
+    )[0]
+
+}
+
+getPurpleCap(){
+
+  this.purpleCap = Object.values(this.careerStats)
+    .sort(
+      (a:any,b:any)=>
+      b.totalWickets - a.totalWickets
+    )[0]
+
+}
 
 }

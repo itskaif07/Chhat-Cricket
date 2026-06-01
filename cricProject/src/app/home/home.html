@@ -432,8 +432,8 @@
                 <!-- GLASS LAYER -->
                 <div class="absolute inset-0
     backdrop-blur-[2px]
-    bg-white/[0.03]
-    border border-white/[0.05]">
+    bg-white/3
+    border border-white/5">
 
                 </div>
 
@@ -510,19 +510,19 @@
                     Current Leaders
                 </p>
 
-                <h1 class="text-2xl lg:text-3xl font-bold mt-2">
-                    Caps and Averages
-                </h1>
+            <h1 class="text-2xl lg:text-3xl font-bold mt-2">
+                Orange & Purple Caps
+            </h1>
 
             </div>
 
             <p class="text-zinc-400 text-sm max-w-xl">
-                Spotlighting the players currently leading the rooftop records.
+                The top run-scorer and wicket-taker across all recorded matches.
             </p>
 
         </div>
 
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div class="w-full grid grid-cols-1 md:grid-cols-2  gap-4">
 
             <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
 
@@ -543,7 +543,7 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        Batsman
+                        {{ this.orangeCap?.playerName || 'Batsman' }}
                     </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
@@ -551,7 +551,9 @@
                     </p>
 
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-orange-300">90</span>
+                    <span class="text-5xl font-black text-orange-300">
+                        {{ this.orangeCap?.totalRuns || 0 }}
+                    </span>
                         <span class="text-zinc-500 font-semibold mb-2">runs</span>
                     </div>
 
@@ -578,7 +580,7 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        Bowler
+                        {{purpleCap?.playerName || 'Bowler'}}
                     </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
@@ -586,7 +588,7 @@
                     </p>
 
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">10</span>
+                        <span class="text-5xl font-black text-purple-300">{{purpleCap?.totalWickets || 0}}</span>
                         <span class="text-zinc-500 font-semibold mb-2">wickets</span>
                     </div>
 
@@ -594,75 +596,6 @@
 
             </div>
 
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-emerald-400/20">
-
-                <div class="flex items-start justify-between">
-
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-emerald-400/15 border border-emerald-400/25 flex items-center justify-center shadow-lg shadow-emerald-400/10">
-                        <img src="/icons/trophy.png" class="w-8" alt="">
-                    </div>
-
-                    <span
-                        class="px-3 py-1 rounded-full bg-emerald-400/15 border border-emerald-400/25 text-emerald-300 text-xs font-bold uppercase tracking-wider">
-                        Bat Avg
-                    </span>
-
-                </div>
-
-                <div class="mt-8">
-
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        Batsman
-                    </h2>
-
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Best batting average
-                    </p>
-
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-emerald-300">10.00</span>
-                        <span class="text-zinc-500 font-semibold mb-2">avg</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-sky-400/20">
-
-                <div class="flex items-start justify-between">
-
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-sky-400/15 border border-sky-400/25 flex items-center justify-center shadow-lg shadow-sky-400/10">
-                        <img src="/icons/cricket.png" class="w-8" alt="">
-                    </div>
-
-                    <span
-                        class="px-3 py-1 rounded-full bg-sky-400/15 border border-sky-400/25 text-sky-300 text-xs font-bold uppercase tracking-wider">
-                        Bowl Avg
-                    </span>
-
-                </div>
-
-                <div class="mt-8">
-
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        Bowler
-                    </h2>
-
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Best bowling average
-                    </p>
-
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-sky-300">15.00</span>
-                        <span class="text-zinc-500 font-semibold mb-2">avg</span>
-                    </div>
-
-                </div>
-
-            </div>
 
         </div>
 
