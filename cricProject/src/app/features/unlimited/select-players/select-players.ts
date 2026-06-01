@@ -111,12 +111,29 @@ selectPlayer(player: Player) {
 
 }
 
+getSelectionOrder(player:Player){
+
+  if(!player.id) return 0
+
+  return this.selectedPlayers.indexOf(player.id) + 1
+
+}
+
 goToTossPage(){
-  if (this.selectedPlayers.length < 2) return;
+  if (this.selectedPlayers.length < 4) return;
 
   this.matchSetupService.setTeams(this.teamA, this.teamB)
   this.router.navigate(['/unlimited/toss'])
 }
+
+reset(){
+  this.selectedPlayers = []
+  this.teamA = []
+  this.teamB = []
+  this.currentTurn = 'A'
+}
+
+
 
 
 }

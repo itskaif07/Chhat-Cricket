@@ -41,7 +41,8 @@ getData(){
 
       this.matchData = data
 
-      this.selectedInnings = this.matchData.innings[1]
+      console.log(data)
+      this.selectedInnings = this.matchData.innings[0]
       
       this.getCaptains()
       this.cdr.detectChanges()
@@ -59,7 +60,12 @@ catch(e){
 
 getPlayers(playerStats:any): any[] {
 
-  return Object.values(playerStats || {})
+  return Object.entries(playerStats || {}).map(
+    ([id, player]: any) => ({
+      id,
+      ...player
+    })
+  )
 
 }
 
@@ -105,10 +111,9 @@ getBowlers(playerStats:any){
 }
 
 getCaptains(){
- this.captainA = this.matchSetupService.getTeamACaptain()
- this.captainB = this.matchSetupService.getTeamBCaptain()
+ this.captainA = this.matchData.teamACaptain
+ this.captainB = this.matchData.teamBCaptain
 
- console.log(this.captainA)
 }
 
 

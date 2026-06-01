@@ -21,7 +21,7 @@ export class Home implements OnInit {
   totalWickets = 0
 
 
-  constructor( private auth: Auth, private ngZone: NgZone, private firestore: Firestore, private cdr: ChangeDetectorRef, private matchService:MatchService) {
+  constructor( private auth: Auth, private firestore: Firestore, private cdr: ChangeDetectorRef, private matchService:MatchService) {
 
   onAuthStateChanged(this.auth, (user) => {
       this.user = user;

@@ -42,7 +42,6 @@ export class AddPlayer {
 
     this.selectedFile = file
 
-    console.log('the file exists')
     const reader = new FileReader()
 
     reader.onload = (()=>{
@@ -84,11 +83,10 @@ async addPlayer(playerForm: NgForm) {
 
       ...this.player,
 
-      photoURL: imageURL
+      photoURL: imageURL || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4YreOWfDX3kK-QLAbAL4ufCPc84ol2MA8Xg&s'
 
     });
 
-    console.log('player added');
     playerForm.reset()
     this.previewImage = null
     this.selectedFile = null
