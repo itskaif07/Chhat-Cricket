@@ -506,10 +506,6 @@
 
             <div>
 
-                <p class="text-[#44d43b] text-sm font-semibold uppercase tracking-widest">
-                    Current Leaders
-                </p>
-
             <h1 class="text-2xl lg:text-3xl font-bold mt-2">
                 Orange & Purple Caps
             </h1>
@@ -590,6 +586,183 @@
                     <div class="mt-5 flex items-end gap-2">
                         <span class="text-5xl font-black text-purple-300">{{purpleCap?.totalWickets || 0}}</span>
                         <span class="text-zinc-500 font-semibold mb-2">wickets</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div id="section5" class="w-full bg-[#050B18] text-white px-4 lg:px-12 py-12 flex flex-col gap-6">
+
+        <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+
+            <div>
+
+
+            <h1 class="text-2xl lg:text-3xl font-bold mt-2">
+                Elite Performers
+            </h1>
+
+            </div>
+
+            <p class="text-zinc-400 text-sm max-w-xl">
+                Beyond totals, these players are setting the benchmark for efficiency and consistency.
+            </p>
+
+        </div>
+
+        <div class="w-full grid grid-cols-1 md:grid-cols-2  gap-4">
+
+            <!-- Strike Rate -->
+
+            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
+
+                <div class="flex items-start justify-between">
+
+                    <div
+                        class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10">
+                        <img src="/icons/bat.png" class="w-8" alt="">
+                    </div>
+
+                    <span
+                        class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider">
+                        Strike Rate
+                    </span>
+
+                </div>
+
+                <div class="mt-8">
+
+                    <h2 class="text-3xl font-bold leading-tight uppercase">
+                        {{ this.bestStrikeRatePlayer?.playerName || 'Batsman' }}
+                    </h2>
+
+                    <p class="text-zinc-400 text-sm mt-2">
+                        Best Strike Rate
+                    </p>
+
+                    <div class="mt-5 flex items-end gap-2">
+                    <span class="text-5xl font-black text-orange-300">
+                        {{ this.bestStrikeRate.toFixed(2) || 0.00 }}
+                    </span>
+                        <!-- <span class="text-zinc-500 font-semibold mb-2">runs</span> -->
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Economy -->
+
+            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
+
+                <div class="flex items-start justify-between">
+
+                    <div
+                        class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10">
+                        <img src="/icons/ball.png" class="w-8" alt="">
+                    </div>
+
+                    <span
+                        class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider">
+                       Economy
+                    </span>
+
+                </div>
+
+                <div class="mt-8">
+
+                    <h2 class="text-3xl font-bold leading-tight uppercase">
+                        {{bestEconomyPlayer?.playerName || 'Bowler'}}
+                    </h2>
+
+                    <p class="text-zinc-400 text-sm mt-2">
+                        Best Economy
+                    </p>
+
+                    <div class="mt-5 flex items-end gap-2">
+                        <span class="text-5xl font-black text-purple-300">{{bestEconomy.toFixed(1) || 0}}</span>
+                        <!-- <span class="text-zinc-500 font-semibold mb-2">wickets</span> -->
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Batting Average -->
+
+            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
+
+                <div class="flex items-start justify-between">
+
+                    <div
+                        class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10">
+                        <img src="/icons/bat.png" class="w-8" alt="">
+                    </div>
+
+                    <span
+                        class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider">
+                       Batting Average
+                    </span>
+
+                </div>
+
+                <div class="mt-8">
+
+                    <h2 class="text-3xl font-bold leading-tight uppercase">
+                        {{bestBattingAveragePlayer?.playerName || 'Bowler'}}
+                    </h2>
+
+                    <p class="text-zinc-400 text-sm mt-2">
+                        Best Batting Average
+                    </p>
+
+                    <div class="mt-5 flex items-end gap-2">
+                        <span class="text-5xl font-black text-orange-300">{{ bestBattingAverage.toFixed(2) || 0}}</span>
+                        <!-- <span class="text-zinc-500 font-semibold mb-2">wickets</span> -->
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Bowling Average -->
+
+            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
+
+                <div class="flex items-start justify-between">
+
+                    <div
+                        class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10">
+                        <img src="/icons/ball.png" class="w-8" alt="">
+                    </div>
+
+                    <span
+                        class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider">
+                       Bowling Average
+                    </span>
+
+                </div>
+
+                <div class="mt-8">
+
+                    <h2 class="text-3xl font-bold leading-tight uppercase">
+                        {{bestBowlingAveragePlayer?.playerName || 'Bowler'}}
+                    </h2>
+
+                    <p class="text-zinc-400 text-sm mt-2">
+                        Best Bowling Average
+                    </p>
+
+                    <div class="mt-5 flex items-end gap-2">
+                        <span class="text-5xl font-black text-purple-300">{{bestBowlingAverage.toFixed(2) || 0}}</span>
+                        <!-- <span class="text-zinc-500 font-semibold mb-2">wickets</span> -->
                     </div>
 
                 </div>

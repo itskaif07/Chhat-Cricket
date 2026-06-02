@@ -22,6 +22,15 @@ export class Home implements OnInit {
   careerStats:any = {}
   orangeCap:any
   purpleCap:any
+  bestStrikeRate:number = 0
+  bestStrikeRatePlayer:any = null
+  bestEconomyPlayer:any = null
+  bestEconomy:number = 0
+  bestBattingAveragePlayer:any = null
+  bestBattingAverage:number = 0
+  bestBowlingAveragePlayer:any = null
+  bestBowlingAverage:number = 0
+
 
 
   constructor( private auth: Auth, private firestore: Firestore, private cdr: ChangeDetectorRef, private matchService:MatchService) {
@@ -60,6 +69,8 @@ async retrievePlayers() {
 
 }
 
+//Platform Stats
+
 retrieveMatches(){
 
   this.matchService
@@ -68,6 +79,7 @@ retrieveMatches(){
 
     this.matchesCount = data.length
     this.matches = data
+    console.log(data)
     this.aggregateTotalRuns()
     this.aggregateTotalWickets()
     this.aggregateCareerStats()
@@ -120,6 +132,8 @@ aggregateTotalWickets(){
   }
 }
 
+// Player Stats
+
 
 aggregateCareerStats(){
 
@@ -147,7 +161,14 @@ aggregateCareerStats(){
 
             totalBallsFaced: 0,
 
-            totalMatches: 0
+            totalMatches: 0,
+
+            totalRunsConceded: 0,
+
+            totalBallsDelivered: 0,
+
+            dismissed: 0
+
 
           }
 
@@ -160,11 +181,18 @@ aggregateCareerStats(){
           stats.wickets || 0
 
         this.careerStats[playerId].totalBallsFaced +=
-          stats.balls || 0
+          stats.ballsFaced || 0
 
         this.careerStats[playerId].totalMatches +=
           stats.matches || 0
 
+        this.careerStats[playerId].totalRunsConceded +=
+          stats.runsConceded || 0
+
+        this.careerStats[playerId].totalBallsDelivered +=
+          stats.ballsDelivered || 0
+
+        this.careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0
 
 
       })
@@ -175,6 +203,11 @@ aggregateCareerStats(){
 
   this.getOrangeCap()
   this.getPurpleCap()
+  this.getStrikeRate()
+  this.getEconomy()
+  this.getBattingAverage()
+  this.getBowlingAverage()
+  this.cdr.detectChanges()
  
 
 }
@@ -196,6 +229,121 @@ getPurpleCap(){
       (a:any,b:any)=>
       b.totalWickets - a.totalWickets
     )[0]
+
+}
+
+getStrikeRate() {
+
+  if (!this.careerStats) return;
+
+  const players = Object.values(this.careerStats);
+
+  this.bestStrikeRatePlayer = players.reduce(
+    (winner: any, challenger: any) => {
+
+      const winnerSR =
+        (winner.totalRuns / winner.totalBallsFaced) * 100;
+
+      const challengerSR =
+        (challenger.totalRuns / challenger.totalBallsFaced) * 100;
+
+      return challengerSR > winnerSR
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.bestStrikeRate =
+    (
+      this.bestStrikeRatePlayer.totalRuns /
+      this.bestStrikeRatePlayer.totalBallsFaced
+    ) * 100;
+
+}
+
+getEconomy(){
+  if(!this.careerStats){
+    return
+  }
+
+  let players = Object.values(this.careerStats)
+
+  this.bestEconomyPlayer = players.reduce(
+  (winner:any, challenger:any) => {
+
+    const winnerEconomy =
+      winner.totalBallsDelivered > 0
+        ? winner.totalRunsConceded /
+          (winner.totalBallsDelivered / 6)
+        : Infinity;
+
+    const challengerEconomy =
+      challenger.totalBallsDelivered > 0
+        ? challenger.totalRunsConceded /
+          (challenger.totalBallsDelivered / 6)
+        : Infinity;
+
+
+    return challengerEconomy < winnerEconomy
+      ? challenger
+      : winner;
+  }
+);
+
+this.bestEconomy = this.bestEconomyPlayer.totalRunsConceded / (this.bestEconomyPlayer.totalBallsDelivered/6)
+
+}
+
+getBattingAverage(){
+  if(!this.careerStats){
+    return
+  }
+
+  let players = Object.values(this.careerStats)
+
+  this.bestBattingAveragePlayer = players.reduce((prev:any, next:any)=>{
+    let prevPlayerAverage = prev.dismissed > 0 ? (prev.totalRuns / prev.dismissed) : prev.totalRuns
+    let nextPlayerAverage = next.dismissed > 0 ? (next.totalRuns / next.dismissed) : next.totalRuns
+
+    return nextPlayerAverage > prevPlayerAverage ? next : prev
+  })
+
+  this.bestBattingAverage = this.bestBattingAveragePlayer.dismissed > 0 ? (this.bestBattingAveragePlayer.totalRuns / this.bestBattingAveragePlayer.dismissed) : this.bestBattingAveragePlayer.totalRuns
+
+}
+
+getBowlingAverage(){
+  if(!this.careerStats){
+    return
+  }
+
+  let players = Object.values(this.careerStats)
+
+ this.bestBowlingAveragePlayer = players.reduce(
+  (prev: any, next: any) => {
+
+    const prevAverage =
+      prev.totalWickets > 0
+        ? prev.totalRunsConceded / prev.totalWickets
+        : Infinity;
+
+    const nextAverage =
+      next.totalWickets > 0
+        ? next.totalRunsConceded / next.totalWickets
+        : Infinity;
+
+    return nextAverage < prevAverage
+      ? next
+      : prev;
+  }
+);
+
+this.bestBowlingAverage =
+  this.bestBowlingAveragePlayer.totalWickets > 0
+    ? this.bestBowlingAveragePlayer.totalRunsConceded /
+      this.bestBowlingAveragePlayer.totalWickets
+    : 0;
 
 }
 
