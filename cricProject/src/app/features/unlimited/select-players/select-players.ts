@@ -23,6 +23,9 @@ export class SelectPlayers implements OnInit
   teamA: Player[] = []
   teamB: Player[] = []
 
+   captainA:Player | null = null
+  captainB:Player | null = null
+
   currentTurn: 'A' | 'B' = 'A';
 
   ngOnInit(){
@@ -119,10 +122,12 @@ getSelectionOrder(player:Player){
 
 }
 
-goToTossPage(){
+goToNextPage(){
   if (this.selectedPlayers.length < 4) return;
 
   this.matchSetupService.setTeams(this.teamA, this.teamB)
+  this.getCaptains()
+  this.saveMatchSetup()
   this.router.navigate(['/unlimited/toss'])
 }
 
@@ -133,7 +138,18 @@ reset(){
   this.currentTurn = 'A'
 }
 
+getCaptains(){
+  this.captainA = this.matchSetupService.getTeamACaptain()
+  this.captainB = this.matchSetupService.getTeamBCaptain()
+}
 
-
+saveMatchSetup(){
+  localStorage.setItem('lastMatchSetup', JSON.stringify({
+    teamA: this.teamA,
+    teamB: this.teamB,
+    teamACaptain: this.captainA,
+    teamBCaptain: this.captainB
+  }))
+}
 
 }

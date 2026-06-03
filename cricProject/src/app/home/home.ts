@@ -3,6 +3,7 @@ import {Auth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, 
 import { collection, Firestore, getDoc, getDocs } from '@angular/fire/firestore';
 import { RouterLink } from '@angular/router';
 import { MatchService } from '../services/matchService/match-service';
+import { Player } from '../shared/models/player.model';
 
 
 @Component({
@@ -30,6 +31,18 @@ export class Home implements OnInit {
   bestBattingAverage:number = 0
   bestBowlingAveragePlayer:any = null
   bestBowlingAverage:number = 0
+  highestScore:number = 0
+  highestScorePlayer:any = null
+  bestFiguresPlayer:any = null
+  bestFigures:string | number | null = null
+  mostFoursPlayer:any = null
+  mostFours:number = 0
+  mostSixesPlayer:any = null
+  mostSixes:number = 0
+  mostFiftiesPlayer:any = null
+  mostFifties:number = 0
+  mostHattricksPlayer:any = null
+  mosthattricks:number = 0
 
 
 
@@ -167,7 +180,15 @@ aggregateCareerStats(){
 
             totalBallsDelivered: 0,
 
-            dismissed: 0
+            dismissed: 0,
+
+            totalFours: 0,
+
+            totalSixes: 0,
+
+            totalFifties: 0,
+
+            totalHattricks: 0
 
 
           }
@@ -192,6 +213,18 @@ aggregateCareerStats(){
         this.careerStats[playerId].totalBallsDelivered +=
           stats.ballsDelivered || 0
 
+        this.careerStats[playerId].totalFours +=
+          stats.fours || 0
+
+        this.careerStats[playerId].totalSixes +=
+          stats.sixes || 0
+
+        this.careerStats[playerId].totalFifties +=
+          stats.fifty || 0
+
+        this.careerStats[playerId].totalHattricks +=
+          stats.hatTricks || 0
+
         this.careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0
 
 
@@ -207,6 +240,12 @@ aggregateCareerStats(){
   this.getEconomy()
   this.getBattingAverage()
   this.getBowlingAverage()
+  this.getHighestScore()
+  this.getBestFigures()
+  this.getMostFours()
+  this.getMostSixes()
+  this.getMostFifties()
+  this.getMostHattricks()
   this.cdr.detectChanges()
  
 
@@ -345,6 +384,152 @@ this.bestBowlingAverage =
       this.bestBowlingAveragePlayer.totalWickets
     : 0;
 
+}
+
+getHighestScore(){
+
+  this.matches.forEach((match:any)=>{
+    match.innings.forEach((inning:any)=>{
+
+      Object.values(inning.playerStats || {}).forEach((player:any)=>{
+          if(player.runs > this.highestScore){
+            this.highestScore = player.runs
+            this.highestScorePlayer = player
+          }
+      })
+    })
+  })
+}
+
+getBestFigures(){
+
+  this.matches.forEach((match:any)=>{
+
+    match.innings.forEach((inning:any)=>{
+
+      Object.values(inning.playerStats || {})
+      .forEach((player:any)=>{
+
+        const currentWickets = player.wickets || 0;
+        const currentRuns = player.runsConceded || 0;
+
+        const bestWickets =
+          this.bestFiguresPlayer?.wickets || 0;
+
+        const bestRuns =
+          this.bestFiguresPlayer?.runsConceded || Infinity;
+
+        if(
+          currentWickets > bestWickets ||
+
+          (
+            currentWickets === bestWickets &&
+            currentRuns < bestRuns
+          )
+        ){
+
+          this.bestFiguresPlayer = player;
+          this.bestFigures = currentWickets +  '/' + currentRuns 
+        }
+
+      });
+
+    });
+
+  });
+
+}
+
+getMostFours(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  this.mostFoursPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalFours >
+             winner.totalFours
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mostFours =
+    this.mostFoursPlayer.totalFours;
+}
+
+getMostSixes(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  this.mostSixesPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalSixes >
+             winner.totalSixes
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mostSixes =
+    this.mostSixesPlayer.totalSixes;
+}
+
+getMostFifties(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  this.mostFiftiesPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalFifties >
+             winner.totalFifties
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mostFifties =
+    this.mostFiftiesPlayer.totalFifties;
+}
+
+getMostHattricks(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  this.mostHattricksPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalHattricks >
+             winner.totalHattricks
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mosthattricks =
+    this.mostHattricksPlayer.totalHattricks;
 }
 
 }

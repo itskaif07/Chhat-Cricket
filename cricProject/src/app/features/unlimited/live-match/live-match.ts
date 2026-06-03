@@ -978,7 +978,6 @@ async saveCompletedMatch(){
     await this.matchService
     .saveMatch(matchData)
 
-    this.saveMatchSetup()
     this.router.navigate(['/'])
 
   }
@@ -994,14 +993,6 @@ async saveCompletedMatch(){
 
 }
 
-saveMatchSetup(){
-  localStorage.setItem('lastMatchSetup', JSON.stringify({
-    teamA: this.teamA,
-    teamB: this.teamB,
-    teamACaptain: this.captainA,
-    teamBCaptain: this.captainB
-  }))
-}
  
 }
 
