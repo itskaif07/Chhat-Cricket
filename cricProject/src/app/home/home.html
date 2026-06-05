@@ -523,74 +523,131 @@
 
         </div>
 
-        <div class="w-full grid grid-cols-1 md:grid-cols-2  gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
+            <div class="lg:col-span-2 relative overflow-hidden
+                       rounded-4xl
+                       border border-orange-400/20
+                       bg-linear-to-br
+                       from-orange-500/15
+                       via-[#08111F]
+                       to-[#08111F]
+                       p-8 min-h-80">
 
-                <div class="flex items-start justify-between">
+                <!-- giant background number -->
+                <div class="absolute right-6 top-4
+                           text-[140px]
+                           font-black
+                           text-orange-500/5
+                           leading-none">
+                    1
+                </div>
 
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10">
-                        <img src="/icons/bat.png" class="w-8" alt="">
+                <div class="flex items-center gap-3">
+
+                    <div class="h-16 w-16 rounded-2xl
+                               bg-orange-400/20
+                               border border-orange-400/30
+                               flex items-center justify-center">
+
+                        <img src="/icons/bat.png" class="w-9">
+
                     </div>
 
-                    <span
-                        class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider">
-                        Orange Cap
-                    </span>
+                    <div>
+
+                        <p class="text-orange-300 text-xs uppercase tracking-[0.25em]">
+                            Orange Cap
+                        </p>
+
+                        <h3 class="text-zinc-400 text-sm">
+                            Leading Run Scorer
+                        </h3>
+
+                    </div>
 
                 </div>
 
-                <div class="mt-8">
+                <div class="mt-10">
 
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ this.orangeCap?.playerName || 'Batsman' }}
-                    </h2>
+                    <h1 class="text-6xl font-black uppercase">
+                    {{ orangeCap?.totalRuns > 0
+                    ? orangeCap?.playerName
+                    : 'No Records Yet' }}
+                    </h1>
 
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Most runs scored
-                    </p>
+                    <div class="mt-8 flex items-end gap-3">
 
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-orange-300">
-                            {{ this.orangeCap?.totalRuns || 0 }}
+                        <span class="text-8xl font-black text-orange-300">
+                        {{ orangeCap?.totalRuns > 0
+                        ? orangeCap?.totalRuns
+                        : '--' }}
                         </span>
-                        <span class="text-zinc-500 font-semibold mb-2">runs</span>
+
+                        <span class="text-zinc-500 text-xl mb-3">
+                            runs
+                        </span>
+
                     </div>
 
                 </div>
 
             </div>
 
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
+            <div class="relative overflow-hidden
+                   rounded-4xl
+                   border border-purple-400/20
+                   bg-linear-to-br
+                   from-purple-500/15
+                   via-[#08111F]
+                   to-[#08111F]
+                   p-6 min-h-80">
 
-                <div class="flex items-start justify-between">
+                <div class="absolute right-4 top-4
+                       text-[100px]
+                       font-black
+                       text-purple-500/5
+                       leading-none">
+                    1
+                </div>
 
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10">
-                        <img src="/icons/ball.png" class="w-8" alt="">
-                    </div>
+                <div class="h-14 w-14 rounded-2xl
+                       bg-purple-400/20
+                       border border-purple-400/30
+                       flex items-center justify-center">
 
-                    <span
-                        class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider">
-                        Purple Cap
-                    </span>
+                    <img src="/icons/ball.png" class="w-8">
 
                 </div>
 
                 <div class="mt-8">
 
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{purpleCap?.playerName || 'Bowler'}}
-                    </h2>
-
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Most wickets taken
+                    <p class="text-purple-300 text-xs uppercase tracking-[0.25em]">
+                        Purple Cap
                     </p>
 
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">{{purpleCap?.totalWickets || 0}}</span>
-                        <span class="text-zinc-500 font-semibold mb-2">wickets</span>
+                    <p class="text-zinc-500 text-sm mt-1">
+                        Leading Wicket Taker
+                    </p>
+
+                    <h2 class="text-4xl font-black mt-8 uppercase">
+                        {{ purpleCap?.totalWickets > 0
+                        ? purpleCap?.playerName
+                        : 'No Records Yet' }}
+                    </h2>
+
+                    <div class="mt-6">
+
+                        <span class="text-7xl font-black text-purple-300">
+                            {{ purpleCap?.totalWickets > 0
+                            ? purpleCap?.totalWickets
+                            : '--' }}
+                        </span>
+
+                        <p class="text-zinc-500 mt-2">
+                            wickets
+                        </p>
+
                     </div>
 
                 </div>
@@ -646,7 +703,9 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ this.bestStrikeRatePlayer?.playerName || 'Batsman' }}
+                        {{ bestStrikeRate > 0
+                        ? bestStrikeRatePlayer?.playerName
+                        : 'No Records Yet' }}
                     </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
@@ -655,9 +714,10 @@
 
                     <div class="mt-5 flex items-end gap-2">
                         <span class="text-5xl font-black text-orange-300">
-                            {{ this.bestStrikeRate.toFixed(2) || 0.00 }}
+                            {{ bestStrikeRate > 0
+                            ? bestStrikeRate.toFixed(2)
+                            : '--' }}
                         </span>
-                        <!-- <span class="text-zinc-500 font-semibold mb-2">runs</span> -->
                     </div>
 
                 </div>
@@ -685,7 +745,9 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{bestEconomyPlayer?.playerName || 'Bowler'}}
+                        {{ bestEconomy > 0
+                        ? bestEconomyPlayer?.playerName
+                        : 'No Records Yet' }}
                     </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
@@ -693,8 +755,9 @@
                     </p>
 
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">{{bestEconomy.toFixed(1) || 0}}</span>
-                        <!-- <span class="text-zinc-500 font-semibold mb-2">wickets</span> -->
+                        <span class="text-5xl font-black text-purple-300">{{ bestEconomy > 0
+                        ? bestEconomy.toFixed(2)
+                        : '--' }}</span>
                     </div>
 
                 </div>
@@ -722,7 +785,9 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{bestBattingAveragePlayer?.playerName || 'Bowler'}}
+                        {{ bestBattingAverage > 0
+                        ? bestBattingAveragePlayer?.playerName
+                        : 'No Records Yet' }}
                     </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
@@ -730,8 +795,9 @@
                     </p>
 
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-orange-300">{{ bestBattingAverage.toFixed(2) || 0}}</span>
-                        <!-- <span class="text-zinc-500 font-semibold mb-2">wickets</span> -->
+                        <span class="text-5xl font-black text-orange-300">{{ bestBattingAverage > 0
+                        ? bestBattingAverage.toFixed(2)
+                        : '--' }}</span>
                     </div>
 
                 </div>
@@ -760,7 +826,9 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{bestBowlingAveragePlayer?.playerName || 'Bowler'}}
+                        {{ bestBowlingAverage > 0
+                        ? bestBowlingAveragePlayer?.playerName
+                        : 'No Records Yet' }}
                     </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
@@ -768,8 +836,9 @@
                     </p>
 
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">{{bestBowlingAverage.toFixed(2) || 0}}</span>
-                        <!-- <span class="text-zinc-500 font-semibold mb-2">wickets</span> -->
+                        <span class="text-5xl font-black text-purple-300">{{ bestBowlingAverage > 0
+                        ? bestBowlingAverage.toFixed(2)
+                        : '--' }}</span>
                     </div>
 
                 </div>
@@ -782,7 +851,7 @@
     </div>
 
 
-    <section id="section6" class="space-y-5 px-4 py-12 lg:px-12">
+    <section id="section6" class="space-y-5 px-4 py-12 lg:px-12 w-full">
 
         <!-- HEADER -->
         <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between pb-3">
@@ -821,11 +890,13 @@
                 </p>
 
                 <h1 class="text-6xl font-black mt-4">
-                    {{highestScore || 0}}
+                    {{highestScore > 0 ? highestScore : '--'}}
                 </h1>
 
                 <p class="text-zinc-300 mt-2">
-                    {{highestScorePlayer?.playerName || 'Batsman'}}
+                    {{ highestScorePlayer
+                    ? highestScorePlayer.playerName
+                    : 'No Records Yet' }}
                 </p>
 
             </div>
@@ -844,11 +915,13 @@
                 </p>
 
                 <h1 class="text-6xl font-black mt-4">
-                    {{bestFigures}}
+                    {{ bestFigures.length  > 0 ? bestFigures : '--' }}
                 </h1>
 
                 <p class="text-zinc-300 mt-2">
-                    {{bestFiguresPlayer?.playerName}}
+                    {{ bestFiguresPlayer
+                    ? bestFiguresPlayer?.playerName
+                    : 'No Records Yet' }}
                 </p>
 
             </div>
@@ -856,17 +929,17 @@
         </div>
 
         <!-- MINI RECORDS -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 lg:grid-cols-3 lg:grid-rows-1 gap-4">
 
             <div class="glass-card p-5 text-center">
                 <p class="text-zinc-500 text-xs uppercase">Most Sixes</p>
-            
+
                 <h1 class="text-4xl font-black mt-3">
                     {{ mostSixes > 0 ? mostSixes : '--' }}
                 </h1>
-            
+
                 <p class="text-zinc-300 mt-2">
-                    {{ mostSixes > 0
+                    {{ mostSixes 
                     ? mostSixesPlayer?.playerName
                     : 'No Records Yet' }}
                 </p>
@@ -874,11 +947,11 @@
 
             <div class="glass-card p-5 text-center">
                 <p class="text-zinc-500 text-xs uppercase">Most Fours</p>
-            
+
                 <h1 class="text-4xl font-black mt-3">
                     {{ mostFours > 0 ? mostFours : '--' }}
                 </h1>
-            
+
                 <p class="text-zinc-300 mt-2">
                     {{ mostFours > 0
                     ? mostFoursPlayer?.playerName
@@ -886,24 +959,137 @@
                 </p>
             </div>
 
-            <div class="glass-card p-5 text-center">
+            <div class="glass-card p-5 text-center hidden lg:block">
                 <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
-            
+
                 <h1 class="text-4xl font-black mt-3">
                     {{ mostFifties > 0 ? mostFifties : '--' }}
                 </h1>
-            
+
                 <p class="text-zinc-300 mt-2">
                     {{ mostFifties > 0
                     ? mostFiftiesPlayer?.playerName
                     : 'No Records Yet' }}
                 </p>
             </div>
+        </div>
 
+        <div class="lg:hidden">
             <div class="glass-card p-5 text-center">
-                <p class="text-zinc-500 text-xs uppercase">Most Hattricks</p>
-                <h1 class="text-4xl font-black mt-3">{{ mosthattricks > 0 ? mosthattricks : '--' }}</h1>
-                <p class="text-zinc-300 mt-2">{{ mosthattricks > 0 ? mostHattricksPlayer?.playerName : 'No Records Yet' }}</p>
+                <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
+
+                <h1 class="text-4xl font-black mt-3">
+                    {{ mostFifties > 0 ? mostFifties : '--' }}
+                </h1>
+
+                <p class="text-zinc-300 mt-2">
+                    {{ mostFifties > 0
+                    ? mostFiftiesPlayer?.playerName
+                    : 'No Records Yet' }}
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="section7" class="space-y-5 px-4 py-12 lg:px-12 w-full">
+        <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 pb-3">
+
+            <div>
+
+                <p class="text-yellow-400 text-sm font-semibold uppercase tracking-[0.3em]">
+                    LEGENDS CLUB
+                </p>
+
+                <h1 class="text-2xl lg:text-3xl font-bold mt-2">
+                    Elite Milestones
+                </h1>
+
+            </div>
+
+            <p class="text-zinc-400 text-sm max-w-xl">
+                Rare achievements that only a select few players may ever unlock.
+            </p>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+
+            <!-- Century -->
+            <div class="relative overflow-hidden
+                       rounded-4xl
+                       border border-yellow-400/20
+                       bg-linear-to-br
+                       from-yellow-500/10
+                       to-transparent
+                       p-6">
+
+                <p class="text-yellow-300 uppercase text-xs tracking-widest">
+                    Centuries
+                </p>
+
+                <h1 class="text-6xl font-black mt-4">
+                    {{ mostHundreds > 0 ? mostHundreds : '--' }}
+                </h1>
+
+                <p class="text-zinc-300 mt-2">
+                    {{ mostHundreds > 0
+                    ? mostHundredsPlayer?.playerName
+                    : 'No Century Yet' }}
+                </p>
+
+            </div>
+
+            <!-- Five Wicket Hauls -->
+
+            <div class="relative overflow-hidden
+                       rounded-4xl
+                       border border-emerald-400/20
+                       bg-linear-to-br
+                       from-emerald-500/10
+                       to-transparent
+                       p-6">
+
+                <p class="text-emerald-300 uppercase text-xs tracking-widest">
+                    Five-Fers
+                </p>
+
+                <h1 class="text-6xl font-black mt-4">
+                    {{ mostFifers > 0 ? mostFifers : '--' }}
+                </h1>
+
+                <p class="text-zinc-300 mt-2">
+                    {{ mostFifers > 0
+                    ? mostFifersPlayer?.playerName
+                    : 'No Five-Wicket Haul Yet' }}
+                </p>
+
+            </div>
+
+            <!-- Hattricks -->
+
+            <div class="relative overflow-hidden
+                       rounded-4xl
+                       border border-cyan-400/20
+                       bg-linear-to-br
+                       from-cyan-500/10
+                       to-transparent
+                       p-6">
+
+                <p class="text-cyan-300 uppercase text-xs tracking-widest">
+                    Hattricks
+                </p>
+
+                <h1 class="text-6xl font-black mt-4">
+                    {{ mosthattricks > 0 ? mosthattricks : '--' }}
+                </h1>
+
+                <p class="text-zinc-300 mt-2">
+                    {{ mosthattricks > 0
+                    ? mostHattricksPlayer?.playerName
+                    : 'No Hattrick Yet' }}
+                </p>
+
             </div>
 
         </div>

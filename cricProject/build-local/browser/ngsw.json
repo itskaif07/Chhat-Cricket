@@ -1,0 +1,113 @@
+{
+  "configVersion": 1,
+  "timestamp": 1780596319996,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/index.html",
+        "/main-HC2LIKGF.js",
+        "/manifest.webmanifest",
+        "/polyfills-5CFQRCPP.js",
+        "/styles-TA7A5SDU.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/cricket.png",
+        "/icons/add.png",
+        "/icons/ball.png",
+        "/icons/bat.png",
+        "/icons/community.png",
+        "/icons/cricket.png",
+        "/icons/hand.png",
+        "/icons/home.png",
+        "/icons/icon-128x128.png",
+        "/icons/icon-144x144.png",
+        "/icons/icon-152x152.png",
+        "/icons/icon-192x192.png",
+        "/icons/icon-384x384.png",
+        "/icons/icon-512x512.png",
+        "/icons/icon-72x72.png",
+        "/icons/icon-96x96.png",
+        "/icons/menu.png",
+        "/icons/trophy.png",
+        "/icons/user.png",
+        "/icons/x.png",
+        "/limited.png",
+        "/logo.png",
+        "/signIn.jpg",
+        "/stats.png",
+        "/unlimited.png",
+        "/user.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/cricket.png": "c2d2b66923c076458d4c948d8d92aa807b178162",
+    "/icons/add.png": "c664c6a8fa3714a46e3afbe89ea929b2056b3402",
+    "/icons/ball.png": "caeef4eb3852f2fb822667a3311f717d7075fad3",
+    "/icons/bat.png": "5dc85f7ec02fba638749b84c77920aaa561544e5",
+    "/icons/community.png": "158622d51432313aee0840bf563c1cebae2705d9",
+    "/icons/cricket.png": "1c3fb300dac2a9b085ecb4f48a547b1a6dc4b41e",
+    "/icons/hand.png": "8289613e794e0264aa35029b540d71c71d6e3f9e",
+    "/icons/home.png": "91d2573737bbbd1a50d2409c73a98d51aa288508",
+    "/icons/icon-128x128.png": "aaee7d0d7043f8b55b49871e92b33700910391cb",
+    "/icons/icon-144x144.png": "5db9b817e52eaf9726ec4454ca9419cf34085e53",
+    "/icons/icon-152x152.png": "d645bde0eb020340fe8ce3cea50de86d3ff0fa0c",
+    "/icons/icon-192x192.png": "f99f4adb390e0c2019dad4abfb823f8367f0f22e",
+    "/icons/icon-384x384.png": "775528166b25e05a9a5deff9137c3569c93992bb",
+    "/icons/icon-512x512.png": "ea2bc012eb4bd44fbed0b0c7198ce60325be3119",
+    "/icons/icon-72x72.png": "6d2f3ee12206254ebdcebe49aaebf9b074c41a5b",
+    "/icons/icon-96x96.png": "88af622ecea8cc89c23b2483c7a845a2c979f4e8",
+    "/icons/menu.png": "5582321e699f8afb262ce8e66a9b08911b811d4e",
+    "/icons/trophy.png": "555b67ecb51ba4ef146f9c95ca22a635efa419ad",
+    "/icons/user.png": "0719f98701cce89b975f96277716f2f512e1e727",
+    "/icons/x.png": "382ae2722b0e320b6e10e9da00541af2e11580c1",
+    "/index.html": "74d2a8294482e92264baaf74d90b20fc9373abac",
+    "/limited.png": "10bb2f5b13e77a21318c1bc379bebee424ac1763",
+    "/logo.png": "ae97c8d64a9b71502712200bff7f2c2fbb1f1fcb",
+    "/main-HC2LIKGF.js": "91f7aad31e6471c7f8af5c949c07d9028ddbdd79",
+    "/manifest.webmanifest": "0c2cf0d98ef39a6353da0048b51e1bae9330f136",
+    "/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
+    "/signIn.jpg": "367766ee5f4f3f3cc4f19c4b8f444b2cee57cc09",
+    "/stats.png": "aa5f5fb75085a4c99b4064aeb1b77f0d2c9e30bb",
+    "/styles-TA7A5SDU.css": "7825d81a78b4a7a8541b0c9636004b3e322cfb0b",
+    "/unlimited.png": "5400bc2010f1c95bd77029d23abde0cb39f71458",
+    "/user.png": "a380b2ee3192f66a05eb460c4b853a10ceebe41f"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

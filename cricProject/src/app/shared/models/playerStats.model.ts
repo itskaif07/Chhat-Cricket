@@ -38,6 +38,8 @@ export interface PlayerStats {
 
   maiden: number
 
+  fifer: number
+
   hasScoredFifty: boolean
   
 hasScoredHundred: boolean

@@ -34,7 +34,7 @@ export class Home implements OnInit {
   highestScore:number = 0
   highestScorePlayer:any = null
   bestFiguresPlayer:any = null
-  bestFigures:string | number | null = null
+  bestFigures:string  = ''
   mostFoursPlayer:any = null
   mostFours:number = 0
   mostSixesPlayer:any = null
@@ -43,6 +43,10 @@ export class Home implements OnInit {
   mostFifties:number = 0
   mostHattricksPlayer:any = null
   mosthattricks:number = 0
+  mostHundreds:number = 0
+  mostHundredsPlayer:any = null
+  mostFifers:number = 0
+  mostFifersPlayer:any = null
 
 
 
@@ -92,7 +96,7 @@ retrieveMatches(){
 
     this.matchesCount = data.length
     this.matches = data
-    console.log(data)
+    // console.log(data)
     this.aggregateTotalRuns()
     this.aggregateTotalWickets()
     this.aggregateCareerStats()
@@ -130,6 +134,8 @@ aggregateTotalRuns(){
 
 
 aggregateTotalWickets(){
+ this.totalWickets = 0;
+
   if(this.matches){
     this.matches.forEach((match:any) =>{
       match.innings.forEach((innings:any)=>{
@@ -149,6 +155,8 @@ aggregateTotalWickets(){
 
 
 aggregateCareerStats(){
+
+    this.careerStats = {};
 
   this.matches.forEach((match:any)=>{
 
@@ -188,7 +196,11 @@ aggregateCareerStats(){
 
             totalFifties: 0,
 
-            totalHattricks: 0
+            totalHundreds: 0,
+
+            totalHattricks: 0,
+
+            totalFifers: 0
 
 
           }
@@ -222,8 +234,14 @@ aggregateCareerStats(){
         this.careerStats[playerId].totalFifties +=
           stats.fifty || 0
 
+        this.careerStats[playerId].totalHundreds +=
+          stats.hundred || 0
+
         this.careerStats[playerId].totalHattricks +=
           stats.hatTricks || 0
+
+        this.careerStats[playerId].totalFifers +=
+          stats.fifer || 0
 
         this.careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0
 
@@ -246,6 +264,8 @@ aggregateCareerStats(){
   this.getMostSixes()
   this.getMostFifties()
   this.getMostHattricks()
+  this.getMostHundreds()
+  this.getMostFifers()
   this.cdr.detectChanges()
  
 
@@ -273,12 +293,19 @@ getPurpleCap(){
 
 getStrikeRate() {
 
-  if (!this.careerStats) return;
+  const players = Object.values(this.careerStats)
+    .filter((player:any) =>
+      player.totalBallsFaced > 0
+    );
 
-  const players = Object.values(this.careerStats);
+  if (players.length === 0) {
+    this.bestStrikeRate = 0;
+    this.bestStrikeRatePlayer = null;
+    return;
+  }
 
   this.bestStrikeRatePlayer = players.reduce(
-    (winner: any, challenger: any) => {
+    (winner:any, challenger:any) => {
 
       const winnerSR =
         (winner.totalRuns / winner.totalBallsFaced) * 100;
@@ -298,7 +325,6 @@ getStrikeRate() {
       this.bestStrikeRatePlayer.totalRuns /
       this.bestStrikeRatePlayer.totalBallsFaced
     ) * 100;
-
 }
 
 getEconomy(){
@@ -307,6 +333,10 @@ getEconomy(){
   }
 
   let players = Object.values(this.careerStats)
+
+  if (players.length === 0) {
+    return;
+  }
 
   this.bestEconomyPlayer = players.reduce(
   (winner:any, challenger:any) => {
@@ -341,6 +371,10 @@ getBattingAverage(){
 
   let players = Object.values(this.careerStats)
 
+  if (players.length === 0) {
+    return;
+  }
+
   this.bestBattingAveragePlayer = players.reduce((prev:any, next:any)=>{
     let prevPlayerAverage = prev.dismissed > 0 ? (prev.totalRuns / prev.dismissed) : prev.totalRuns
     let nextPlayerAverage = next.dismissed > 0 ? (next.totalRuns / next.dismissed) : next.totalRuns
@@ -358,6 +392,10 @@ getBowlingAverage(){
   }
 
   let players = Object.values(this.careerStats)
+
+  if (players.length === 0) {
+    return;
+  }
 
  this.bestBowlingAveragePlayer = players.reduce(
   (prev: any, next: any) => {
@@ -388,6 +426,9 @@ this.bestBowlingAverage =
 
 getHighestScore(){
 
+    this.highestScore = 0;
+  this.highestScorePlayer = null;
+
   this.matches.forEach((match:any)=>{
     match.innings.forEach((inning:any)=>{
 
@@ -402,6 +443,9 @@ getHighestScore(){
 }
 
 getBestFigures(){
+
+    this.bestFiguresPlayer = null;
+  this.bestFigures = '';
 
   this.matches.forEach((match:any)=>{
 
@@ -448,6 +492,10 @@ getMostFours(){
 
   const players = Object.values(this.careerStats);
 
+  if (players.length === 0) {
+    return;
+  }
+
   this.mostFoursPlayer = players.reduce(
     (winner:any, challenger:any)=>{
 
@@ -470,6 +518,10 @@ getMostSixes(){
   }
 
   const players = Object.values(this.careerStats);
+
+  if (players.length === 0) {
+    return;
+  }
 
   this.mostSixesPlayer = players.reduce(
     (winner:any, challenger:any)=>{
@@ -494,6 +546,10 @@ getMostFifties(){
 
   const players = Object.values(this.careerStats);
 
+  if (players.length === 0) {
+    return;
+  }
+
   this.mostFiftiesPlayer = players.reduce(
     (winner:any, challenger:any)=>{
 
@@ -509,6 +565,60 @@ getMostFifties(){
     this.mostFiftiesPlayer.totalFifties;
 }
 
+getMostHundreds(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  if (players.length === 0) {
+    return;
+  }
+
+  this.mostHundredsPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalHundreds >
+             winner.totalHundreds
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mostHundreds =
+    this.mostHundredsPlayer.totalHundreds;
+}
+
+getMostFifers(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  if (players.length === 0) {
+    return;
+  }
+
+  this.mostFifersPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalFifers >
+             winner.totalFifers
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mostFifers =
+    this.mostFifersPlayer.totalFifers;
+}
+
 getMostHattricks(){
 
   if(!this.careerStats){
@@ -516,6 +626,10 @@ getMostHattricks(){
   }
 
   const players = Object.values(this.careerStats);
+
+  if (players.length === 0) {
+    return;
+  }
 
   this.mostHattricksPlayer = players.reduce(
     (winner:any, challenger:any)=>{
