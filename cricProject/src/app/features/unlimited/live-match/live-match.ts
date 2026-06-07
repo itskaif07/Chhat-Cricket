@@ -126,7 +126,7 @@ export class LiveMatch implements OnInit {
         sixes: 0,
         runsConceded: 0,
         dismissalType: null,
-        caughtBy: '',
+        caughtBy: null,
         dismissedBy:'',
         hatTricks:0,
         maiden:0,
@@ -643,8 +643,7 @@ selectCaughtBy(player:Player){
 
     this.playerStats[
       this.currentBatsman.id
-    ].caughtBy =
-    player.displayName
+    ].caughtBy = player
 
   }
 
@@ -784,6 +783,7 @@ undo(){
     this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1
     this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1
     this.playerStats[this.currentBowler?.id!].wickets -= 1
+    
     this.recentDeliveries.shift()
     this.saveMatchState();
   }

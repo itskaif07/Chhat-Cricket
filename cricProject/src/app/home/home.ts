@@ -47,6 +47,10 @@ export class Home implements OnInit {
   mostHundredsPlayer:any = null
   mostFifers:number = 0
   mostFifersPlayer:any = null
+  mostCatches:number = 0
+  mostCatchesPlayer:any = null
+  mostMotmPlayer:any = null
+  mostMotm:number = 0
 
 
 
@@ -96,7 +100,7 @@ retrieveMatches(){
 
     this.matchesCount = data.length
     this.matches = data
-    // console.log(data)
+    console.log(data)
     this.aggregateTotalRuns()
     this.aggregateTotalWickets()
     this.aggregateCareerStats()
@@ -200,7 +204,11 @@ aggregateCareerStats(){
 
             totalHattricks: 0,
 
-            totalFifers: 0
+            totalFifers: 0,
+
+            totalCatches: 0,
+
+            totalMotm: 0,
 
 
           }
@@ -243,12 +251,38 @@ aggregateCareerStats(){
         this.careerStats[playerId].totalFifers +=
           stats.fifer || 0
 
-        this.careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0
+          this.careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0
+
+
+        if (stats.caughtBy?.id) {
+
+          const catcherId = stats.caughtBy.id;
+
+          if (this.careerStats[catcherId]) {
+            this.careerStats[catcherId].totalCatches++;
+          }
+
+        }
+
 
 
       })
 
+      
+      
     })
+    if(match.motm?.playerId){
+
+    const motmId = match.motm.playerId;
+
+      if(this.careerStats[motmId]){
+
+        this.careerStats[motmId].totalMotm =
+      (this.careerStats[motmId].totalMotm || 0) + 1;
+
+     }
+
+}
 
   })
 
@@ -266,6 +300,8 @@ aggregateCareerStats(){
   this.getMostHattricks()
   this.getMostHundreds()
   this.getMostFifers()
+  this.getMostCatches()
+  this.getMostMotm()
   this.cdr.detectChanges()
  
 
@@ -421,6 +457,12 @@ this.bestBowlingAverage =
     ? this.bestBowlingAveragePlayer.totalRunsConceded /
       this.bestBowlingAveragePlayer.totalWickets
     : 0;
+
+    console.log(
+  'Bowling Average',
+  this.bestBowlingAveragePlayer,
+  this.bestBowlingAverage
+);
 
 }
 
@@ -592,6 +634,34 @@ getMostHundreds(){
     this.mostHundredsPlayer.totalHundreds;
 }
 
+getMostCatches(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  if (players.length === 0) {
+    return;
+  }
+
+  this.mostCatchesPlayer = players.reduce(
+    (winner:any, challenger:any)=>{
+
+      return challenger.totalCatches >
+             winner.totalCatches
+        ? challenger
+        : winner;
+
+    }
+  );
+
+  this.mostCatches =
+    this.mostCatchesPlayer.totalCatches;
+
+}
+
 getMostFifers(){
 
   if(!this.careerStats){
@@ -644,6 +714,31 @@ getMostHattricks(){
 
   this.mosthattricks =
     this.mostHattricksPlayer.totalHattricks;
+}
+
+getMostMotm(){
+
+  if(!this.careerStats){
+    return;
+  }
+
+  const players = Object.values(this.careerStats);
+
+  if(players.length === 0){
+    return;
+  }
+
+  this.mostMotmPlayer = players.reduce(
+    (winner:any, challenger:any)=>
+      challenger.totalMotm > winner.totalMotm
+      ? challenger
+      : winner
+  );
+
+  this.mostMotm =
+    this.mostMotmPlayer.totalMotm;
+
+   
 }
 
 }

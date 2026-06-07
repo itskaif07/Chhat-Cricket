@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {
   collection,
+  doc,
+  docData,
   Firestore,
   getDocs,
   orderBy,
@@ -8,6 +10,7 @@ import {
 } from '@angular/fire/firestore';
 
 import { Player } from '../../shared/models/player.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -27,6 +30,12 @@ export class RetrievePlayersService {
       id: doc.id,
       ...doc.data()
     })) as Player[];
+  }
+
+   getPlayer(playerId:string):Observable<Player>{
+    const playerRef = doc(this.fireStore, `players/${playerId}`)
+
+    return docData(playerRef, {idField: 'id'}) as Observable<Player>
   }
 
 }

@@ -508,11 +508,11 @@
             <div>
 
                 <p class="text-orange-400 text-sm font-semibold uppercase tracking-[0.3em]">
-                    SEASON STANDINGS
+                    STANDINGS
                 </p>
 
                 <h1 class="text-2xl lg:text-3xl font-bold mt-2">
-                    Orange & Purple Caps
+                    Leaders & MVP
                 </h1>
 
             </div>
@@ -655,6 +655,85 @@
             </div>
 
 
+            <!-- MVP -->
+            <div class="lg:col-span-3 relative overflow-hidden
+                            rounded-4xl
+                            border border-yellow-400/20
+                            bg-linear-to-br
+                            from-yellow-500/15
+                            via-[#08111F]
+                            to-[#08111F]
+                            p-8 min-h-72">
+            
+                <!-- giant trophy -->
+                <div class="absolute right-6 top-4
+                                text-[120px]
+                                font-black
+                                text-yellow-500/5
+                                leading-none">
+                    🏆
+                </div>
+            
+                <div class="flex items-center gap-3">
+            
+                    <div class="h-16 w-16 rounded-2xl
+                                    bg-yellow-400/20
+                                    border border-yellow-400/30
+                                    flex items-center justify-center">
+            
+                        <span class="text-3xl">🏆</span>
+            
+                    </div>
+            
+                    <div>
+            
+                        <p class="text-yellow-300 text-xs uppercase tracking-[0.25em]">
+                            MVP
+                        </p>
+            
+                        <h3 class="text-zinc-400 text-sm">
+                            Most Valuable Player
+                        </h3>
+            
+                    </div>
+            
+                </div>
+            
+                <div class="mt-10">
+            
+                    <h1 class="text-5xl lg:text-7xl font-black uppercase">
+            
+                        {{ mostMotm > 0
+                        ? mostMotmPlayer?.playerName
+                        : 'No MVP Yet' }}
+            
+                    </h1>
+            
+                    <div class="mt-8 flex items-end gap-3">
+            
+                        <span class="text-7xl lg:text-8xl font-black text-yellow-300">
+            
+                            {{ mostMotm > 0
+                            ? mostMotm
+                            : '--' }}
+            
+                        </span>
+            
+                        <span class="text-zinc-500 text-xl mb-3">
+            
+                            {{ mostMotm === 1
+                            ? 'award'
+                            : 'awards' }}
+            
+                        </span>
+            
+                    </div>
+            
+                </div>
+            
+            </div>
+
+
         </div>
 
     </div>
@@ -745,19 +824,21 @@
                 <div class="mt-8">
 
                     <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ bestEconomy > 0
-                        ? bestEconomyPlayer?.playerName
+                        {{ bestEconomyPlayer
+                        ? bestEconomyPlayer.playerName
                         : 'No Records Yet' }}
                     </h2>
-
+                    
                     <p class="text-zinc-400 text-sm mt-2">
                         Best Economy
                     </p>
-
+                    
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">{{ bestEconomy > 0
-                        ? bestEconomy.toFixed(2)
-                        : '--' }}</span>
+                        <span class="text-5xl font-black text-purple-300">
+                            {{ bestEconomyPlayer
+                            ? bestEconomy.toFixed(2)
+                            : '--' }}
+                        </span>
                     </div>
 
                 </div>
@@ -825,20 +906,22 @@
 
                 <div class="mt-8">
 
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ bestBowlingAverage > 0
-                        ? bestBowlingAveragePlayer?.playerName
-                        : 'No Records Yet' }}
-                    </h2>
+                <h2 class="text-3xl font-bold leading-tight uppercase">
+                    {{ bestBowlingAveragePlayer
+                    ? bestBowlingAveragePlayer.playerName
+                    : 'No Records Yet' }}
+                </h2>
 
                     <p class="text-zinc-400 text-sm mt-2">
                         Best Bowling Average
                     </p>
 
                     <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">{{ bestBowlingAverage > 0
-                        ? bestBowlingAverage.toFixed(2)
-                        : '--' }}</span>
+                        <span class="text-5xl font-black text-purple-300">
+                            {{ bestBowlingAveragePlayer
+                            ? bestBowlingAverage.toFixed(2)
+                            : '--' }}
+                        </span>
                     </div>
 
                 </div>
@@ -929,66 +1012,69 @@
         </div>
 
         <!-- MINI RECORDS -->
-        <div class="grid grid-cols-2 lg:grid-cols-3 lg:grid-rows-1 gap-4">
-
-            <div class="glass-card p-5 text-center">
-                <p class="text-zinc-500 text-xs uppercase">Most Sixes</p>
-
-                <h1 class="text-4xl font-black mt-3">
-                    {{ mostSixes > 0 ? mostSixes : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ mostSixes 
-                    ? mostSixesPlayer?.playerName
-                    : 'No Records Yet' }}
-                </p>
-            </div>
-
-            <div class="glass-card p-5 text-center">
-                <p class="text-zinc-500 text-xs uppercase">Most Fours</p>
-
-                <h1 class="text-4xl font-black mt-3">
-                    {{ mostFours > 0 ? mostFours : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ mostFours > 0
-                    ? mostFoursPlayer?.playerName
-                    : 'No Records Yet' }}
-                </p>
-            </div>
-
-            <div class="glass-card p-5 text-center hidden lg:block">
-                <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
-
-                <h1 class="text-4xl font-black mt-3">
-                    {{ mostFifties > 0 ? mostFifties : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ mostFifties > 0
-                    ? mostFiftiesPlayer?.playerName
-                    : 'No Records Yet' }}
-                </p>
-            </div>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    
+        <!-- Most Sixes -->
+        <div class="glass-card p-5 text-center">
+            <p class="text-zinc-500 text-xs uppercase">Most Sixes</p>
+    
+            <h1 class="text-4xl font-black mt-3">
+                {{ mostSixes > 0 ? mostSixes : '--' }}
+            </h1>
+    
+            <p class="text-zinc-300 mt-2">
+                {{ mostSixes > 0
+                ? mostSixesPlayer?.playerName
+                : 'No Records Yet' }}
+            </p>
         </div>
-
-        <div class="lg:hidden">
-            <div class="glass-card p-5 text-center">
-                <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
-
-                <h1 class="text-4xl font-black mt-3">
-                    {{ mostFifties > 0 ? mostFifties : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ mostFifties > 0
-                    ? mostFiftiesPlayer?.playerName
-                    : 'No Records Yet' }}
-                </p>
-            </div>
+    
+        <!-- Most Fours -->
+        <div class="glass-card p-5 text-center">
+            <p class="text-zinc-500 text-xs uppercase">Most Fours</p>
+    
+            <h1 class="text-4xl font-black mt-3">
+                {{ mostFours > 0 ? mostFours : '--' }}
+            </h1>
+    
+            <p class="text-zinc-300 mt-2">
+                {{ mostFours > 0
+                ? mostFoursPlayer?.playerName
+                : 'No Records Yet' }}
+            </p>
         </div>
+    
+        <!-- Most Fifties -->
+        <div class="glass-card p-5 text-center">
+            <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
+    
+            <h1 class="text-4xl font-black mt-3">
+                {{ mostFifties > 0 ? mostFifties : '--' }}
+            </h1>
+    
+            <p class="text-zinc-300 mt-2">
+                {{ mostFifties > 0
+                ? mostFiftiesPlayer?.playerName
+                : 'No Records Yet' }}
+            </p>
+        </div>
+    
+        <!-- Most Catches -->
+        <div class="glass-card p-5 text-center">
+            <p class="text-zinc-500 text-xs uppercase">Most Catches</p>
+    
+            <h1 class="text-4xl font-black mt-3">
+                {{ mostCatches > 0 ? mostCatches : '--' }}
+            </h1>
+    
+            <p class="text-zinc-300 mt-2">
+                {{ mostCatches > 0
+                ? mostCatchesPlayer?.playerName
+                : 'No Records Yet' }}
+            </p>
+        </div>
+    
+    </div>
     </section>
 
     <section id="section7" class="space-y-5 px-4 py-12 lg:px-12 w-full">

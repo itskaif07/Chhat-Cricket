@@ -19,6 +19,7 @@ export class Scorecard implements OnInit{
   Object = Object;
   captainA:Player | null = null
   captainB:Player | null = null
+  loading = false
 
   ngOnInit(){
 
@@ -27,6 +28,8 @@ export class Scorecard implements OnInit{
 }
 
 getData(){
+
+  this.loading = true
 
   try{
     const id =
@@ -45,6 +48,7 @@ getData(){
       this.selectedInnings = this.matchData.innings[0]
       
       this.getCaptains()
+      this.loading = false
       this.cdr.detectChanges()
     })
     
@@ -52,6 +56,7 @@ getData(){
 
 }
 catch(e){
+  this.loading = false
   console.log(e)
 }
 
@@ -66,7 +71,6 @@ getPlayers(playerStats:any): any[] {
       ...player
     })
   )
-
 }
 
 

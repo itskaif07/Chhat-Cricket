@@ -1,489 +1,234 @@
-<div class="w-full h-full bg-[#050B18] text-white pb-10">
+@if(loading){
 
-    <!-- TOP HERO SECTION -->
-    <div class="w-full h-80 relative flex flex-col items-center justify-end pb-8">
-
-
-        <!-- PLAYER IMAGE -->
-        <div class="w-36 h-36 rounded-full overflow-hidden
-      border-2 border-[#94F505]
-      shadow-[0_0_40px_rgba(148,245,5,0.35)]">
-
-            <img [src]="player?.photoURL" class="w-full h-full object-cover">
-
+<div class="loader-overlay">
+    <div class="loader-content">
+        <div class="cricket-loader">
+            <div class="pitch"></div>
+            <div class="ball"></div>
         </div>
 
-        <!-- PLAYER NAME -->
-        <h1 class="mt-5 text-3xl font-black tracking-tight">
-
-            {{ player?.displayName }}
-
-        </h1>
-
-        <!-- FULL NAME -->
-        <h2 class="text-zinc-400 mt-1 text-sm">
-
-            {{ player?.fullName }}
-
-        </h2>
-
-        <!-- STYLE -->
-        <div class="mt-4 px-4 py-2 rounded-full
-      bg-[#94F505]/10 border border-[#94F505]/20">
-
-            <h2 class="text-sm font-semibold text-[#94F505]">
-
-                {{ player?.style === 'right'
-                ? 'Right Handed'
-                : 'Left Handed'
-                }}
-
-            </h2>
-
-        </div>
-
+        <h2>CHHAT CRICKET</h2>
+        <p>Loading Player Data...</p>
     </div>
-
-<!-- CAREER STATS -->
-<div class="px-5 mt-8 pb-10">
-
-    <!-- HEADER -->
-    <div class="flex items-center justify-between mb-8">
-
-        <h1 class="text-2xl font-bold">
-
-            Career Stats
-
-        </h1>
-
-        <div class="px-3 py-1 rounded-full
-        bg-white/5 border border-white/10">
-
-            <h2 class="text-xs text-zinc-400">
-
-                Lifetime
-
-            </h2>
-
-        </div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- BATTING -->
-    <!-- ========================= -->
-
-    <div class="mb-10">
-
-        <!-- TITLE -->
-        <div class="flex items-center gap-3 mb-5">
-
-            <div class="w-2 h-8 rounded-full bg-[#94F505]"></div>
-
-            <h1 class="text-xl font-bold">
-
-                Batting
-
-            </h1>
-
-        </div>
-
-        <!-- GRID -->
-        <div class="grid grid-cols-2 gap-4">
-
-            <!-- RUNS -->
-            <div class="col-span-2 rounded-3xl p-6
-            bg-[#94F505]/10 border border-[#94F505]/20
-            backdrop-blur-xl">
-
-                <h2 class="text-zinc-300 text-sm">
-
-                    Runs
-
-                </h2>
-
-                <h1 class="text-6xl font-black
-                text-[#94F505] mt-4">
-
-                    458
-
-                </h1>
-
-            </div>
-
-            <!-- MATCHES -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Matches
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    10
-
-                </h1>
-
-            </div>
-
-            <!-- INNINGS -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Innings
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    9
-
-                </h1>
-
-            </div>
-
-            <!-- HIGHEST -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Highest Score
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    92
-
-                </h1>
-
-            </div>
-
-            <!-- BALLS -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Balls Faced
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    200
-
-                </h1>
-
-            </div>
-
-            <!-- AVERAGE -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Average
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    40.67
-
-                </h1>
-
-            </div>
-
-            <!-- SR -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Strike Rate
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    234.78
-
-                </h1>
-
-            </div>
-
-            <!-- 4s -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Fours
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    20
-
-                </h1>
-
-            </div>
-
-            <!-- 6s -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Sixes
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    35
-
-                </h1>
-
-            </div>
-
-            <!-- 50s -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    50s
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    5
-
-                </h1>
-
-            </div>
-
-            <!-- 100s -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    100s
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-[#94F505] mt-3">
-
-                    0
-
-                </h1>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- BOWLING -->
-    <!-- ========================= -->
-
-    <div>
-
-        <!-- TITLE -->
-        <div class="flex items-center gap-3 mb-5">
-
-            <div class="w-2 h-8 rounded-full bg-blue-400"></div>
-
-            <h1 class="text-xl font-bold">
-
-                Bowling
-
-            </h1>
-
-        </div>
-
-        <!-- GRID -->
-        <div class="grid grid-cols-2 gap-4">
-
-            <!-- WICKETS -->
-            <div class="col-span-2 rounded-3xl p-6
-            bg-blue-500/10 border border-blue-400/20
-            backdrop-blur-xl">
-
-                <h2 class="text-zinc-300 text-sm">
-
-                    Wickets
-
-                </h2>
-
-                <h1 class="text-6xl font-black
-                text-blue-400 mt-4">
-
-                    18
-
-                </h1>
-
-            </div>
-
-            <!-- BALLS -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Balls Bowled
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    144
-
-                </h1>
-
-            </div>
-
-            <!-- RUNS -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Runs Conceded
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    122
-
-                </h1>
-
-            </div>
-
-            <!-- ECONOMY -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Economy
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    8.5
-
-                </h1>
-
-            </div>
-
-            <!-- AVERAGE -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Bowling Average
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    20.55
-
-                </h1>
-
-            </div>
-
-            <!-- MAIDENS -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Maidens
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    6
-
-                </h1>
-
-            </div>
-
-            <!-- BEST -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Hattricks
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    1
-
-                </h1>
-
-            </div>
-            <!-- BEST -->
-            <div class="rounded-3xl p-5
-            bg-white/5 border border-white/10">
-
-                <h2 class="text-zinc-400 text-sm">
-
-                    Fifer
-
-                </h2>
-
-                <h1 class="text-4xl font-black
-                text-blue-400 mt-3">
-
-                    1
-
-                </h1>
-
-            </div>
-
-        </div>
-
-    </div>
-
 </div>
 
+}
 
-</div>
+<main class="min-h-screen bg-[#050B18] text-white pb-12">
+
+    <section class="player-hero px-4 pt-10 pb-8 lg:px-12 lg:pt-14">
+
+        <div class="mx-auto flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+
+            <div class="flex flex-col items-center gap-5 text-center lg:flex-row lg:text-left">
+
+                <div class="relative">
+                    <div class="h-36 w-36 overflow-hidden rounded-full border-2 border-[#94F505] bg-white/5 shadow-[0_0_42px_rgba(148,245,5,0.35)] lg:h-44 lg:w-44">
+                        <img [src]="player?.photoURL || 'user.png'" class="h-full w-full object-cover" alt="">
+                    </div>
+
+                    <div class="absolute -bottom-2 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-[#94F505]/30 bg-[#071224] shadow-[0_0_22px_rgba(148,245,5,0.25)] lg:left-auto lg:right-2 lg:translate-x-0">
+                        <img src="icons/bat.png" class="h-5 w-5" alt="">
+                    </div>
+                </div>
+
+                <div class="max-w-2xl">
+                    <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#94F505]">Player Profile</p>
+
+                    <h1 class="mt-3 text-4xl font-black uppercase tracking-tight text-white lg:text-6xl">
+                        {{ player?.displayName || 'Player' }}
+                    </h1>
+
+                    <p class="mt-2 text-sm text-zinc-400 lg:text-base">
+                        {{ player?.fullName || 'Chhat Cricket Player' }}
+                    </p>
+
+                    <div class="mt-5 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+                        <span class="rounded-full border border-[#94F505]/25 bg-[#94F505]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#94F505]">
+                            {{ player?.style === 'right' ? 'Right Handed' : 'Left Handed' }}
+                        </span>
+
+                        <span class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-zinc-300">
+                            {{ formatStat(stats?.totalMatches, 'No') }} Matches
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 lg:min-w-107.5">
+                <div class="hero-stat">
+                    <span>Runs</span>
+                    <strong>{{ formatStat(stats?.totalRuns) }}</strong>
+                </div>
+
+                <div class="hero-stat hero-stat-blue">
+                    <span>Wickets</span>
+                    <strong>{{ formatStat(stats?.totalWickets) }}</strong>
+                </div>
+
+                <div class="hero-stat hero-stat-gold">
+                    <span>Best</span>
+                    <strong>{{ formatStat(stats?.highestScore) }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="mx-auto grid w-11/12 lg:space-x-6 space-y-10 lg:space-y-0 px-4 lg:grid-cols-2 mt-10">
+
+        <article class="stat-panel stat-panel-batting">
+
+            <div class="section-title">
+                <div>
+                    <p>Batting</p>
+                    <h2>Run Making</h2>
+                </div>
+
+                <img src="icons/bat.png" alt="">
+            </div>
+
+            <div class="featured-metric">
+                <span>Total Runs</span>
+                <strong>{{ formatStat(stats?.totalRuns) }}</strong>
+                <p>{{ formatStat(stats?.totalFours, '0') }} fours | {{ formatStat(stats?.totalSixes, '0') }} sixes</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="metric-card">
+                    <span>Highest Score</span>
+                    <strong>{{ formatStat(stats?.highestScore) }}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>Innings</span>
+                    <strong>{{ formatStat(stats?.totalInnings) }}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>Average</span>
+                    <strong>{{ battingAverage }}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>Strike Rate</span>
+                    <strong>{{ strikeRate }}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>Balls Faced</span>
+                    <strong>{{ formatStat(stats?.totalBallsFaced) }}</strong>
+                </div>
+
+                <div class="metric-card">
+                    <span>Boundaries</span>
+                    <strong>{{ (stats?.totalFours || 0) + (stats?.totalSixes || 0) }}</strong>
+                </div>
+            </div>
+
+        </article>
+
+        <article class="stat-panel stat-panel-bowling">
+
+            <div class="section-title">
+                <div>
+                    <p>Bowling</p>
+                    <h2>Wicket Taking</h2>
+                </div>
+
+                <img src="icons/ball.png" alt="">
+            </div>
+
+            <div class="featured-metric">
+                <span>Total Wickets</span>
+                <strong>{{ formatStat(stats?.totalWickets) }}</strong>
+                <p>{{ oversBowled }} overs | {{ formatStat(stats?.totalMaidens, '0') }} maidens</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="metric-card2">
+                    <span>Economy</span>
+                    <strong>{{ economy }}</strong>
+                </div>
+
+                <div class="metric-card2">
+                    <span>Average</span>
+                    <strong>{{ bowlingAverage }}</strong>
+                </div>
+
+                <div class="metric-card2">
+                    <span>Balls Bowled</span>
+                    <strong>{{ formatStat(stats?.totalBallsDelivered) }}</strong>
+                </div>
+
+                <div class="metric-card2">
+                    <span>Runs Given</span>
+                    <strong>{{ formatStat(stats?.totalRunsConceded, '0') }}</strong>
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <section class="mx-auto w-11/12 px-4 py-8">
+    
+        <div class="mb-5 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-[0.3em] text-amber-300">Milestone Cabinet</p>
+                <h2 class="mt-2 text-2xl font-black lg:text-3xl">Big Achievements</h2>
+            </div>
+    
+            <p class="max-w-xl text-sm text-zinc-400">
+                Landmark performances are pulled forward so centuries, fifties, five-wicket hauls and hattricks feel earned.
+            </p>
+        </div>
+    
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    
+            <article class="achievement-card achievement-gold">
+                <div class="achievement-icon">
+                    <img src="icons/bat.png" alt="">
+                </div>
+                <p>Centuries</p>
+                <h3>{{ formatStat(stats?.totalHundreds, '0') }}</h3>
+                <span>{{ stats?.totalHundreds > 0 ? 'Triple digits reached' : 'Waiting for the first ton' }}</span>
+            </article>
+    
+            <article class="achievement-card achievement-green">
+                <div class="achievement-icon">
+                    <img src="icons/bat.png" alt="">
+                </div>
+                <p>Fifties</p>
+                <h3>{{ formatStat(stats?.totalFifties, '0') }}</h3>
+                <span>{{ stats?.totalFifties > 0 ? 'Reliable scoring impact' : 'No half-century yet' }}</span>
+            </article>
+    
+            <article class="achievement-card achievement-blue">
+                <div class="achievement-icon">
+                    <img src="icons/ball.png" alt="">
+                </div>
+                <p>Five-Fers</p>
+                <h3>{{ formatStat(stats?.totalFifers, '0') }}</h3>
+                <span>{{ stats?.totalFifers > 0 ? 'Match-turning spells' : 'No five-wicket haul yet' }}</span>
+            </article>
+    
+            <article class="achievement-card achievement-purple">
+                <div class="achievement-icon">
+                    <img src="icons/ball.png" alt="">
+                </div>
+                <p>Hattricks</p>
+                <h3>{{ formatStat(stats?.totalHattricks, '0') }}</h3>
+                <span>{{ stats?.totalHattricks > 0 ? 'Rare bowling burst' : 'No hattrick yet' }}</span>
+            </article>
+    
+        </div>
+    
+    </section>
+
+</main>

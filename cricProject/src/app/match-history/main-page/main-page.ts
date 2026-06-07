@@ -14,14 +14,17 @@ constructor(private matchService:MatchService, private cdr: ChangeDetectorRef){}
 
   Math = Math
 matches:any[] = []
+loading = false
 
 ngOnInit(){
   this.getMatches()
 }
 
  getMatches(){
+this.loading = true
    this.matchService.retrieveMatches().subscribe((data:any)=>{
   this.matches = data
+  this.loading = false
   this.cdr.detectChanges()
 })
 }

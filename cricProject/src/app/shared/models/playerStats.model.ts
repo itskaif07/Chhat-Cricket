@@ -1,3 +1,5 @@
+import { Player } from "./player.model";
+
 export interface PlayerStats {
 
   playerId: string
@@ -28,7 +30,7 @@ export interface PlayerStats {
 
   dismissedBy: string
 
-  caughtBy?: string
+  caughtBy?: Player | null
 
   hatTricks: number
 
