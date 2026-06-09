@@ -1,339 +1,194 @@
 <!-- Loader -->
-@if(loading){
-
-<div class="loader-wrapper">
-
+@if (loading) {
+  <div class="loader-wrapper">
     <div class="loader">
+      <img src="https://cdn-icons-png.flaticon.com/128/1099/1099680.png" class="ball" alt="ball" />
 
-        <img src="https://cdn-icons-png.flaticon.com/128/1099/1099680.png" class="ball" alt="ball">
-
-        <svg class="bat" viewBox="0 0 460.84737 460.84737">
-
-            <path d="m460.847656 31.75-25.070312 25.078125-31.761719-31.757813 25.082031-25.070312zm0 0"
-                fill="#a85d5d" />
-            <path d="m378.945312 50.140625 25.070313-25.070313 31.761719 31.757813-25.070313 25.070313zm0 0"
-                fill="#7f4545" />
-            <path d="m353.878906 75.210938 25.066406-25.070313 31.761719 31.757813-25.070312 25.070312zm0 0"
-                fill="#a85d5d" />
-            <path d="m328.808594 100.28125 25.066406-25.070312 31.761719 31.757812-25.070313 25.070312zm0 0"
-                fill="#7f4545" />
-            <path d="m360.566406 132.039062-25.078125 25.070313-31.75-31.75 25.070313-25.078125zm0 0" fill="#a85d5d" />
-            <path
-                d="m352.425781 190.320312-260.136719 260.140626c-13.847656 13.847656-36.296874 13.847656-50.140624 0l-31.761719-31.761719c-13.847657-13.84375-13.847657-36.296875 0-50.140625l260.140625-260.136719 25.070312 25.066406-.21875.222657-76.050781 107.808593 107.808594-76.050781.21875-.21875zm0 0"
-                fill="#ffd2a6" />
-            <path d="m327.355469 165.25-.21875.21875-107.808594 76.050781 76.050781-107.808593.21875-.222657zm0 0"
-                fill="#7f4545" />
-
-        </svg>
-
+      <svg class="bat" viewBox="0 0 460.84737 460.84737">
+        <path
+          d="m460.847656 31.75-25.070312 25.078125-31.761719-31.757813 25.082031-25.070312zm0 0"
+          fill="#a85d5d"
+        />
+        <path
+          d="m378.945312 50.140625 25.070313-25.070313 31.761719 31.757813-25.070313 25.070313zm0 0"
+          fill="#7f4545"
+        />
+        <path
+          d="m353.878906 75.210938 25.066406-25.070313 31.761719 31.757813-25.070312 25.070312zm0 0"
+          fill="#a85d5d"
+        />
+        <path
+          d="m328.808594 100.28125 25.066406-25.070312 31.761719 31.757812-25.070313 25.070312zm0 0"
+          fill="#7f4545"
+        />
+        <path
+          d="m360.566406 132.039062-25.078125 25.070313-31.75-31.75 25.070313-25.078125zm0 0"
+          fill="#a85d5d"
+        />
+        <path
+          d="m352.425781 190.320312-260.136719 260.140626c-13.847656 13.847656-36.296874 13.847656-50.140624 0l-31.761719-31.761719c-13.847657-13.84375-13.847657-36.296875 0-50.140625l260.140625-260.136719 25.070312 25.066406-.21875.222657-76.050781 107.808593 107.808594-76.050781.21875-.21875zm0 0"
+          fill="#ffd2a6"
+        />
+        <path
+          d="m327.355469 165.25-.21875.21875-107.808594 76.050781 76.050781-107.808593.21875-.222657zm0 0"
+          fill="#7f4545"
+        />
+      </svg>
     </div>
 
-    <p class="loader-text">
-        Loading Match Data...
-    </p>
-
-</div>
-
+    <p class="loader-text">Loading Match Data...</p>
+  </div>
 }
 
-
-
 <!-- PAGE -->
-<div class="w-full h-full min-h-screen bg-[#050816] px-4 sm:px-6 lg:px-10
+<div class="w-full h-full min-h-screen bg-[#050816] px-4 sm:px-6 lg:px-10 py-8">
+  <!-- TOP -->
+  <div class="flex items-center justify-between mb-8">
+    <!-- LEFT -->
+    <div>
+      <p class="uppercase tracking-[0.35em] text-[10px] sm:text-xs text-zinc-500 font-black">
+        Rooftop Cricket Archive
+      </p>
 
-py-8 ">
-
-    <!-- TOP -->
-    <div class="flex items-center
-    justify-between
-
-    mb-8">
-
-        <!-- LEFT -->
-        <div>
-
-            <p class="uppercase
-            tracking-[0.35em]
-            text-[10px] sm:text-xs
-            text-zinc-500
-            font-black">
-                Rooftop Cricket Archive
-            </p>
-
-            <h1 class="text-5xl sm:text-4xl
-            font-black text-white
-            mt-3">
-                Match History
-            </h1>
-        </div>
-
-        <!-- TOTAL -->
-        <div class="hidden sm:flex
-        flex-col items-end">
-
-            <p class="text-zinc-500
-            text-sm">
-                Total Matches
-            </p>
-
-            <h1 class="text-4xl   font-black text-amber-400">
-                {{matches.length}}
-            </h1>
-
-        </div>
-
+      <h1 class="text-5xl sm:text-4xl font-black text-white mt-3">Match History</h1>
     </div>
 
-    <!-- MATCHES -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3
-
-    gap-5">
-
-        @for(match of matches; track match.id){
-
-        <!-- CARD -->
-        <button class="group relative overflow-hidden rounded-[2.5rem]  border border-white/10  bg-white/3  p-6
-        text-left transition-all duration-300 hover:bg-white/5 hover:border-white/20 hover:scale-[1.02]">
-
-            <!-- GLOW -->
-            <div class="absolute inset-0   opacity-0   group-hover:opacity-10 transition-all duration-500   bg-linear-to-br
-            from-amber-400/5 via-transparent to-blue-400/5"> </div>
-
-            <!-- CONTENT -->
-            <div class="relative z-10">
-
-                <!-- TOP -->
-                <div class="flex items-start
-                justify-between">
-
-                    <!-- DATE -->
-                    <div>
-
-                        <p class="text-zinc-500 text-xs  uppercase tracking-[0.25em] font-bold">
-                            Match
-                        </p>
-
-                        <p class="text-zinc-400 text-sm  mt-2">
-                            {{formatDate(match.createdAt)}}
-                        </p>
-
-                    </div>
-
-                    <!-- RESULT -->
-                    <div class="px-3 py-2   rounded-2xl bg-emerald-400/10    border border-emerald-400/20">
-                        <p class="text-emerald-400 text-xs font-black">
-                        {{getMatchTime(match.createdAt)}}
-                        </p>
-                    </div>
-
-                </div>
-
-                <!-- SCORES -->
-                <div class="mt-8 space-y-5">
-
-                    <!-- TEAM A -->
-                    <div class="flex items-center
-                    justify-between">
-
-                        <div>
-
-                            <p class="text-white text-xl font-black">
-                                First Innings
-                            </p>
-
-                        </div>
-
-                        <div class="text-right">
-
-                            <h1 class="text-3xl font-black text-white">
-
-                                {{match.innings[0].firstInningsTotalRuns}}/{{match.innings[0].firstInningsTotalWickets}}
-
-                            </h1>
-
-                            <p class="text-zinc-500  text-sm">
-
-                                {{
-                                Math.floor(
-                                match.innings[0].firstInningsTotalBalls / 6
-                                )
-                                }}.
-                                {{
-                                match.innings[0].firstInningsTotalBalls % 6
-                                }}
-                                Overs
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    <!-- TEAM B -->
-                    <div class="flex items-center
-                    justify-between">
-
-                        <div>
-
-                            <p class="text-white
-
-                            text-xl
-
-                            font-black">
-
-                               Second Innings
-
-                            </p>
-
-                        </div>
-
-                        <div class="text-right">
-
-                            <h1 class="text-3xl
-
-                            font-black
-
-                            text-white">
-
-                                {{match.innings[1].secondInningsTotalRuns}}/{{match.innings[1].secondInningsTotalWickets}}
-
-                            </h1>
-
-                            <p class="text-zinc-500
-                            text-sm">
-
-                                {{
-                                Math.floor(
-                                match.innings[1].secondInningsTotalBalls / 6
-                                )
-                                }}.
-                                {{
-                                match.innings[1].secondInningsTotalBalls % 6
-                                }}
-                                Overs
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- DIVIDER -->
-                <div class="h-px
-
-                bg-white/5
-
-                my-6">
-
-                </div>
-
-                <!-- BOTTOM -->
-                <div class="flex items-end
-                justify-between gap-4">
-
-                    <!-- MOTM -->
-                    <div>
-
-                        <p class="text-zinc-500
-
-                        text-xs
-
-                        uppercase
-
-                        tracking-[0.2em]
-
-                        font-bold">
-
-                            Player Of The Match
-
-                        </p>
-
-                        <div class="flex items-center gap-3
-
-                        mt-3">
-
-                            <!-- PHOTO -->
-                            <img [src]="match.motm.playerPhoto" class="w-12 h-12
-
-                            rounded-full
-
-                            object-cover
-
-                            border border-white/10">
-
-                            <!-- INFO -->
-                            <div>
-
-                                <h1 class="text-white
-
-                                font-black">
-
-                                    {{match.motm.playerName}}
-
-                                </h1>
-
-                                <p class="text-zinc-400
-
-                                text-sm">
-
-                                @if(match.motm.runs > 0 && match.motm.wickets > 0){
-
-                                    {{match.motm.runs}} Runs
-
-                                    •
-
-                                    {{match.motm.wickets}} Wickets
-                                }
-                                @else if(match.motm.runs > 0 && match.motm.wickets == 0){
-                                    {{match.motm.runs}} Runs
-                                }
-                                @else if(match.motm.runs == 0 && match.motm.wickets > 0){
-                                    {{match.motm.wickets}} Wickets
-                                }
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- VIEW -->
-                    <div [routerLink]="['/match-scorecard', match.id]" class="cursor-pointer text-right">
-
-                        <p class="text-amber-400
-
-                        text-sm
-
-                        font-bold">
-
-                            View
-
-                        </p>
-
-                        <p class="text-zinc-500
-
-                        text-xs
-
-                        mt-1">
-
-                            Full Scorecard
-
-                        </p>
-
-                    </div>
-
-                </div>
-
+    <!-- TOTAL -->
+    <div class="hidden sm:flex flex-col items-end">
+      <p class="text-zinc-500 text-sm">Total Matches</p>
+
+      <h1 class="text-4xl font-black text-amber-400">
+        {{ matches.length }}
+      </h1>
+    </div>
+  </div>
+
+  <!-- MATCHES -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+    @for (match of matches; track match.id) {
+      <!-- CARD -->
+      <button
+        class="group relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/3 p-6 text-left transition-all duration-300 hover:bg-white/5 hover:border-white/20 hover:scale-[1.02]"
+      >
+        <!-- GLOW -->
+        <div
+          class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-all duration-500 bg-linear-to-br from-amber-400/5 via-transparent to-blue-400/5"
+        ></div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10">
+          <!-- TOP -->
+          <div class="flex items-start justify-between">
+            <!-- DATE -->
+            <div>
+              <p class="text-zinc-500 text-xs uppercase tracking-[0.25em] font-bold">Match</p>
+
+              <p class="text-zinc-400 text-sm mt-2">
+                {{ formatDate(match.createdAt) }}
+              </p>
             </div>
 
-        </button>
+            <!-- RESULT -->
+            <div class="px-3 py-2 rounded-2xl bg-emerald-400/10 border border-emerald-400/20">
+              <p class="text-emerald-400 text-xs font-black">
+                {{ getMatchTime(match.createdAt) }}
+              </p>
+            </div>
+          </div>
 
-        }
+          <!-- SCORES -->
+          <div class="mt-8 space-y-5">
+            <!-- TEAM A -->
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white text-xl font-black">First Innings</p>
+              </div>
 
-    </div>
+              <div class="text-right">
+                <h1 class="text-3xl font-black text-white">
+                  {{ match.innings[0].firstInningsTotalRuns }}/{{
+                    match.innings[0].firstInningsTotalWickets
+                  }}
+                </h1>
 
+                <p class="text-zinc-500 text-sm">
+                  {{ Math.floor(match.innings[0].firstInningsTotalBalls / 6) }}.
+                  {{ match.innings[0].firstInningsTotalBalls % 6 }}
+                  Overs
+                </p>
+              </div>
+            </div>
+
+            <!-- TEAM B -->
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white text-xl font-black">Second Innings</p>
+              </div>
+
+              <div class="text-right">
+                <h1 class="text-3xl font-black text-white">
+                  {{ match.innings[1].secondInningsTotalRuns }}/{{
+                    match.innings[1].secondInningsTotalWickets
+                  }}
+                </h1>
+
+                <p class="text-zinc-500 text-sm">
+                  {{ Math.floor(match.innings[1].secondInningsTotalBalls / 6) }}.
+                  {{ match.innings[1].secondInningsTotalBalls % 6 }}
+                  Overs
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIVIDER -->
+          <div class="h-px bg-white/5 my-6"></div>
+
+          <!-- BOTTOM -->
+          <div class="flex items-end justify-between gap-4">
+            <!-- MOTM -->
+            <div>
+              <p class="text-zinc-500 text-xs uppercase tracking-[0.2em] font-bold">
+                Player Of The Match
+              </p>
+
+              <div class="flex items-center gap-3 mt-3">
+                <!-- PHOTO -->
+                <img
+                  [src]="match.motm.playerPhoto"
+                  class="w-12 h-12 rounded-full object-cover border border-white/10"
+                />
+
+                <!-- INFO -->
+                <div>
+                  <h1 class="text-white font-black">
+                    {{ match.motm.playerName }}
+                  </h1>
+
+                  <p class="text-zinc-400 text-sm">
+                    @if (match.motm.runs > 0 && match.motm.wickets > 0) {
+                      {{ match.motm.runs }} Runs •
+
+                      {{ match.motm.wickets }} Wickets
+                    } @else if (match.motm.runs > 0 && match.motm.wickets == 0) {
+                      {{ match.motm.runs }} Runs
+                    } @else if (match.motm.runs == 0 && match.motm.wickets > 0) {
+                      {{ match.motm.wickets }} Wickets
+                    }
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW -->
+            <div [routerLink]="['/match-scorecard', match.id]" class="cursor-pointer text-right">
+              <p class="text-amber-400 text-sm font-bold">View</p>
+
+              <p class="text-zinc-500 text-xs mt-1">Full Scorecard</p>
+            </div>
+          </div>
+        </div>
+      </button>
+    }
+  </div>
 </div>

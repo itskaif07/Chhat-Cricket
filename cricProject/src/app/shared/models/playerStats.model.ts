@@ -1,50 +1,47 @@
-import { Player } from "./player.model";
+import { Player } from './player.model';
 
 export interface PlayerStats {
+  playerId: string;
 
-  playerId: string
+  playerName: string;
 
-  playerName: string
+  playerPhoto: string;
 
-  playerPhoto: string
+  matches: number;
 
-  matches: number
+  innings: number;
 
-  innings: number
+  runs: number;
 
-  runs: number
+  ballsDelivered: number;
 
-  ballsDelivered: number
+  wickets: number;
 
-  wickets: number
+  ballsFaced: number;
 
-  ballsFaced: number
+  fours: number;
 
-  fours: number
+  sixes: number;
 
-  sixes: number
+  runsConceded: number;
 
-  runsConceded: number
+  dismissalType: 'caught' | 'bowled' | 'offside' | null;
 
-  dismissalType: 'caught' | 'bowled' | 'offside' | null 
+  dismissedBy: string;
 
-  dismissedBy: string
+  caughtBy?: Player | null;
 
-  caughtBy?: Player | null
+  hatTricks: number;
 
-  hatTricks: number
+  fifty: number;
 
-  fifty: number
+  hundred: number;
 
-  hundred: number
+  maiden: number;
 
-  maiden: number
+  fifer: number;
 
-  fifer: number
+  hasScoredFifty: boolean;
 
-  hasScoredFifty: boolean
-  
-hasScoredHundred: boolean
-
-
+  hasScoredHundred: boolean;
 }

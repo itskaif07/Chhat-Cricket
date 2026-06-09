@@ -1,23 +1,23 @@
 export interface CareerStats {
-  playerId: string
+  playerId: string;
 
-  matches: number
+  matches: number;
 
-  runs: number
-  ballsFaced: number
+  runs: number;
+  ballsFaced: number;
 
-  wickets: number
-  ballsBowled: number
-  runsConceded: number
+  wickets: number;
+  ballsBowled: number;
+  runsConceded: number;
 
-  fifties: number
-  centuries: number
+  fifties: number;
+  centuries: number;
 
-  highestScore: number
+  highestScore: number;
 
-  motm: number
+  motm: number;
 
-  hatTricks: number
+  hatTricks: number;
 
-  wins: number
+  wins: number;
 }

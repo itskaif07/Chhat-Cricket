@@ -1,50 +1,35 @@
 .coin {
+  width: 180px;
+  height: 180px;
 
-    width: 180px;
-    height: 180px;
+  border-radius: 9999px;
 
-    border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  font-size: 5rem;
+  font-weight: 900;
 
-    font-size: 5rem;
-    font-weight: 900;
+  background: linear-gradient(to bottom, #b8ff4f, #94f505);
 
-    background: linear-gradient(to bottom,
-            #b8ff4f,
-            #94F505);
+  color: black;
 
-    color: black;
+  transition: all 0.3s ease;
 
-    transition: all .3s ease;
-
-    transform-style: preserve-3d;
-
+  transform-style: preserve-3d;
 }
 
 .tossing {
-
-    animation:
-        toss 0.15s linear infinite;
-
+  animation: toss 0.15s linear infinite;
 }
 
 @keyframes toss {
+  from {
+    transform: rotateY(0deg) rotateX(0deg);
+  }
 
-    from {
-
-        transform:
-            rotateY(0deg) rotateX(0deg);
-
-    }
-
-    to {
-
-        transform:
-            rotateY(720deg) rotateX(720deg);
-
-    }
-
+  to {
+    transform: rotateY(720deg) rotateX(720deg);
+  }
 }

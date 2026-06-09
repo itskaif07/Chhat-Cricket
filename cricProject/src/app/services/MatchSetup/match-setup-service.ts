@@ -5,103 +5,97 @@ import { Player } from '../../shared/models/player.model';
   providedIn: 'root',
 })
 export class MatchSetupService {
-
-  teamA: Player[] = []
-  teamB: Player[] = []
-  teamACaptain: Player | null = null
-  teamBCaptain: Player | null = null
+  teamA: Player[] = [];
+  teamB: Player[] = [];
+  teamACaptain: Player | null = null;
+  teamBCaptain: Player | null = null;
   tossWinner: 'A' | 'B' | '' = '';
   firstBattingTeam: 'A' | 'B' | '' = '';
   firstBowlingTeam: 'A' | 'B' | '' = '';
 
-  selectedPlayers: Player[] = []
+  selectedPlayers: Player[] = [];
 
-  setMatchTossWinner(team: 'A'|'B' | ''){
-    this.tossWinner = team
+  setMatchTossWinner(team: 'A' | 'B' | '') {
+    this.tossWinner = team;
   }
 
-  setFirstBattingTeam(team: 'A'|'B'|''){
-    this.firstBattingTeam = team 
+  setFirstBattingTeam(team: 'A' | 'B' | '') {
+    this.firstBattingTeam = team;
   }
 
-  setFirstBowlingTeam(team: 'A'|'B'|''){
-    this.firstBowlingTeam = team
+  setFirstBowlingTeam(team: 'A' | 'B' | '') {
+    this.firstBowlingTeam = team;
   }
 
+  setTeams(teamA: Player[], teamB: Player[]) {
+    this.teamA = teamA;
+    this.teamB = teamB;
+    this.teamACaptain = teamA[0] || null;
+    this.teamBCaptain = teamB[0] || null;
 
-
-  setTeams(teamA:Player[], teamB:Player[]){
-    this.teamA = teamA
-    this.teamB = teamB
-    this.teamACaptain = teamA[0] || null
-    this.teamBCaptain = teamB[0] || null
-
-    this.selectedPlayers = [...teamA, ...teamB]
+    this.selectedPlayers = [...teamA, ...teamB];
   }
 
   restoreTeams(
     teamA: Player[],
     teamB: Player[],
     teamACaptain: Player | null,
-    teamBCaptain: Player | null
-  ){
-    this.teamA = teamA
-    this.teamB = teamB
-    this.teamACaptain = teamACaptain || teamA[0] || null
-    this.teamBCaptain = teamBCaptain || teamB[0] || null
-    this.tossWinner = ''
-    this.firstBattingTeam = ''
-    this.firstBowlingTeam = ''
+    teamBCaptain: Player | null,
+  ) {
+    this.teamA = teamA;
+    this.teamB = teamB;
+    this.teamACaptain = teamACaptain || teamA[0] || null;
+    this.teamBCaptain = teamBCaptain || teamB[0] || null;
+    this.tossWinner = '';
+    this.firstBattingTeam = '';
+    this.firstBowlingTeam = '';
 
-    this.selectedPlayers = [...teamA, ...teamB]
+    this.selectedPlayers = [...teamA, ...teamB];
   }
 
-  setLeftOverPlayer(player: Player){
-    if(this.tossWinner ==='A'){
-      this.teamA.push(player)
-    }
-    else if(this.tossWinner === 'B'){
-      this.teamB.push(player)
+  setLeftOverPlayer(player: Player) {
+    if (this.tossWinner === 'A') {
+      this.teamA.push(player);
+    } else if (this.tossWinner === 'B') {
+      this.teamB.push(player);
     }
 
-    this.selectedPlayers = [...this.teamA, ...this.teamB]
+    this.selectedPlayers = [...this.teamA, ...this.teamB];
   }
 
-  setLeftOverPlayerToBattingTeam(player: Player){
+  setLeftOverPlayerToBattingTeam(player: Player) {
+    const targetTeam = this.firstBattingTeam === 'A' ? this.teamA : this.teamB;
 
-    const targetTeam = this.firstBattingTeam === 'A' ? this.teamA : this.teamB
-
-    const alreadyExists = targetTeam.some(teamPlayer => teamPlayer.id === player.id)
+    const alreadyExists = targetTeam.some((teamPlayer) => teamPlayer.id === player.id);
 
     if (!alreadyExists) {
-      targetTeam.push(player)
+      targetTeam.push(player);
     }
 
-    this.selectedPlayers = [...this.teamA, ...this.teamB]
+    this.selectedPlayers = [...this.teamA, ...this.teamB];
   }
 
-  setLeftOverPlayerInTeamA(player: Player){
-    this.setLeftOverPlayerToBattingTeam(player)
-  }
- 
-
-  getTeamA(){
-    return this.teamA
+  setLeftOverPlayerInTeamA(player: Player) {
+    this.setLeftOverPlayerToBattingTeam(player);
   }
 
-  getTeamB(){
-    return this.teamB
+  getTeamA() {
+    return this.teamA;
   }
 
-  getTeamACaptain(){
-    return this.teamACaptain
+  getTeamB() {
+    return this.teamB;
   }
 
-  getTeamBCaptain(){
-    return this.teamBCaptain
+  getTeamACaptain() {
+    return this.teamACaptain;
   }
 
-  getSelectedPlayers(){
-    return this.selectedPlayers
+  getTeamBCaptain() {
+    return this.teamBCaptain;
+  }
+
+  getSelectedPlayers() {
+    return this.selectedPlayers;
   }
 }

@@ -1,154 +1,83 @@
-<div class="w-full min-h-screen bg-[#050B18] text-white overflow-hidden relative flex items-center justify-center px-6">
+<div
+  class="w-full min-h-screen bg-[#050B18] text-white overflow-hidden relative flex items-center justify-center px-6"
+>
+  <!-- BACKGROUND GLOW -->
+  <div
+    class="absolute -top-30 left-1/2 -translate-x-1/2 w-125 h-125 bg-linear-to-b from-[#38BDF8] to-[#0EA5E9] blur-[140px] rounded-full opacity-20 pointer-events-none"
+  ></div>
 
-    <!-- BACKGROUND GLOW -->
-    <div class="absolute -top-30 left-1/2 -translate-x-1/2
-    w-125 h-125
-    bg-linear-to-b
-    from-[#38BDF8]
-    to-[#0EA5E9]
-    blur-[140px] rounded-full opacity-20
-    pointer-events-none">
-
+  <!-- CONTENT -->
+  <div class="relative z-10 w-full max-w-xl flex flex-col items-center text-center">
+    <!-- MODE BADGE -->
+    <div class="px-4 py-2 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/20 backdrop-blur-xl">
+      <h2 class="text-xs tracking-[0.3em] text-[#38BDF8] font-bold">UNLIMITED OVERS</h2>
     </div>
 
-    <!-- CONTENT -->
-    <div class="relative z-10 w-full max-w-xl
-    flex flex-col items-center text-center">
+    @if (hasPreviousSetup && previousSetup) {
+      <!-- PREVIOUS SETUP -->
+      <h1 class="text-white text-4xl md:text-5xl font-black leading-none mt-10">
+        Continue Previous
+        <br />
+        Setup?
+      </h1>
 
-        <!-- MODE BADGE -->
-        <div class="px-4 py-2 rounded-full
-        bg-[#38BDF8]/10 border border-[#38BDF8]/20
-        backdrop-blur-xl">
+      <p class="text-zinc-400 mt-6 leading-relaxed max-w-sm">
+        Use the same teams and captains from your last unlimited match.
+      </p>
 
-            <h2 class="text-xs tracking-[0.3em]
-            text-[#38BDF8] font-bold">
+      <div class="w-full grid grid-cols-2 gap-4 mt-10">
+        <div class="rounded-3xl p-4 bg-[#94F505]/10 border border-[#94F505]/20 text-left">
+          <p class="text-[#94F505] text-xs font-black tracking-[0.2em]">TEAM A</p>
 
-                UNLIMITED OVERS
+          <h2 class="text-white text-lg font-black mt-2 truncate">
+            {{ previousSetup.teamACaptain?.displayName || previousSetup.teamA[0].displayName }}
+          </h2>
 
-            </h2>
-
+          <p class="text-zinc-500 text-sm mt-1">{{ previousSetup.teamA.length }} players</p>
         </div>
 
-        @if(hasPreviousSetup && previousSetup){
+        <div class="rounded-3xl p-4 bg-purple-400/10 border border-purple-400/20 text-left">
+          <p class="text-purple-300 text-xs font-black tracking-[0.2em]">TEAM B</p>
 
-        <!-- PREVIOUS SETUP -->
-        <h1 class="text-white text-4xl md:text-5xl font-black
-        leading-none mt-10">
+          <h2 class="text-white text-lg font-black mt-2 truncate">
+            {{ previousSetup.teamBCaptain?.displayName || previousSetup.teamB[0].displayName }}
+          </h2>
 
-            Continue Previous
-            <br>
-            Setup?
-
-        </h1>
-
-        <p class="text-zinc-400
-        mt-6 leading-relaxed max-w-sm">
-
-            Use the same teams and captains from your last unlimited match.
-
-        </p>
-
-        <div class="w-full grid grid-cols-2 gap-4 mt-10">
-
-            <div class="rounded-3xl p-4
-            bg-[#94F505]/10 border border-[#94F505]/20
-            text-left">
-
-                <p class="text-[#94F505] text-xs font-black tracking-[0.2em]">
-                    TEAM A
-                </p>
-
-                <h2 class="text-white text-lg font-black mt-2 truncate">
-                    {{ previousSetup.teamACaptain?.displayName || previousSetup.teamA[0].displayName }}
-                </h2>
-
-                <p class="text-zinc-500 text-sm mt-1">
-                    {{ previousSetup.teamA.length }} players
-                </p>
-
-            </div>
-
-            <div class="rounded-3xl p-4
-            bg-purple-400/10 border border-purple-400/20
-            text-left">
-
-                <p class="text-purple-300 text-xs font-black tracking-[0.2em]">
-                    TEAM B
-                </p>
-
-                <h2 class="text-white text-lg font-black mt-2 truncate">
-                    {{ previousSetup.teamBCaptain?.displayName || previousSetup.teamB[0].displayName }}
-                </h2>
-
-                <p class="text-zinc-500 text-sm mt-1">
-                    {{ previousSetup.teamB.length }} players
-                </p>
-
-            </div>
-
+          <p class="text-zinc-500 text-sm mt-1">{{ previousSetup.teamB.length }} players</p>
         </div>
+      </div>
 
-        <button (click)="continuePreviousSetup()" class="w-full mt-10 h-16 rounded-3xl cursor-pointer
-        bg-linear-to-b
-        from-[#38BDF8]
-        to-[#0EA5E9]
-        border border-[#38BDF8]/30
-        text-black text-lg font-black
-        shadow-[0_0_40px_rgba(56,189,248,0.2)]
-        active:scale-[0.98]
-        transition-all duration-300">
+      <button
+        (click)="continuePreviousSetup()"
+        class="w-full mt-10 h-16 rounded-3xl cursor-pointer bg-linear-to-b from-[#38BDF8] to-[#0EA5E9] border border-[#38BDF8]/30 text-black text-lg font-black shadow-[0_0_40px_rgba(56,189,248,0.2)] active:scale-[0.98] transition-all duration-300"
+      >
+        CONTINUE WITH THIS SETUP
+      </button>
 
-            CONTINUE WITH THIS SETUP
+      <button
+        (click)="startNewSetup()"
+        class="w-full mt-4 h-16 rounded-3xl cursor-pointer bg-white/5 border border-white/10 backdrop-blur-xl text-white text-lg font-semibold active:scale-[0.98] transition-all duration-300"
+      >
+        START NEW SETUP
+      </button>
+    } @else {
+      <!-- DEFAULT WELCOME -->
+      <h1 class="text-white text-5xl md:text-6xl font-black leading-none mt-10">
+        ROOFTOP
+        <br />
+        BATTLE
+      </h1>
 
-        </button>
+      <p class="text-zinc-400 mt-6 leading-relaxed max-w-sm">
+        Build your teams and start an endless rooftop cricket match.
+      </p>
 
-        <button (click)="startNewSetup()" class="w-full mt-4 h-16 rounded-3xl cursor-pointer
-        bg-white/5 border border-white/10
-        backdrop-blur-xl
-        text-white text-lg font-semibold
-        active:scale-[0.98]
-        transition-all duration-300">
-
-            START NEW SETUP
-
-        </button>
-
-        }
-        @else {
-
-        <!-- DEFAULT WELCOME -->
-        <h1 class="text-white text-5xl md:text-6xl font-black
-        leading-none mt-10">
-
-            ROOFTOP
-            <br>
-            BATTLE
-
-        </h1>
-
-        <p class="text-zinc-400
-        mt-6 leading-relaxed max-w-sm">
-
-            Build your teams and start an endless rooftop cricket match.
-
-        </p>
-
-        <button [routerLink]="['/unlimited/select-players']" class="w-full mt-12 h-16 rounded-3xl cursor-pointer
-        bg-linear-to-b
-        from-[#38BDF8]
-        to-[#0EA5E9]
-        border border-[#38BDF8]/30
-        text-black text-lg font-black
-        shadow-[0_0_40px_rgba(56,189,248,0.2)]
-        active:scale-[0.98]
-        transition-all duration-300">
-
-            SELECT PLAYERS
-
-        </button>
-
-        }
-
-    </div>
-
+      <button
+        [routerLink]="['/unlimited/select-players']"
+        class="w-full mt-12 h-16 rounded-3xl cursor-pointer bg-linear-to-b from-[#38BDF8] to-[#0EA5E9] border border-[#38BDF8]/30 text-black text-lg font-black shadow-[0_0_40px_rgba(56,189,248,0.2)] active:scale-[0.98] transition-all duration-300"
+      >
+        SELECT PLAYERS
+      </button>
+    }
+  </div>
 </div>

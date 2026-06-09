@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Player } from '../../../shared/models/player.model';
 import { CommonModule } from '@angular/common';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
 import { MatchSetupService } from '../../../services/MatchSetup/match-setup-service';
 
@@ -11,145 +11,125 @@ import { MatchSetupService } from '../../../services/MatchSetup/match-setup-serv
   templateUrl: './select-players.html',
   styleUrl: './select-players.css',
 })
-export class SelectPlayers implements OnInit
-{
+export class SelectPlayers implements OnInit {
+  constructor(
+    private RetrievePlayersService: RetrievePlayersService,
+    private cdr: ChangeDetectorRef,
+    private matchSetupService: MatchSetupService,
+    private router: Router,
+  ) {}
 
-  constructor(private RetrievePlayersService: RetrievePlayersService, private cdr: ChangeDetectorRef, private matchSetupService: MatchSetupService, private router: Router){}
+  players: Player[] = [];
 
-  players: Player[] = []
+  selectedPlayers: string[] = [];
 
-  selectedPlayers: string[] = []
+  teamA: Player[] = [];
+  teamB: Player[] = [];
 
-  teamA: Player[] = []
-  teamB: Player[] = []
-
-   captainA:Player | null = null
-  captainB:Player | null = null
+  captainA: Player | null = null;
+  captainB: Player | null = null;
 
   currentTurn: 'A' | 'B' = 'A';
 
-  ngOnInit(){
-    this.getPlayers()
+  ngOnInit() {
+    this.getPlayers();
   }
 
-   async getPlayers(){
-
-  try{
-    
-   this.players = await this.RetrievePlayersService.getAllPlayers()
-    this.cdr.detectChanges()
-    
-  }
-  catch(e){
-    console.log(e)
-  }
+  async getPlayers() {
+    try {
+      this.players = await this.RetrievePlayersService.getAllPlayers();
+      this.cdr.detectChanges();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-selectPlayer(player: Player) {
+  selectPlayer(player: Player) {
+    const playerId = player.id;
 
-  const playerId = player.id;
+    if (!playerId) return;
 
-  if (!playerId) return;
+    // =====================
+    // UNDO TEAM A
+    // =====================
 
-  // =====================
-  // UNDO TEAM A
-  // =====================
+    if (this.teamA.some((p) => p.id === playerId)) {
+      this.teamA = this.teamA.filter((p) => p.id !== playerId);
 
-  if (this.teamA.some(p => p.id === playerId)) {
+      this.selectedPlayers = this.selectedPlayers.filter((id) => id !== playerId);
 
-    this.teamA =
-      this.teamA.filter(p => p.id !== playerId);
+      this.currentTurn = 'A';
 
-    this.selectedPlayers =
-      this.selectedPlayers.filter(id => id !== playerId);
+      return;
+    }
 
+    // =====================
+    // UNDO TEAM B
+    // =====================
+
+    if (this.teamB.some((p) => p.id === playerId)) {
+      this.teamB = this.teamB.filter((p) => p.id !== playerId);
+
+      this.selectedPlayers = this.selectedPlayers.filter((id) => id !== playerId);
+
+      this.currentTurn = 'B';
+
+      return;
+    }
+
+    // =====================
+    // NEW SELECTION
+    // =====================
+
+    if (this.currentTurn === 'A') {
+      this.teamA.push(player);
+
+      this.currentTurn = 'B';
+    } else {
+      this.teamB.push(player);
+
+      this.currentTurn = 'A';
+    }
+
+    this.selectedPlayers.push(playerId);
+  }
+
+  getSelectionOrder(player: Player) {
+    if (!player.id) return 0;
+
+    return this.selectedPlayers.indexOf(player.id) + 1;
+  }
+
+  goToNextPage() {
+    if (this.selectedPlayers.length < 4) return;
+
+    this.matchSetupService.setTeams(this.teamA, this.teamB);
+    this.getCaptains();
+    this.saveMatchSetup();
+    this.router.navigate(['/unlimited/toss']);
+  }
+
+  reset() {
+    this.selectedPlayers = [];
+    this.teamA = [];
+    this.teamB = [];
     this.currentTurn = 'A';
-
-
-    return;
-
   }
 
-  // =====================
-  // UNDO TEAM B
-  // =====================
-
-  if (this.teamB.some(p => p.id === playerId)) {
-
-    this.teamB =
-      this.teamB.filter(p => p.id !== playerId);
-
-    this.selectedPlayers =
-      this.selectedPlayers.filter(id => id !== playerId);
-
-    this.currentTurn = 'B';
-
-
-    return;
-
+  getCaptains() {
+    this.captainA = this.matchSetupService.getTeamACaptain();
+    this.captainB = this.matchSetupService.getTeamBCaptain();
   }
 
-  // =====================
-  // NEW SELECTION
-  // =====================
-
-  if (this.currentTurn === 'A') {
-
-    this.teamA.push(player);
-
-    this.currentTurn = 'B';
-
+  saveMatchSetup() {
+    localStorage.setItem(
+      'lastMatchSetup',
+      JSON.stringify({
+        teamA: this.teamA,
+        teamB: this.teamB,
+        teamACaptain: this.captainA,
+        teamBCaptain: this.captainB,
+      }),
+    );
   }
-
-  else {
-
-    this.teamB.push(player);
-
-    this.currentTurn = 'A';
-
-  }
-
-  this.selectedPlayers.push(playerId);
-
-
-}
-
-getSelectionOrder(player:Player){
-
-  if(!player.id) return 0
-
-  return this.selectedPlayers.indexOf(player.id) + 1
-
-}
-
-goToNextPage(){
-  if (this.selectedPlayers.length < 4) return;
-
-  this.matchSetupService.setTeams(this.teamA, this.teamB)
-  this.getCaptains()
-  this.saveMatchSetup()
-  this.router.navigate(['/unlimited/toss'])
-}
-
-reset(){
-  this.selectedPlayers = []
-  this.teamA = []
-  this.teamB = []
-  this.currentTurn = 'A'
-}
-
-getCaptains(){
-  this.captainA = this.matchSetupService.getTeamACaptain()
-  this.captainB = this.matchSetupService.getTeamBCaptain()
-}
-
-saveMatchSetup(){
-  localStorage.setItem('lastMatchSetup', JSON.stringify({
-    teamA: this.teamA,
-    teamB: this.teamB,
-    teamACaptain: this.captainA,
-    teamBCaptain: this.captainB
-  }))
-}
-
 }

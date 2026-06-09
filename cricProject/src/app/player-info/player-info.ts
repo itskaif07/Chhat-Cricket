@@ -1,25 +1,12 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import {
-  CommonModule
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
 
-import {
-  ActivatedRoute
-} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
-import {
-  Firestore,
-  doc,
-  getDoc
-} from '@angular/fire/firestore';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { RetrievePlayersService } from '../services/retrievePlayer/retrieve-players-service';
 import { MatchService } from '../services/matchService/match-service';
-
 
 @Component({
   selector: 'app-player-info',
@@ -28,7 +15,6 @@ import { MatchService } from '../services/matchService/match-service';
   styleUrl: './player-info.css',
 })
 export class PlayerInfo implements OnInit {
-
   player: any = null;
   stats: any = null;
   playerId = '';
@@ -38,55 +24,38 @@ export class PlayerInfo implements OnInit {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private retrievePlayerService: RetrievePlayersService,
-    private matchService: MatchService
+    private matchService: MatchService,
   ) {}
 
   ngOnInit(): void {
-
-    this.playerId =
-      this.route.snapshot.paramMap.get('id') || '';
+    this.playerId = this.route.snapshot.paramMap.get('id') || '';
 
     this.getPlayer();
     this.getStats();
-
   }
- getPlayer() {
+  getPlayer() {
     this.loading = true;
-    this.retrievePlayerService.getPlayer(this.playerId).subscribe((data:any)=>{
-    this.player = data;
-    this.loading = false;
-    this.cdr.detectChanges();
-  });
-
-
+    this.retrievePlayerService.getPlayer(this.playerId).subscribe((data: any) => {
+      this.player = data;
+      this.loading = false;
+      this.cdr.detectChanges();
+    });
   }
 
- async getStats() {
+  async getStats() {
+    try {
+      this.matchService.retrieveMatches().subscribe((matches: any[]) => {
+        const careerStats: any = {};
 
-  try {
-
-    this.matchService
-      .retrieveMatches()
-      .subscribe((matches:any[]) => {
-
-        const careerStats:any = {};
-
-        matches.forEach((match:any) => {
-
+        matches.forEach((match: any) => {
           const matchPlayers = new Set<string>();
 
-          match.innings.forEach((innings:any) => {
-
-            Object.entries(
-              innings.playerStats || {}
-            ).forEach(([playerId, stats]:any) => {
-
+          match.innings.forEach((innings: any) => {
+            Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
               matchPlayers.add(playerId);
 
               if (!careerStats[playerId]) {
-
                 careerStats[playerId] = {
-
                   totalMatches: 0,
                   totalRuns: 0,
                   totalWickets: 0,
@@ -102,89 +71,58 @@ export class PlayerInfo implements OnInit {
                   totalBallsDelivered: 0,
                   totalMaidens: 0,
                   totalHattricks: 0,
-                  totalFifers: 0
-
+                  totalFifers: 0,
                 };
-
               }
 
-              careerStats[playerId].totalRuns +=
-                stats.runs || 0;
-                
-                careerStats[playerId].totalFours +=
-                stats.fours || 0;
+              careerStats[playerId].totalRuns += stats.runs || 0;
 
-              careerStats[playerId].totalSixes +=
-                stats.sixes || 0;
+              careerStats[playerId].totalFours += stats.fours || 0;
 
-              careerStats[playerId].totalInnings +=
-                stats.innings || 0;
+              careerStats[playerId].totalSixes += stats.sixes || 0;
 
-              careerStats[playerId].totalBallsFaced +=
-                stats.ballsFaced || 0;
+              careerStats[playerId].totalInnings += stats.innings || 0;
 
-              careerStats[playerId].totalFifties +=
-                stats.fifty || 0;
+              careerStats[playerId].totalBallsFaced += stats.ballsFaced || 0;
 
-              careerStats[playerId].totalHundreds +=
-                stats.hundred || 0;
+              careerStats[playerId].totalFifties += stats.fifty || 0;
 
-              careerStats[playerId].dismissed +=
-                stats.dismissalType ? 1 : 0;
+              careerStats[playerId].totalHundreds += stats.hundred || 0;
 
-                careerStats[playerId].highestScore =
-                Math.max(
-             careerStats[playerId].highestScore,
-              stats.runs || 0
-                );
-                
-              careerStats[playerId].totalWickets +=
-               stats.wickets || 0;
-                
-              careerStats[playerId].totalBallsDelivered +=
-               stats.ballsDelivered || 0;
-                
-              careerStats[playerId].totalRunsConceded +=
-               stats.runsConceded || 0;
-                
-              careerStats[playerId].totalMaidens +=
-               stats.maiden || 0;
-                
-              careerStats[playerId].totalHattricks +=
-               stats.hatTricks || 0;
-                
-              careerStats[playerId].totalFifers +=
-               stats.fifers || stats.fifer || 0;
+              careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0;
 
+              careerStats[playerId].highestScore = Math.max(
+                careerStats[playerId].highestScore,
+                stats.runs || 0,
+              );
 
+              careerStats[playerId].totalWickets += stats.wickets || 0;
 
-                
+              careerStats[playerId].totalBallsDelivered += stats.ballsDelivered || 0;
+
+              careerStats[playerId].totalRunsConceded += stats.runsConceded || 0;
+
+              careerStats[playerId].totalMaidens += stats.maiden || 0;
+
+              careerStats[playerId].totalHattricks += stats.hatTricks || 0;
+
+              careerStats[playerId].totalFifers += stats.fifers || stats.fifer || 0;
             });
-
           });
 
-          matchPlayers.forEach((playerId:any) => {
-
+          matchPlayers.forEach((playerId: any) => {
             careerStats[playerId].totalMatches++;
-
           });
-
         });
 
-        this.stats =
-          careerStats[this.playerId] || {};
+        this.stats = careerStats[this.playerId] || {};
 
         this.cdr.detectChanges();
-
       });
-
-  } catch(error) {
-
-    console.log(error);
-
+    } catch (error) {
+      console.log(error);
+    }
   }
-
-}
 
   formatStat(value: any, fallback = '--') {
     return value && value > 0 ? value : fallback;

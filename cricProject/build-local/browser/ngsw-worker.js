@@ -5,29 +5,30 @@
   var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __defNormalProp = (obj, key, value) =>
+    key in obj
+      ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value })
+      : (obj[key] = value);
   var __spreadValues = (a, b) => {
     for (var prop in b || (b = {}))
-      if (__hasOwnProp.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
+      if (__hasOwnProp.call(b, prop)) __defNormalProp(a, prop, b[prop]);
     if (__getOwnPropSymbols)
       for (var prop of __getOwnPropSymbols(b)) {
-        if (__propIsEnum.call(b, prop))
-          __defNormalProp(a, prop, b[prop]);
+        if (__propIsEnum.call(b, prop)) __defNormalProp(a, prop, b[prop]);
       }
     return a;
   };
   var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   var __publicField = (obj, key, value) => {
-    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+    __defNormalProp(obj, typeof key !== 'symbol' ? key + '' : key, value);
     return value;
   };
 
   // packages/service-worker/worker/src/named-cache-storage.js
   var NamedCacheStorage = class {
     constructor(original, cacheNamePrefix) {
-      __publicField(this, "original");
-      __publicField(this, "cacheNamePrefix");
+      __publicField(this, 'original');
+      __publicField(this, 'cacheNamePrefix');
       this.original = original;
       this.cacheNamePrefix = cacheNamePrefix;
     }
@@ -55,9 +56,9 @@
   // packages/service-worker/worker/src/adapter.js
   var Adapter = class {
     constructor(scopeUrl, caches) {
-      __publicField(this, "scopeUrl");
-      __publicField(this, "caches");
-      __publicField(this, "origin");
+      __publicField(this, 'scopeUrl');
+      __publicField(this, 'caches');
+      __publicField(this, 'origin');
       this.scopeUrl = scopeUrl;
       const parsedScopeUrl = this.parseUrl(this.scopeUrl);
       this.origin = parsedScopeUrl.origin;
@@ -129,8 +130,8 @@
   // packages/service-worker/worker/src/database.js
   var NotFound = class {
     constructor(table, key) {
-      __publicField(this, "table");
-      __publicField(this, "key");
+      __publicField(this, 'table');
+      __publicField(this, 'key');
       this.table = table;
       this.key = key;
     }
@@ -139,12 +140,12 @@
   // packages/service-worker/worker/src/db-cache.js
   var CacheDatabase = class {
     constructor(adapter2) {
-      __publicField(this, "adapter");
-      __publicField(this, "cacheNamePrefix", "db");
-      __publicField(this, "tables", /* @__PURE__ */ new Map());
+      __publicField(this, 'adapter');
+      __publicField(this, 'cacheNamePrefix', 'db');
+      __publicField(this, 'tables', /* @__PURE__ */ new Map());
       this.adapter = adapter2;
     }
-    "delete"(name) {
+    delete(name) {
       if (this.tables.has(name)) {
         this.tables.delete(name);
       }
@@ -167,11 +168,11 @@
   };
   var CacheTable = class {
     constructor(name, cache, adapter2, cacheQueryOptions) {
-      __publicField(this, "name");
-      __publicField(this, "cache");
-      __publicField(this, "adapter");
-      __publicField(this, "cacheQueryOptions");
-      __publicField(this, "cacheName");
+      __publicField(this, 'name');
+      __publicField(this, 'cache');
+      __publicField(this, 'adapter');
+      __publicField(this, 'cacheQueryOptions');
+      __publicField(this, 'cacheName');
       this.name = name;
       this.cache = cache;
       this.adapter = adapter2;
@@ -179,9 +180,9 @@
       this.cacheName = this.cache.name;
     }
     request(key) {
-      return this.adapter.newRequest("/" + key);
+      return this.adapter.newRequest('/' + key);
     }
-    "delete"(key) {
+    delete(key) {
       return this.cache.delete(this.request(key), this.cacheQueryOptions);
     }
     keys() {
@@ -202,17 +203,17 @@
 
   // packages/service-worker/worker/src/api.js
   var UpdateCacheStatus;
-  (function(UpdateCacheStatus2) {
-    UpdateCacheStatus2[UpdateCacheStatus2["NOT_CACHED"] = 0] = "NOT_CACHED";
-    UpdateCacheStatus2[UpdateCacheStatus2["CACHED_BUT_UNUSED"] = 1] = "CACHED_BUT_UNUSED";
-    UpdateCacheStatus2[UpdateCacheStatus2["CACHED"] = 2] = "CACHED";
+  (function (UpdateCacheStatus2) {
+    UpdateCacheStatus2[(UpdateCacheStatus2['NOT_CACHED'] = 0)] = 'NOT_CACHED';
+    UpdateCacheStatus2[(UpdateCacheStatus2['CACHED_BUT_UNUSED'] = 1)] = 'CACHED_BUT_UNUSED';
+    UpdateCacheStatus2[(UpdateCacheStatus2['CACHED'] = 2)] = 'CACHED';
   })(UpdateCacheStatus || (UpdateCacheStatus = {}));
 
   // packages/service-worker/worker/src/error.js
   var SwCriticalError = class extends Error {
     constructor() {
       super(...arguments);
-      __publicField(this, "isCritical", true);
+      __publicField(this, 'isCritical', true);
     }
   };
   function errorToString(error) {
@@ -226,7 +227,7 @@ ${error.stack}`;
   var SwUnrecoverableStateError = class extends SwCriticalError {
     constructor() {
       super(...arguments);
-      __publicField(this, "isUnrecoverableState", true);
+      __publicField(this, 'isUnrecoverableState', true);
     }
   };
 
@@ -243,8 +244,8 @@ ${error.stack}`;
   function _sha1(words32, len) {
     const w = [];
     let [a, b, c, d, e] = [1732584193, 4023233417, 2562383102, 271733878, 3285377520];
-    words32[len >> 5] |= 128 << 24 - len % 32;
-    words32[(len + 64 >> 9 << 4) + 15] = len;
+    words32[len >> 5] |= 128 << (24 - (len % 32));
+    words32[(((len + 64) >> 9) << 4) + 15] = len;
     for (let i = 0; i < words32.length; i += 16) {
       const [h0, h1, h2, h3, h4] = [a, b, c, d, e];
       for (let j = 0; j < 80; j++) {
@@ -267,30 +268,30 @@ ${error.stack}`;
   function add32to64(a, b) {
     const low = (a & 65535) + (b & 65535);
     const high = (a >>> 16) + (b >>> 16) + (low >>> 16);
-    return [high >>> 16, high << 16 | low & 65535];
+    return [high >>> 16, (high << 16) | (low & 65535)];
   }
   function rol32(a, count) {
-    return a << count | a >>> 32 - count;
+    return (a << count) | (a >>> (32 - count));
   }
   var Endian;
-  (function(Endian2) {
-    Endian2[Endian2["Little"] = 0] = "Little";
-    Endian2[Endian2["Big"] = 1] = "Big";
+  (function (Endian2) {
+    Endian2[(Endian2['Little'] = 0)] = 'Little';
+    Endian2[(Endian2['Big'] = 1)] = 'Big';
   })(Endian || (Endian = {}));
   function fk(index, b, c, d) {
     if (index < 20) {
-      return [b & c | ~b & d, 1518500249];
+      return [(b & c) | (~b & d), 1518500249];
     }
     if (index < 40) {
       return [b ^ c ^ d, 1859775393];
     }
     if (index < 60) {
-      return [b & c | b & d | c & d, 2400959708];
+      return [(b & c) | (b & d) | (c & d), 2400959708];
     }
     return [b ^ c ^ d, 3395469782];
   }
   function stringToWords32(str, endian) {
-    const size = str.length + 3 >>> 2;
+    const size = (str.length + 3) >>> 2;
     const words32 = [];
     for (let i = 0; i < size; i++) {
       words32[i] = wordAt(str, i * 4, endian);
@@ -298,7 +299,7 @@ ${error.stack}`;
     return words32;
   }
   function arrayBufferToWords32(buffer, endian) {
-    const size = buffer.byteLength + 3 >>> 2;
+    const size = (buffer.byteLength + 3) >>> 2;
     const words32 = [];
     const view = new Uint8Array(buffer);
     for (let i = 0; i < size; i++) {
@@ -307,7 +308,7 @@ ${error.stack}`;
     return words32;
   }
   function byteAt(str, index) {
-    if (typeof str === "string") {
+    if (typeof str === 'string') {
       return index >= str.length ? 0 : str.charCodeAt(index) & 255;
     } else {
       return index >= str.byteLength ? 0 : str[index] & 255;
@@ -317,27 +318,27 @@ ${error.stack}`;
     let word = 0;
     if (endian === Endian.Big) {
       for (let i = 0; i < 4; i++) {
-        word += byteAt(str, index + i) << 24 - 8 * i;
+        word += byteAt(str, index + i) << (24 - 8 * i);
       }
     } else {
       for (let i = 0; i < 4; i++) {
-        word += byteAt(str, index + i) << 8 * i;
+        word += byteAt(str, index + i) << (8 * i);
       }
     }
     return word;
   }
   function words32ToByteString(words32) {
-    return words32.reduce((str, word) => str + word32ToByteString(word), "");
+    return words32.reduce((str, word) => str + word32ToByteString(word), '');
   }
   function word32ToByteString(word) {
-    let str = "";
+    let str = '';
     for (let i = 0; i < 4; i++) {
-      str += String.fromCharCode(word >>> 8 * (3 - i) & 255);
+      str += String.fromCharCode((word >>> (8 * (3 - i))) & 255);
     }
     return str;
   }
   function byteStringToHexString(str) {
-    let hex = "";
+    let hex = '';
     for (let i = 0; i < str.length; i++) {
       const b = byteAt(str, i);
       hex += (b >>> 4).toString(16) + (b & 15).toString(16);
@@ -348,38 +349,38 @@ ${error.stack}`;
   // packages/service-worker/worker/src/assets.js
   var AssetGroup = class {
     constructor(scope2, adapter2, idle, config, hashes, db, cacheNamePrefix) {
-      __publicField(this, "scope");
-      __publicField(this, "adapter");
-      __publicField(this, "idle");
-      __publicField(this, "config");
-      __publicField(this, "hashes");
-      __publicField(this, "db");
+      __publicField(this, 'scope');
+      __publicField(this, 'adapter');
+      __publicField(this, 'idle');
+      __publicField(this, 'config');
+      __publicField(this, 'hashes');
+      __publicField(this, 'db');
       /**
        * A deduplication cache, to make sure the SW never makes two network requests
        * for the same resource at once. Managed by `fetchAndCacheOnce`.
        */
-      __publicField(this, "inFlightRequests", /* @__PURE__ */ new Map());
+      __publicField(this, 'inFlightRequests', /* @__PURE__ */ new Map());
       /**
        * Normalized resource URLs.
        */
-      __publicField(this, "urls", []);
+      __publicField(this, 'urls', []);
       /**
        * Regular expression patterns.
        */
-      __publicField(this, "patterns", []);
+      __publicField(this, 'patterns', []);
       /**
        * A Promise which resolves to the `Cache` used to back this asset group. This
        * is opened from the constructor.
        */
-      __publicField(this, "cache");
+      __publicField(this, 'cache');
       /**
        * Group name from the configuration.
        */
-      __publicField(this, "name");
+      __publicField(this, 'name');
       /**
        * Metadata associated with specific cache entries.
        */
-      __publicField(this, "metadata");
+      __publicField(this, 'metadata');
       this.scope = scope2;
       this.adapter = adapter2;
       this.idle = idle;
@@ -390,7 +391,10 @@ ${error.stack}`;
       this.urls = config.urls.map((url) => adapter2.normalizeUrl(url));
       this.patterns = config.patterns.map((pattern) => new RegExp(pattern));
       this.cache = adapter2.caches.open(`${cacheNamePrefix}:${config.name}:cache`);
-      this.metadata = this.db.open(`${cacheNamePrefix}:${config.name}:meta`, config.cacheQueryOptions);
+      this.metadata = this.db.open(
+        `${cacheNamePrefix}:${config.name}:meta`,
+        config.cacheQueryOptions,
+      );
     }
     async cacheStatus(url) {
       const cache = await this.cache;
@@ -405,8 +409,7 @@ ${error.stack}`;
         if (!data.used) {
           return UpdateCacheStatus.CACHED_BUT_UNUSED;
         }
-      } catch (_) {
-      }
+      } catch (_) {}
       return UpdateCacheStatus.CACHED;
     }
     /**
@@ -453,11 +456,14 @@ ${error.stack}`;
      * per the caching headers.
      */
     async needToRevalidate(req, res) {
-      if (res.headers.has("Cache-Control")) {
-        const cacheControl = res.headers.get("Cache-Control");
-        const cacheDirectives = cacheControl.split(",").map((v) => v.trim()).map((v) => v.split("="));
-        cacheDirectives.forEach((v) => v[0] = v[0].toLowerCase());
-        const maxAgeDirective = cacheDirectives.find((v) => v[0] === "max-age");
+      if (res.headers.has('Cache-Control')) {
+        const cacheControl = res.headers.get('Cache-Control');
+        const cacheDirectives = cacheControl
+          .split(',')
+          .map((v) => v.trim())
+          .map((v) => v.split('='));
+        cacheDirectives.forEach((v) => (v[0] = v[0].toLowerCase()));
+        const maxAgeDirective = cacheDirectives.find((v) => v[0] === 'max-age');
         const cacheAge = maxAgeDirective ? maxAgeDirective[1] : void 0;
         if (!cacheAge) {
           return true;
@@ -469,7 +475,7 @@ ${error.stack}`;
             const metaTable = await this.metadata;
             ts = (await metaTable.read(req.url)).ts;
           } catch (e) {
-            const date = res.headers.get("Date");
+            const date = res.headers.get('Date');
             if (date === null) {
               return true;
             }
@@ -480,8 +486,8 @@ ${error.stack}`;
         } catch (e) {
           return true;
         }
-      } else if (res.headers.has("Expires")) {
-        const expiresStr = res.headers.get("Expires");
+      } else if (res.headers.has('Expires')) {
+        const expiresStr = res.headers.get('Expires');
         try {
           return this.adapter.time > Date.parse(expiresStr);
         } catch (e) {
@@ -505,8 +511,7 @@ ${error.stack}`;
       let metadata = void 0;
       try {
         metadata = await metaTable.read(request.url);
-      } catch (e) {
-      }
+      } catch (e) {}
       return { response, metadata };
     }
     /**
@@ -514,7 +519,9 @@ ${error.stack}`;
      */
     async unhashedResources() {
       const cache = await this.cache;
-      return (await cache.keys()).map((request) => this.adapter.normalizeUrl(request.url)).filter((url) => !this.hashes.has(url));
+      return (await cache.keys())
+        .map((request) => this.adapter.normalizeUrl(request.url))
+        .filter((url) => !this.hashes.has(url));
     }
     /**
      * Fetch the given resource from the network, and cache it if able.
@@ -528,7 +535,9 @@ ${error.stack}`;
       try {
         const res = await fetchOp;
         if (!res.ok) {
-          throw new Error(`Response not Ok (fetchAndCacheOnce): request for ${req.url} returned response ${res.status} ${res.statusText}`);
+          throw new Error(
+            `Response not Ok (fetchAndCacheOnce): request for ${req.url} returned response ${res.status} ${res.statusText}`,
+          );
         }
         try {
           const cache = await this.cache;
@@ -540,7 +549,9 @@ ${error.stack}`;
           }
           return res;
         } catch (err) {
-          throw new SwCriticalError(`Failed to update the caches for request to '${req.url}' (fetchAndCacheOnce): ${errorToString(err)}`);
+          throw new SwCriticalError(
+            `Failed to update the caches for request to '${req.url}' (fetchAndCacheOnce): ${errorToString(err)}`,
+          );
         }
       } finally {
         this.inFlightRequests.delete(req.url);
@@ -548,9 +559,11 @@ ${error.stack}`;
     }
     async fetchFromNetwork(req, redirectLimit = 3) {
       const res = await this.cacheBustedFetchFromNetwork(req);
-      if (res["redirected"] && !!res.url) {
+      if (res['redirected'] && !!res.url) {
         if (redirectLimit === 0) {
-          throw new SwCriticalError(`Response hit redirect limit (fetchFromNetwork): request redirected too many times, next is ${res.url}`);
+          throw new SwCriticalError(
+            `Response hit redirect limit (fetchFromNetwork): request redirected too many times, next is ${res.url}`,
+          );
         }
         return this.fetchFromNetwork(this.newRequestWithMetadata(res.url, req), redirectLimit - 1);
       }
@@ -575,12 +588,16 @@ ${error.stack}`;
           if (response.ok) {
             const cacheBustedHash = sha1Binary(await response.clone().arrayBuffer());
             if (canonicalHash !== cacheBustedHash) {
-              throw new SwCriticalError(`Hash mismatch (cacheBustedFetchFromNetwork): ${req.url}: expected ${canonicalHash}, got ${cacheBustedHash} (after cache busting)`);
+              throw new SwCriticalError(
+                `Hash mismatch (cacheBustedFetchFromNetwork): ${req.url}: expected ${canonicalHash}, got ${cacheBustedHash} (after cache busting)`,
+              );
             }
           }
         }
         if (!response.ok && response.status === 404) {
-          throw new SwUnrecoverableStateError(`Failed to retrieve hashed resource from the server. (AssetGroup: ${this.config.name} | URL: ${url})`);
+          throw new SwUnrecoverableStateError(
+            `Failed to retrieve hashed resource from the server. (AssetGroup: ${this.config.name} | URL: ${url})`,
+          );
         }
         return response;
       } else {
@@ -623,10 +640,10 @@ ${error.stack}`;
     newRequestWithMetadata(url, options) {
       const init = {
         headers: options.headers,
-        redirect: options.redirect
+        redirect: options.redirect,
       };
-      if (options.credentials === "omit") {
-        init.credentials = "omit";
+      if (options.credentials === 'omit') {
+        init.credentials = 'omit';
       }
       if (options.cache !== void 0) {
         init.cache = options.cache;
@@ -637,15 +654,15 @@ ${error.stack}`;
      * Construct a cache-busting URL for a given URL.
      */
     cacheBust(url) {
-      return url + (url.indexOf("?") === -1 ? "?" : "&") + "ngsw-cache-bust=" + Math.random();
+      return url + (url.indexOf('?') === -1 ? '?' : '&') + 'ngsw-cache-bust=' + Math.random();
     }
     async safeFetch(req) {
       try {
         return await this.scope.fetch(req);
       } catch (e) {
-        return this.adapter.newResponse("", {
+        return this.adapter.newResponse('', {
           status: 504,
-          statusText: "Gateway Timeout"
+          statusText: 'Gateway Timeout',
         });
       }
     }
@@ -658,34 +675,47 @@ ${error.stack}`;
         const req = this.adapter.newRequest(url);
         let alreadyCached = false;
         try {
-          alreadyCached = await cache.match(req, this.config.cacheQueryOptions) !== void 0;
+          alreadyCached = (await cache.match(req, this.config.cacheQueryOptions)) !== void 0;
         } catch (error) {
-          throw new SwCriticalError(`Cache is throwing while looking for a match in a PrefetchAssetGroup: ${error}`);
+          throw new SwCriticalError(
+            `Cache is throwing while looking for a match in a PrefetchAssetGroup: ${error}`,
+          );
         }
         if (alreadyCached) {
           return;
         }
-        if (updateFrom !== void 0 && await this.maybeUpdate(updateFrom, req, cache)) {
+        if (updateFrom !== void 0 && (await this.maybeUpdate(updateFrom, req, cache))) {
           return;
         }
         await this.fetchAndCacheOnce(req, false);
       }, Promise.resolve());
       if (updateFrom !== void 0) {
         const metaTable = await this.metadata;
-        await (await updateFrom.previouslyCachedResources()).filter((url) => this.urls.indexOf(url) !== -1 || this.patterns.some((pattern) => pattern.test(url))).reduce(async (previous, url) => {
-          await previous;
-          const req = this.adapter.newRequest(url);
-          const alreadyCached = await cache.match(req, this.config.cacheQueryOptions) !== void 0;
-          if (alreadyCached) {
-            return;
-          }
-          const res = await updateFrom.lookupResourceWithoutHash(url);
-          if (res === null || res.metadata === void 0) {
-            return;
-          }
-          await cache.put(req, res.response);
-          await metaTable.write(req.url, __spreadProps(__spreadValues({}, res.metadata), { used: false }));
-        }, Promise.resolve());
+        await (
+          await updateFrom.previouslyCachedResources()
+        )
+          .filter(
+            (url) =>
+              this.urls.indexOf(url) !== -1 || this.patterns.some((pattern) => pattern.test(url)),
+          )
+          .reduce(async (previous, url) => {
+            await previous;
+            const req = this.adapter.newRequest(url);
+            const alreadyCached =
+              (await cache.match(req, this.config.cacheQueryOptions)) !== void 0;
+            if (alreadyCached) {
+              return;
+            }
+            const res = await updateFrom.lookupResourceWithoutHash(url);
+            if (res === null || res.metadata === void 0) {
+              return;
+            }
+            await cache.put(req, res.response);
+            await metaTable.write(
+              req.url,
+              __spreadProps(__spreadValues({}, res.metadata), { used: false }),
+            );
+          }, Promise.resolve());
       }
     }
   };
@@ -700,15 +730,17 @@ ${error.stack}`;
         const req = this.adapter.newRequest(url);
         let alreadyCached = false;
         try {
-          alreadyCached = await cache.match(req, this.config.cacheQueryOptions) !== void 0;
+          alreadyCached = (await cache.match(req, this.config.cacheQueryOptions)) !== void 0;
         } catch (error) {
-          throw new SwCriticalError(`Cache is throwing while looking for a match in a LazyAssetGroup: ${error}`);
+          throw new SwCriticalError(
+            `Cache is throwing while looking for a match in a LazyAssetGroup: ${error}`,
+          );
         }
         if (alreadyCached) {
           return;
         }
         const updated = await this.maybeUpdate(updateFrom, req, cache);
-        if (this.config.updateMode === "prefetch" && !updated) {
+        if (this.config.updateMode === 'prefetch' && !updated) {
           const cacheStatus = await updateFrom.recentCacheStatus(url);
           if (cacheStatus !== UpdateCacheStatus.CACHED) {
             return;
@@ -722,13 +754,13 @@ ${error.stack}`;
   // packages/service-worker/worker/src/data.js
   var LruList = class {
     constructor(state) {
-      __publicField(this, "state");
+      __publicField(this, 'state');
       if (state === void 0) {
         state = {
           head: null,
           tail: null,
           map: {},
-          count: 0
+          count: 0,
         };
       }
       this.state = state;
@@ -806,32 +838,32 @@ ${error.stack}`;
   };
   var DataGroup = class {
     constructor(scope2, adapter2, config, db, debugHandler, cacheNamePrefix) {
-      __publicField(this, "scope");
-      __publicField(this, "adapter");
-      __publicField(this, "config");
-      __publicField(this, "db");
-      __publicField(this, "debugHandler");
+      __publicField(this, 'scope');
+      __publicField(this, 'adapter');
+      __publicField(this, 'config');
+      __publicField(this, 'db');
+      __publicField(this, 'debugHandler');
       /**
        * Compiled regular expression set used to determine which resources fall under the purview
        * of this group.
        */
-      __publicField(this, "patterns");
+      __publicField(this, 'patterns');
       /**
        * The `Cache` instance in which resources belonging to this group are cached.
        */
-      __publicField(this, "cache");
+      __publicField(this, 'cache');
       /**
        * Tracks the LRU state of resources in this cache.
        */
-      __publicField(this, "_lru", null);
+      __publicField(this, '_lru', null);
       /**
        * Database table used to store the state of the LRU cache.
        */
-      __publicField(this, "lruTable");
+      __publicField(this, 'lruTable');
       /**
        * Database table used to store metadata for resources in the cache.
        */
-      __publicField(this, "ageTable");
+      __publicField(this, 'ageTable');
       this.scope = scope2;
       this.adapter = adapter2;
       this.config = config;
@@ -839,8 +871,14 @@ ${error.stack}`;
       this.debugHandler = debugHandler;
       this.patterns = config.patterns.map((pattern) => new RegExp(pattern));
       this.cache = adapter2.caches.open(`${cacheNamePrefix}:${config.name}:cache`);
-      this.lruTable = this.db.open(`${cacheNamePrefix}:${config.name}:lru`, config.cacheQueryOptions);
-      this.ageTable = this.db.open(`${cacheNamePrefix}:${config.name}:age`, config.cacheQueryOptions);
+      this.lruTable = this.db.open(
+        `${cacheNamePrefix}:${config.name}:lru`,
+        config.cacheQueryOptions,
+      );
+      this.ageTable = this.db.open(
+        `${cacheNamePrefix}:${config.name}:age`,
+        config.cacheQueryOptions,
+      );
     }
     /**
      * Lazily initialize/load the LRU chain.
@@ -849,7 +887,7 @@ ${error.stack}`;
       if (this._lru === null) {
         const table = await this.lruTable;
         try {
-          this._lru = new LruList(await table.read("lru"));
+          this._lru = new LruList(await table.read('lru'));
         } catch (e) {
           this._lru = new LruList();
         }
@@ -865,9 +903,12 @@ ${error.stack}`;
       }
       const table = await this.lruTable;
       try {
-        return table.write("lru", this._lru.state);
+        return table.write('lru', this._lru.state);
       } catch (err) {
-        this.debugHandler.log(err, `DataGroup(${this.config.name}@${this.config.version}).syncLru()`);
+        this.debugHandler.log(
+          err,
+          `DataGroup(${this.config.name}@${this.config.version}).syncLru()`,
+        );
         await this.detectStorageFull();
       }
     }
@@ -881,14 +922,14 @@ ${error.stack}`;
       }
       const lru = await this.lru();
       switch (req.method) {
-        case "OPTIONS":
+        case 'OPTIONS':
           return null;
-        case "GET":
-        case "HEAD":
+        case 'GET':
+        case 'HEAD':
           switch (this.config.strategy) {
-            case "freshness":
+            case 'freshness':
               return this.handleFetchWithFreshness(req, event, lru);
-            case "performance":
+            case 'performance':
               return this.handleFetchWithPerformance(req, event, lru);
             default:
               throw new Error(`Unknown strategy: ${this.config.strategy}`);
@@ -919,7 +960,7 @@ ${error.stack}`;
       const [timeoutFetch, networkFetch] = this.networkFetchWithTimeout(req);
       res = await timeoutFetch;
       if (res === void 0) {
-        res = this.adapter.newResponse(null, { status: 504, statusText: "Gateway Timeout" });
+        res = this.adapter.newResponse(null, { status: 504, statusText: 'Gateway Timeout' });
         event.waitUntil(this.safeCacheResponse(req, networkFetch, lru, okToCacheOpaque));
       } else {
         await this.safeCacheResponse(req, res, lru, okToCacheOpaque);
@@ -957,7 +998,7 @@ ${error.stack}`;
           } catch (e) {
             return this.adapter.newResponse(null, {
               status: 504,
-              statusText: "Gateway Timeout"
+              statusText: 'Gateway Timeout',
             });
           }
         })();
@@ -981,11 +1022,13 @@ ${error.stack}`;
         try {
           await this.cacheResponse(req, res, lru, okToCacheOpaque);
         } catch (err) {
-          this.debugHandler.log(err, `DataGroup(${this.config.name}@${this.config.version}).safeCacheResponse(${req.url}, status: ${res.status})`);
+          this.debugHandler.log(
+            err,
+            `DataGroup(${this.config.name}@${this.config.version}).safeCacheResponse(${req.url}, status: ${res.status})`,
+          );
           await this.detectStorageFull();
         }
-      } catch (e) {
-      }
+      } catch (e) {}
     }
     async loadFromCache(req, lru) {
       const cache = await this.cache;
@@ -998,8 +1041,7 @@ ${error.stack}`;
             lru.accessed(req.url);
             return { res, age };
           }
-        } catch (e) {
-        }
+        } catch (e) {}
         lru.remove(req.url);
         await this.clearCacheForUrl(req.url);
         await this.syncLru();
@@ -1014,7 +1056,7 @@ ${error.stack}`;
      * request will still be running in the background, to be cached when it completes.
      */
     async cacheResponse(req, res, lru, okToCacheOpaque = false) {
-      if (!(res.ok || okToCacheOpaque && res.type === "opaque")) {
+      if (!(res.ok || (okToCacheOpaque && res.type === 'opaque'))) {
         return;
       }
       if (lru.size >= this.config.maxSize) {
@@ -1036,7 +1078,7 @@ ${error.stack}`;
       await Promise.all([
         this.cache.then((cache) => this.adapter.caches.delete(cache.name)),
         this.ageTable.then((table) => this.db.delete(table.name)),
-        this.lruTable.then((table) => this.db.delete(table.name))
+        this.lruTable.then((table) => this.db.delete(table.name)),
       ]);
     }
     /**
@@ -1046,7 +1088,7 @@ ${error.stack}`;
       const [cache, ageTable, lruTable] = await Promise.all([
         this.cache,
         this.ageTable,
-        this.lruTable
+        this.lruTable,
       ]);
       return [cache.name, ageTable.cacheName, lruTable.cacheName];
     }
@@ -1060,9 +1102,15 @@ ${error.stack}`;
     async clearCacheForUrl(url) {
       const [cache, ageTable] = await Promise.all([this.cache, this.ageTable]);
       await Promise.all([
-        cache.delete(this.adapter.newRequest(url, { method: "GET" }), this.config.cacheQueryOptions),
-        cache.delete(this.adapter.newRequest(url, { method: "HEAD" }), this.config.cacheQueryOptions),
-        ageTable.delete(url)
+        cache.delete(
+          this.adapter.newRequest(url, { method: 'GET' }),
+          this.config.cacheQueryOptions,
+        ),
+        cache.delete(
+          this.adapter.newRequest(url, { method: 'HEAD' }),
+          this.config.cacheQueryOptions,
+        ),
+        ageTable.delete(url),
       ]);
     }
     async safeFetch(req) {
@@ -1071,7 +1119,7 @@ ${error.stack}`;
       } catch (e) {
         return this.adapter.newResponse(null, {
           status: 504,
-          statusText: "Gateway Timeout"
+          statusText: 'Gateway Timeout',
         });
       }
     }
@@ -1083,54 +1131,56 @@ ${error.stack}`;
       try {
         const estimate = await navigator.storage.estimate();
         const { quota, usage } = estimate;
-        if (typeof quota !== "number" || typeof usage !== "number") {
+        if (typeof quota !== 'number' || typeof usage !== 'number') {
           return;
         }
-        const usagePercentage = usage / quota * 100;
+        const usagePercentage = (usage / quota) * 100;
         const isStorageFull = usagePercentage >= 95;
         if (isStorageFull) {
-          this.debugHandler.log("Storage is full or nearly full", `DataGroup(${this.config.name}@${this.config.version}).detectStorageFull()`);
+          this.debugHandler.log(
+            'Storage is full or nearly full',
+            `DataGroup(${this.config.name}@${this.config.version}).detectStorageFull()`,
+          );
         }
-      } catch (e) {
-      }
+      } catch (e) {}
     }
   };
 
   // packages/service-worker/worker/src/app-version.js
   var AppVersion = class {
     constructor(scope2, adapter2, database, idle, debugHandler, manifest, manifestHash) {
-      __publicField(this, "scope");
-      __publicField(this, "adapter");
-      __publicField(this, "database");
-      __publicField(this, "debugHandler");
-      __publicField(this, "manifest");
-      __publicField(this, "manifestHash");
+      __publicField(this, 'scope');
+      __publicField(this, 'adapter');
+      __publicField(this, 'database');
+      __publicField(this, 'debugHandler');
+      __publicField(this, 'manifest');
+      __publicField(this, 'manifestHash');
       /**
        * A Map of absolute URL paths (`/foo.txt`) to the known hash of their contents (if available).
        */
-      __publicField(this, "hashTable", /* @__PURE__ */ new Map());
+      __publicField(this, 'hashTable', /* @__PURE__ */ new Map());
       /**
        * All of the asset groups active in this version of the app.
        */
-      __publicField(this, "assetGroups");
+      __publicField(this, 'assetGroups');
       /**
        * All of the data groups active in this version of the app.
        */
-      __publicField(this, "dataGroups");
+      __publicField(this, 'dataGroups');
       /**
        * Requests to URLs that match any of the `include` RegExps and none of the `exclude` RegExps
        * are considered navigation requests and handled accordingly.
        */
-      __publicField(this, "navigationUrls");
+      __publicField(this, 'navigationUrls');
       /**
        * The normalized URL to the file that serves as the index page to satisfy navigation requests.
        * Usually this is `/index.html`.
        */
-      __publicField(this, "indexUrl");
+      __publicField(this, 'indexUrl');
       /**
        * Tracks whether the manifest has encountered any inconsistencies.
        */
-      __publicField(this, "_okay", true);
+      __publicField(this, '_okay', true);
       this.scope = scope2;
       this.adapter = adapter2;
       this.database = database;
@@ -1144,18 +1194,37 @@ ${error.stack}`;
       const assetCacheNamePrefix = `${manifestHash}:assets`;
       this.assetGroups = (manifest.assetGroups || []).map((config) => {
         switch (config.installMode) {
-          case "prefetch":
-            return new PrefetchAssetGroup(scope2, adapter2, idle, config, this.hashTable, database, assetCacheNamePrefix);
-          case "lazy":
-            return new LazyAssetGroup(scope2, adapter2, idle, config, this.hashTable, database, assetCacheNamePrefix);
+          case 'prefetch':
+            return new PrefetchAssetGroup(
+              scope2,
+              adapter2,
+              idle,
+              config,
+              this.hashTable,
+              database,
+              assetCacheNamePrefix,
+            );
+          case 'lazy':
+            return new LazyAssetGroup(
+              scope2,
+              adapter2,
+              idle,
+              config,
+              this.hashTable,
+              database,
+              assetCacheNamePrefix,
+            );
         }
       });
-      this.dataGroups = (manifest.dataGroups || []).map((config) => new DataGroup(scope2, adapter2, config, database, debugHandler, `${config.version}:data`));
+      this.dataGroups = (manifest.dataGroups || []).map(
+        (config) =>
+          new DataGroup(scope2, adapter2, config, database, debugHandler, `${config.version}:data`),
+      );
       const includeUrls = manifest.navigationUrls.filter((spec) => spec.positive);
       const excludeUrls = manifest.navigationUrls.filter((spec) => !spec.positive);
       this.navigationUrls = {
         include: includeUrls.map((spec) => new RegExp(spec.regex)),
-        exclude: excludeUrls.map((spec) => new RegExp(spec.regex))
+        exclude: excludeUrls.map((spec) => new RegExp(spec.regex)),
       };
     }
     get okay() {
@@ -1199,11 +1268,10 @@ ${error.stack}`;
         return data;
       }
       if (this.adapter.normalizeUrl(req.url) !== this.indexUrl && this.isNavigationRequest(req)) {
-        if (this.manifest.navigationRequestStrategy === "freshness") {
+        if (this.manifest.navigationRequestStrategy === 'freshness') {
           try {
             return await this.scope.fetch(req);
-          } catch (e) {
-          }
+          } catch (e) {}
         }
         return this.handleFetch(this.adapter.newRequest(this.indexUrl), event);
       }
@@ -1214,16 +1282,19 @@ ${error.stack}`;
      * Takes into account: Request method and mode, `Accept` header, `navigationUrls` patterns.
      */
     isNavigationRequest(req) {
-      if (req.method !== "GET" || req.mode !== "navigate") {
+      if (req.method !== 'GET' || req.mode !== 'navigate') {
         return false;
       }
       if (!this.acceptsTextHtml(req)) {
         return false;
       }
-      const urlPrefix = this.scope.registration.scope.replace(/\/$/, "");
+      const urlPrefix = this.scope.registration.scope.replace(/\/$/, '');
       const url = req.url.startsWith(urlPrefix) ? req.url.slice(urlPrefix.length) : req.url;
-      const urlWithoutQueryOrHash = url.replace(/[?#].*$/, "");
-      return this.navigationUrls.include.some((regex) => regex.test(urlWithoutQueryOrHash)) && !this.navigationUrls.exclude.some((regex) => regex.test(urlWithoutQueryOrHash));
+      const urlWithoutQueryOrHash = url.replace(/[?#].*$/, '');
+      return (
+        this.navigationUrls.include.some((regex) => regex.test(urlWithoutQueryOrHash)) &&
+        !this.navigationUrls.exclude.some((regex) => regex.test(urlWithoutQueryOrHash))
+      );
     }
     /**
      * Check this version for a given resource with a particular hash.
@@ -1254,7 +1325,10 @@ ${error.stack}`;
      * List all unhashed resources from all asset groups.
      */
     previouslyCachedResources() {
-      return this.assetGroups.reduce(async (resources, group) => (await resources).concat(await group.unhashedResources()), Promise.resolve([]));
+      return this.assetGroups.reduce(
+        async (resources, group) => (await resources).concat(await group.unhashedResources()),
+        Promise.resolve([]),
+      );
     }
     async recentCacheStatus(url) {
       return this.assetGroups.reduce(async (current, group) => {
@@ -1275,7 +1349,7 @@ ${error.stack}`;
     async getCacheNames() {
       const allGroupCacheNames = await Promise.all([
         ...this.assetGroups.map((group) => group.getCacheNames()),
-        ...this.dataGroups.map((group) => group.getCacheNames())
+        ...this.dataGroups.map((group) => group.getCacheNames()),
       ]);
       return [].concat(...allGroupCacheNames);
     }
@@ -1289,29 +1363,29 @@ ${error.stack}`;
      * Check whether a request accepts `text/html` (based on the `Accept` header).
      */
     acceptsTextHtml(req) {
-      const accept = req.headers.get("Accept");
+      const accept = req.headers.get('Accept');
       if (accept === null) {
         return false;
       }
-      const values = accept.split(",");
-      return values.some((value) => value.trim().toLowerCase() === "text/html");
+      const values = accept.split(',');
+      return values.some((value) => value.trim().toLowerCase() === 'text/html');
     }
   };
 
   // packages/service-worker/worker/src/debug.js
-  var SW_VERSION = "20.3.24";
+  var SW_VERSION = '20.3.24';
   var DEBUG_LOG_BUFFER_SIZE = 100;
   var DebugHandler = class {
     constructor(driver, adapter2) {
-      __publicField(this, "driver");
-      __publicField(this, "adapter");
+      __publicField(this, 'driver');
+      __publicField(this, 'adapter');
       // There are two debug log message arrays. debugLogA records new debugging messages.
       // Once it reaches DEBUG_LOG_BUFFER_SIZE, the array is moved to debugLogB and a new
       // array is assigned to debugLogA. This ensures that insertion to the debug log is
       // always O(1) no matter the number of logged messages, and that the total number
       // of messages in the log never exceeds 2 * DEBUG_LOG_BUFFER_SIZE.
-      __publicField(this, "debugLogA", []);
-      __publicField(this, "debugLogB", []);
+      __publicField(this, 'debugLogA', []);
+      __publicField(this, 'debugLogB', []);
       this.driver = driver;
       this.adapter = adapter2;
     }
@@ -1319,36 +1393,43 @@ ${error.stack}`;
       const [state, versions, idle] = await Promise.all([
         this.driver.debugState(),
         this.driver.debugVersions(),
-        this.driver.debugIdleState()
+        this.driver.debugIdleState(),
       ]);
       const msgState = `NGSW Debug Info:
 
 Driver version: ${SW_VERSION}
 Driver state: ${state.state} (${state.why})
-Latest manifest hash: ${state.latestHash || "none"}
+Latest manifest hash: ${state.latestHash || 'none'}
 Last update check: ${this.since(state.lastUpdateCheck)}`;
-      const msgVersions = versions.map((version) => `=== Version ${version.hash} ===
+      const msgVersions = versions
+        .map(
+          (version) => `=== Version ${version.hash} ===
 
-Clients: ${version.clients.join(", ")}`).join("\n\n");
+Clients: ${version.clients.join(', ')}`,
+        )
+        .join('\n\n');
       const msgIdle = `=== Idle Task Queue ===
 Last update tick: ${this.since(idle.lastTrigger)}
 Last update run: ${this.since(idle.lastRun)}
 Task queue:
-${idle.queue.map((v) => " * " + v).join("\n")}
+${idle.queue.map((v) => ' * ' + v).join('\n')}
 
 Debug log:
 ${this.formatDebugLog(this.debugLogB)}
 ${this.formatDebugLog(this.debugLogA)}
 `;
-      return this.adapter.newResponse(`${msgState}
+      return this.adapter.newResponse(
+        `${msgState}
 
 ${msgVersions}
 
-${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }) });
+${msgIdle}`,
+        { headers: this.adapter.newHeaders({ 'Content-Type': 'text/plain' }) },
+      );
     }
     since(time) {
       if (time === null) {
-        return "never";
+        return 'never';
       }
       let age = this.adapter.time - time;
       const days = Math.floor(age / 864e5);
@@ -1359,14 +1440,20 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       age = age % 6e4;
       const seconds = Math.floor(age / 1e3);
       const millis = age % 1e3;
-      return (days > 0 ? `${days}d` : "") + (hours > 0 ? `${hours}h` : "") + (minutes > 0 ? `${minutes}m` : "") + (seconds > 0 ? `${seconds}s` : "") + (millis > 0 ? `${millis}u` : "");
+      return (
+        (days > 0 ? `${days}d` : '') +
+        (hours > 0 ? `${hours}h` : '') +
+        (minutes > 0 ? `${minutes}m` : '') +
+        (seconds > 0 ? `${seconds}s` : '') +
+        (millis > 0 ? `${millis}u` : '')
+      );
     }
-    log(value, context = "") {
+    log(value, context = '') {
       if (this.debugLogA.length === DEBUG_LOG_BUFFER_SIZE) {
         this.debugLogB = this.debugLogA;
         this.debugLogA = [];
       }
-      if (typeof value !== "string") {
+      if (typeof value !== 'string') {
         value = this.errorToString(value);
       }
       this.debugLogA.push({ value, time: this.adapter.time, context });
@@ -1375,24 +1462,26 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       return `${err.name}(${err.message}, ${err.stack})`;
     }
     formatDebugLog(log) {
-      return log.map((entry) => `[${this.since(entry.time)}] ${entry.value} ${entry.context}`).join("\n");
+      return log
+        .map((entry) => `[${this.since(entry.time)}] ${entry.value} ${entry.context}`)
+        .join('\n');
     }
   };
 
   // packages/service-worker/worker/src/idle.js
   var IdleScheduler = class {
     constructor(adapter2, delay, maxDelay, debug) {
-      __publicField(this, "adapter");
-      __publicField(this, "delay");
-      __publicField(this, "maxDelay");
-      __publicField(this, "debug");
-      __publicField(this, "queue", []);
-      __publicField(this, "scheduled", null);
-      __publicField(this, "empty", Promise.resolve());
-      __publicField(this, "emptyResolve", null);
-      __publicField(this, "lastTrigger", null);
-      __publicField(this, "lastRun", null);
-      __publicField(this, "oldestScheduledAt", null);
+      __publicField(this, 'adapter');
+      __publicField(this, 'delay');
+      __publicField(this, 'maxDelay');
+      __publicField(this, 'debug');
+      __publicField(this, 'queue', []);
+      __publicField(this, 'scheduled', null);
+      __publicField(this, 'empty', Promise.resolve());
+      __publicField(this, 'emptyResolve', null);
+      __publicField(this, 'lastTrigger', null);
+      __publicField(this, 'lastRun', null);
+      __publicField(this, 'oldestScheduledAt', null);
       this.adapter = adapter2;
       this.delay = delay;
       this.maxDelay = maxDelay;
@@ -1408,11 +1497,14 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         this.scheduled.cancel = true;
       }
       const scheduled = {
-        cancel: false
+        cancel: false,
       };
       this.scheduled = scheduled;
       const now = this.adapter.time;
-      const maxDelay = Math.max(0, ((_a = this.oldestScheduledAt) != null ? _a : now) + this.maxDelay - now);
+      const maxDelay = Math.max(
+        0,
+        ((_a = this.oldestScheduledAt) != null ? _a : now) + this.maxDelay - now,
+      );
       const delay = Math.min(maxDelay, this.delay);
       await this.adapter.timeout(delay);
       if (scheduled.cancel) {
@@ -1468,10 +1560,10 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
 
   // packages/service-worker/worker/src/msg.js
   function isMsgCheckForUpdates(msg) {
-    return msg.action === "CHECK_FOR_UPDATES";
+    return msg.action === 'CHECK_FOR_UPDATES';
   }
   function isMsgActivateUpdate(msg) {
-    return msg.action === "ACTIVATE_UPDATE";
+    return msg.action === 'ACTIVATE_UPDATE';
   }
 
   // packages/service-worker/worker/src/driver.js
@@ -1479,111 +1571,117 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
   var MAX_IDLE_DELAY = 3e4;
   var SUPPORTED_CONFIG_VERSION = 1;
   var NOTIFICATION_OPTION_NAMES = [
-    "actions",
-    "badge",
-    "body",
-    "data",
-    "dir",
-    "icon",
-    "image",
-    "lang",
-    "renotify",
-    "requireInteraction",
-    "silent",
-    "tag",
-    "timestamp",
-    "title",
-    "vibrate"
+    'actions',
+    'badge',
+    'body',
+    'data',
+    'dir',
+    'icon',
+    'image',
+    'lang',
+    'renotify',
+    'requireInteraction',
+    'silent',
+    'tag',
+    'timestamp',
+    'title',
+    'vibrate',
   ];
   function isLocalhost(scope2) {
-    return /(?:^https?:\/\/)?(?:(?:^|[^\w.])localhost|\[::1\]|127(?:\.\d{1,3}){3})(?::\d+)?(?:\/.*)?$/.test(scope2);
+    return /(?:^https?:\/\/)?(?:(?:^|[^\w.])localhost|\[::1\]|127(?:\.\d{1,3}){3})(?::\d+)?(?:\/.*)?$/.test(
+      scope2,
+    );
   }
   var DriverReadyState;
-  (function(DriverReadyState2) {
-    DriverReadyState2[DriverReadyState2["NORMAL"] = 0] = "NORMAL";
-    DriverReadyState2[DriverReadyState2["EXISTING_CLIENTS_ONLY"] = 1] = "EXISTING_CLIENTS_ONLY";
-    DriverReadyState2[DriverReadyState2["SAFE_MODE"] = 2] = "SAFE_MODE";
+  (function (DriverReadyState2) {
+    DriverReadyState2[(DriverReadyState2['NORMAL'] = 0)] = 'NORMAL';
+    DriverReadyState2[(DriverReadyState2['EXISTING_CLIENTS_ONLY'] = 1)] = 'EXISTING_CLIENTS_ONLY';
+    DriverReadyState2[(DriverReadyState2['SAFE_MODE'] = 2)] = 'SAFE_MODE';
   })(DriverReadyState || (DriverReadyState = {}));
   var Driver = class {
     constructor(scope2, adapter2, db) {
-      __publicField(this, "scope");
-      __publicField(this, "adapter");
-      __publicField(this, "db");
+      __publicField(this, 'scope');
+      __publicField(this, 'adapter');
+      __publicField(this, 'db');
       /**
        * Tracks the current readiness condition under which the SW is operating. This controls
        * whether the SW attempts to respond to some or all requests.
        */
-      __publicField(this, "state", DriverReadyState.NORMAL);
-      __publicField(this, "stateMessage", "(nominal)");
+      __publicField(this, 'state', DriverReadyState.NORMAL);
+      __publicField(this, 'stateMessage', '(nominal)');
       /**
        * Tracks whether the SW is in an initialized state or not. Before initialization,
        * it's not legal to respond to requests.
        */
-      __publicField(this, "initialized", null);
+      __publicField(this, 'initialized', null);
       /**
        * Maps client IDs to the manifest hash of the application version being used to serve
        * them. If a client ID is not present here, it has not yet been assigned a version.
        *
        * If a ManifestHash appears here, it is also present in the `versions` map below.
        */
-      __publicField(this, "clientVersionMap", /* @__PURE__ */ new Map());
+      __publicField(this, 'clientVersionMap', /* @__PURE__ */ new Map());
       /**
        * Maps manifest hashes to instances of `AppVersion` for those manifests.
        */
-      __publicField(this, "versions", /* @__PURE__ */ new Map());
+      __publicField(this, 'versions', /* @__PURE__ */ new Map());
       /**
        * The latest version fetched from the server.
        *
        * Valid after initialization has completed.
        */
-      __publicField(this, "latestHash", null);
-      __publicField(this, "lastUpdateCheck", null);
+      __publicField(this, 'latestHash', null);
+      __publicField(this, 'lastUpdateCheck', null);
       /**
        * Whether there is a check for updates currently scheduled due to navigation.
        */
-      __publicField(this, "scheduledNavUpdateCheck", false);
+      __publicField(this, 'scheduledNavUpdateCheck', false);
       /**
        * Keep track of whether we have logged an invalid `only-if-cached` request.
        * (See `.onFetch()` for details.)
        */
-      __publicField(this, "loggedInvalidOnlyIfCachedRequest", false);
-      __publicField(this, "ngswStatePath");
+      __publicField(this, 'loggedInvalidOnlyIfCachedRequest', false);
+      __publicField(this, 'ngswStatePath');
       /**
        * A scheduler which manages a queue of tasks that need to be executed when the SW is
        * not doing any other work (not processing any other requests).
        */
-      __publicField(this, "idle");
-      __publicField(this, "debugger");
+      __publicField(this, 'idle');
+      __publicField(this, 'debugger');
       // A promise resolving to the control DB table.
-      __publicField(this, "controlTable");
+      __publicField(this, 'controlTable');
       this.scope = scope2;
       this.adapter = adapter2;
       this.db = db;
-      this.controlTable = this.db.open("control");
-      this.ngswStatePath = this.adapter.parseUrl("ngsw/state", this.scope.registration.scope).path;
-      this.scope.addEventListener("install", (event) => {
+      this.controlTable = this.db.open('control');
+      this.ngswStatePath = this.adapter.parseUrl('ngsw/state', this.scope.registration.scope).path;
+      this.scope.addEventListener('install', (event) => {
         event.waitUntil(this.scope.skipWaiting());
       });
-      this.scope.addEventListener("activate", (event) => {
-        event.waitUntil((async () => {
-          await this.scope.clients.claim();
-        })());
+      this.scope.addEventListener('activate', (event) => {
+        event.waitUntil(
+          (async () => {
+            await this.scope.clients.claim();
+          })(),
+        );
         if (this.scope.registration.active !== null) {
-          this.scope.registration.active.postMessage({ action: "INITIALIZE" });
+          this.scope.registration.active.postMessage({ action: 'INITIALIZE' });
         }
       });
-      this.scope.addEventListener("fetch", (event) => this.onFetch(event));
-      this.scope.addEventListener("message", (event) => this.onMessage(event));
-      this.scope.addEventListener("push", (event) => this.onPush(event));
-      this.scope.addEventListener("notificationclick", (event) => this.onClick(event));
-      this.scope.addEventListener("notificationclose", (event) => this.onClose(event));
-      this.scope.addEventListener("pushsubscriptionchange", (event) => (
+      this.scope.addEventListener('fetch', (event) => this.onFetch(event));
+      this.scope.addEventListener('message', (event) => this.onMessage(event));
+      this.scope.addEventListener('push', (event) => this.onPush(event));
+      this.scope.addEventListener('notificationclick', (event) => this.onClick(event));
+      this.scope.addEventListener('notificationclose', (event) => this.onClose(event));
+      this.scope.addEventListener('pushsubscriptionchange', (event) =>
         // This is a bug in TypeScript, where they removed `PushSubscriptionChangeEvent`
         // based on the incorrect assumption that browsers don't support it.
-        this.onPushSubscriptionChange(event)
-      ));
-      this.scope.addEventListener("messageerror", (event) => this.onMessageError(event));
-      this.scope.addEventListener("unhandledrejection", (event) => this.onUnhandledRejection(event));
+        this.onPushSubscriptionChange(event),
+      );
+      this.scope.addEventListener('messageerror', (event) => this.onMessageError(event));
+      this.scope.addEventListener('unhandledrejection', (event) =>
+        this.onUnhandledRejection(event),
+      );
       this.debugger = new DebugHandler(this, this.adapter);
       this.idle = new IdleScheduler(this.adapter, IDLE_DELAY, MAX_IDLE_DELAY, this.debugger);
     }
@@ -1597,7 +1695,10 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       const req = event.request;
       const scopeUrl = this.scope.registration.scope;
       const requestUrlObj = this.adapter.parseUrl(req.url, scopeUrl);
-      if (req.headers.has("ngsw-bypass") || /[?&]ngsw-bypass(?:[=&]|$)/i.test(requestUrlObj.search)) {
+      if (
+        req.headers.has('ngsw-bypass') ||
+        /[?&]ngsw-bypass(?:[=&]|$)/i.test(requestUrlObj.search)
+      ) {
         return;
       }
       if (requestUrlObj.path === this.ngswStatePath) {
@@ -1608,14 +1709,17 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         event.waitUntil(this.idle.trigger());
         return;
       }
-      if (requestUrlObj.origin.startsWith("http:") && scopeUrl.startsWith("https:")) {
+      if (requestUrlObj.origin.startsWith('http:') && scopeUrl.startsWith('https:')) {
         this.debugger.log(`Ignoring passive mixed content request: Driver.fetch(${req.url})`);
         return;
       }
-      if (req.cache === "only-if-cached" && req.mode !== "same-origin") {
+      if (req.cache === 'only-if-cached' && req.mode !== 'same-origin') {
         if (!this.loggedInvalidOnlyIfCachedRequest) {
           this.loggedInvalidOnlyIfCachedRequest = true;
-          this.debugger.log(`Ignoring invalid request: 'only-if-cached' can be set only with 'same-origin' mode`, `Driver.fetch(${req.url}, cache: ${req.cache}, mode: ${req.mode})`);
+          this.debugger.log(
+            `Ignoring invalid request: 'only-if-cached' can be set only with 'same-origin' mode`,
+            `Driver.fetch(${req.url}, cache: ${req.cache}, mode: ${req.mode})`,
+          );
         }
         return;
       }
@@ -1632,16 +1736,18 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       if (!data || !data.action) {
         return;
       }
-      event.waitUntil((async () => {
-        if (data.action === "INITIALIZE") {
-          return this.ensureInitialized(event);
-        }
-        if (!this.adapter.isClient(event.source)) {
-          return;
-        }
-        await this.ensureInitialized(event);
-        await this.handleMessage(data, event.source);
-      })());
+      event.waitUntil(
+        (async () => {
+          if (data.action === 'INITIALIZE') {
+            return this.ensureInitialized(event);
+          }
+          if (!this.adapter.isClient(event.source)) {
+            return;
+          }
+          await this.ensureInitialized(event);
+          await this.handleMessage(data, event.source);
+        })(),
+      );
     }
     onPush(msg) {
       if (!msg.data) {
@@ -1659,10 +1765,16 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       event.waitUntil(this.handlePushSubscriptionChange(event));
     }
     onMessageError(event) {
-      this.debugger.log(`Message error occurred - data could not be deserialized`, `Driver.onMessageError(origin: ${event.origin})`);
+      this.debugger.log(
+        `Message error occurred - data could not be deserialized`,
+        `Driver.onMessageError(origin: ${event.origin})`,
+      );
     }
     onUnhandledRejection(event) {
-      this.debugger.log(`Unhandled promise rejection occurred`, `Driver.onUnhandledRejection(reason: ${event.reason})`);
+      this.debugger.log(
+        `Unhandled promise rejection occurred`,
+        `Driver.onUnhandledRejection(reason: ${event.reason})`,
+      );
     }
     async ensureInitialized(event) {
       if (this.initialized !== null) {
@@ -1690,30 +1802,43 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     }
     async handlePush(data) {
       await this.broadcast({
-        type: "PUSH",
-        data
+        type: 'PUSH',
+        data,
       });
       if (!data.notification || !data.notification.title) {
         return;
       }
       const desc = data.notification;
       let options = {};
-      NOTIFICATION_OPTION_NAMES.filter((name) => desc.hasOwnProperty(name)).forEach((name) => options[name] = desc[name]);
-      await this.scope.registration.showNotification(desc["title"], options);
+      NOTIFICATION_OPTION_NAMES.filter((name) => desc.hasOwnProperty(name)).forEach(
+        (name) => (options[name] = desc[name]),
+      );
+      await this.scope.registration.showNotification(desc['title'], options);
     }
     async handleClick(notification, action) {
       var _a, _b, _c;
       notification.close();
       const options = {};
-      NOTIFICATION_OPTION_NAMES.filter((name) => name in notification).forEach((name) => options[name] = notification[name]);
-      const notificationAction = action === "" || action === void 0 ? "default" : action;
-      const onActionClick = (_b = (_a = notification == null ? void 0 : notification.data) == null ? void 0 : _a.onActionClick) == null ? void 0 : _b[notificationAction];
-      const urlToOpen = new URL((_c = onActionClick == null ? void 0 : onActionClick.url) != null ? _c : "", this.scope.registration.scope).href;
+      NOTIFICATION_OPTION_NAMES.filter((name) => name in notification).forEach(
+        (name) => (options[name] = notification[name]),
+      );
+      const notificationAction = action === '' || action === void 0 ? 'default' : action;
+      const onActionClick =
+        (_b =
+          (_a = notification == null ? void 0 : notification.data) == null
+            ? void 0
+            : _a.onActionClick) == null
+          ? void 0
+          : _b[notificationAction];
+      const urlToOpen = new URL(
+        (_c = onActionClick == null ? void 0 : onActionClick.url) != null ? _c : '',
+        this.scope.registration.scope,
+      ).href;
       switch (onActionClick == null ? void 0 : onActionClick.operation) {
-        case "openWindow":
+        case 'openWindow':
           await this.scope.clients.openWindow(urlToOpen);
           break;
-        case "focusLastFocusedOrOpen": {
+        case 'focusLastFocusedOrOpen': {
           let matchingClient = await this.getLastFocusedMatchingClient(this.scope);
           if (matchingClient) {
             await (matchingClient == null ? void 0 : matchingClient.focus());
@@ -1722,7 +1847,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
           }
           break;
         }
-        case "navigateLastFocusedOrOpen": {
+        case 'navigateLastFocusedOrOpen': {
           let matchingClient = await this.getLastFocusedMatchingClient(this.scope);
           if (matchingClient) {
             matchingClient = await matchingClient.navigate(urlToOpen);
@@ -1732,7 +1857,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
           }
           break;
         }
-        case "sendRequest": {
+        case 'sendRequest': {
           await this.scope.fetch(urlToOpen);
           break;
         }
@@ -1740,8 +1865,8 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
           break;
       }
       await this.broadcast({
-        type: "NOTIFICATION_CLICK",
-        data: { action, notification: options }
+        type: 'NOTIFICATION_CLICK',
+        data: { action, notification: options },
       });
     }
     /**
@@ -1757,10 +1882,12 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
      */
     async handleClose(notification, action) {
       const options = {};
-      NOTIFICATION_OPTION_NAMES.filter((name) => name in notification).forEach((name) => options[name] = notification[name]);
+      NOTIFICATION_OPTION_NAMES.filter((name) => name in notification).forEach(
+        (name) => (options[name] = notification[name]),
+      );
       await this.broadcast({
-        type: "NOTIFICATION_CLOSE",
-        data: { action, notification: options }
+        type: 'NOTIFICATION_CLOSE',
+        data: { action, notification: options },
       });
     }
     /**
@@ -1777,24 +1904,28 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     async handlePushSubscriptionChange(event) {
       const { oldSubscription, newSubscription } = event;
       await this.broadcast({
-        type: "PUSH_SUBSCRIPTION_CHANGE",
-        data: { oldSubscription, newSubscription }
+        type: 'PUSH_SUBSCRIPTION_CHANGE',
+        data: { oldSubscription, newSubscription },
       });
     }
     async getLastFocusedMatchingClient(scope2) {
-      const windowClients = await scope2.clients.matchAll({ type: "window" });
+      const windowClients = await scope2.clients.matchAll({ type: 'window' });
       return windowClients[0];
     }
     async completeOperation(client, promise, nonce) {
-      const response = { type: "OPERATION_COMPLETED", nonce };
+      const response = { type: 'OPERATION_COMPLETED', nonce };
       try {
-        client.postMessage(__spreadProps(__spreadValues({}, response), {
-          result: await promise
-        }));
+        client.postMessage(
+          __spreadProps(__spreadValues({}, response), {
+            result: await promise,
+          }),
+        );
       } catch (e) {
-        client.postMessage(__spreadProps(__spreadValues({}, response), {
-          error: e.toString()
-        }));
+        client.postMessage(
+          __spreadProps(__spreadValues({}, response), {
+            error: e.toString(),
+          }),
+        );
       }
     }
     async updateClient(client) {
@@ -1818,15 +1949,17 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       } catch (e) {
         return this.safeFetch(event.request);
       }
-      if (event.request.mode === "navigate" && !this.scheduledNavUpdateCheck) {
+      if (event.request.mode === 'navigate' && !this.scheduledNavUpdateCheck) {
         this.scheduledNavUpdateCheck = true;
-        this.idle.schedule("check-updates-on-navigation", async () => {
+        this.idle.schedule('check-updates-on-navigation', async () => {
           this.scheduledNavUpdateCheck = false;
           await this.checkForUpdate();
         });
       }
       const appVersion = await this.assignVersion(event);
-      const isVersionWithinMaxAge = (appVersion == null ? void 0 : appVersion.manifest.applicationMaxAge) === void 0 || this.adapter.time - appVersion.manifest.timestamp < appVersion.manifest.applicationMaxAge;
+      const isVersionWithinMaxAge =
+        (appVersion == null ? void 0 : appVersion.manifest.applicationMaxAge) === void 0 ||
+        this.adapter.time - appVersion.manifest.timestamp < appVersion.manifest.applicationMaxAge;
       let res = null;
       try {
         if (appVersion !== null && isVersionWithinMaxAge) {
@@ -1860,15 +1993,18 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       let manifests, assignments, latest;
       try {
         [manifests, assignments, latest] = await Promise.all([
-          table.read("manifests"),
-          table.read("assignments"),
-          table.read("latest")
+          table.read('manifests'),
+          table.read('assignments'),
+          table.read('latest'),
         ]);
         if (!this.versions.has(latest.latest) && !manifests.hasOwnProperty(latest.latest)) {
-          this.debugger.log(`Missing manifest for latest version hash ${latest.latest}`, "initialize: read from DB");
+          this.debugger.log(
+            `Missing manifest for latest version hash ${latest.latest}`,
+            'initialize: read from DB',
+          );
           throw new Error(`Missing manifest for latest hash ${latest.latest}`);
         }
-        this.idle.schedule("init post-load (update)", async () => {
+        this.idle.schedule('init post-load (update)', async () => {
           await this.checkForUpdate();
         });
       } catch (_) {
@@ -1878,18 +2014,29 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         assignments = {};
         latest = { latest: hash };
         await Promise.all([
-          table.write("manifests", manifests),
-          table.write("assignments", assignments),
-          table.write("latest", latest)
+          table.write('manifests', manifests),
+          table.write('assignments', assignments),
+          table.write('latest', latest),
         ]);
       }
-      this.idle.schedule("init post-load (cleanup)", async () => {
+      this.idle.schedule('init post-load (cleanup)', async () => {
         await this.cleanupCaches();
       });
       Object.keys(manifests).forEach((hash) => {
         const manifest = manifests[hash];
         if (!this.versions.has(hash)) {
-          this.versions.set(hash, new AppVersion(this.scope, this.adapter, this.db, this.idle, this.debugger, manifest, hash));
+          this.versions.set(
+            hash,
+            new AppVersion(
+              this.scope,
+              this.adapter,
+              this.db,
+              this.idle,
+              this.debugger,
+              manifest,
+              hash,
+            ),
+          );
         }
       });
       Object.keys(assignments).forEach((clientId) => {
@@ -1898,24 +2045,33 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
           this.clientVersionMap.set(clientId, hash);
         } else {
           this.clientVersionMap.set(clientId, latest.latest);
-          this.debugger.log(`Unknown version ${hash} mapped for client ${clientId}, using latest instead`, `initialize: map assignments`);
+          this.debugger.log(
+            `Unknown version ${hash} mapped for client ${clientId}, using latest instead`,
+            `initialize: map assignments`,
+          );
         }
       });
       this.latestHash = latest.latest;
       if (!this.versions.has(latest.latest)) {
-        throw new Error(`Invariant violated (initialize): latest hash ${latest.latest} has no known manifest`);
+        throw new Error(
+          `Invariant violated (initialize): latest hash ${latest.latest} has no known manifest`,
+        );
       }
-      await Promise.all(Object.keys(manifests).map(async (hash) => {
-        try {
-          await this.scheduleInitialization(this.versions.get(hash));
-        } catch (err) {
-          this.debugger.log(err, `initialize: schedule init of ${hash}`);
-        }
-      }));
+      await Promise.all(
+        Object.keys(manifests).map(async (hash) => {
+          try {
+            await this.scheduleInitialization(this.versions.get(hash));
+          } catch (err) {
+            this.debugger.log(err, `initialize: schedule init of ${hash}`);
+          }
+        }),
+      );
     }
-    lookupVersionByHash(hash, debugName = "lookupVersionByHash") {
+    lookupVersionByHash(hash, debugName = 'lookupVersionByHash') {
       if (!this.versions.has(hash)) {
-        throw new Error(`Invariant violated (${debugName}): want AppVersion for ${hash} but not loaded`);
+        throw new Error(
+          `Invariant violated (${debugName}): want AppVersion for ${hash} but not loaded`,
+        );
       }
       return this.versions.get(hash);
     }
@@ -1923,13 +2079,20 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
      * Decide which version of the manifest to use for the event.
      */
     async assignVersion(event) {
-      const isWorkerScriptRequest = event.request.destination === "worker" && event.resultingClientId && event.clientId;
-      const clientId = isWorkerScriptRequest ? event.clientId : event.resultingClientId || event.clientId;
+      const isWorkerScriptRequest =
+        event.request.destination === 'worker' && event.resultingClientId && event.clientId;
+      const clientId = isWorkerScriptRequest
+        ? event.clientId
+        : event.resultingClientId || event.clientId;
       if (clientId) {
         if (this.clientVersionMap.has(clientId)) {
           const hash = this.clientVersionMap.get(clientId);
-          let appVersion = this.lookupVersionByHash(hash, "assignVersion");
-          if (this.state === DriverReadyState.NORMAL && hash !== this.latestHash && appVersion.isNavigationRequest(event.request)) {
+          let appVersion = this.lookupVersionByHash(hash, 'assignVersion');
+          if (
+            this.state === DriverReadyState.NORMAL &&
+            hash !== this.latestHash &&
+            appVersion.isNavigationRequest(event.request)
+          ) {
             if (this.latestHash === null) {
               throw new Error(`Invariant violated (assignVersion): latestHash was null`);
             }
@@ -1937,14 +2100,16 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             if (client) {
               await this.updateClient(client);
             }
-            appVersion = this.lookupVersionByHash(this.latestHash, "assignVersion");
+            appVersion = this.lookupVersionByHash(this.latestHash, 'assignVersion');
           }
           if (isWorkerScriptRequest) {
             if (!this.clientVersionMap.has(event.resultingClientId)) {
               this.clientVersionMap.set(event.resultingClientId, hash);
               await this.sync();
             } else if (this.clientVersionMap.get(event.resultingClientId) !== hash) {
-              throw new Error(`Version mismatch between worker client ${event.resultingClientId} and requesting client ${clientId}`);
+              throw new Error(
+                `Version mismatch between worker client ${event.resultingClientId} and requesting client ${clientId}`,
+              );
             }
           }
           return appVersion;
@@ -1959,12 +2124,14 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
             if (!this.clientVersionMap.has(event.resultingClientId)) {
               this.clientVersionMap.set(event.resultingClientId, this.latestHash);
             } else if (this.clientVersionMap.get(event.resultingClientId) !== this.latestHash) {
-              throw new Error(`Version mismatch between worker client ${event.resultingClientId} and requesting client ${clientId}`);
+              throw new Error(
+                `Version mismatch between worker client ${event.resultingClientId} and requesting client ${clientId}`,
+              );
             }
           }
           this.clientVersionMap.set(clientId, this.latestHash);
           await this.sync();
-          return this.lookupVersionByHash(this.latestHash, "assignVersion");
+          return this.lookupVersionByHash(this.latestHash, 'assignVersion');
         }
       } else {
         if (this.state !== DriverReadyState.NORMAL) {
@@ -1973,11 +2140,13 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         if (this.latestHash === null) {
           throw new Error(`Invariant violated (assignVersion): latestHash was null`);
         }
-        return this.lookupVersionByHash(this.latestHash, "assignVersion");
+        return this.lookupVersionByHash(this.latestHash, 'assignVersion');
       }
     }
     async fetchLatestManifest(ignoreOfflineError = false) {
-      const res = await this.safeFetch(this.adapter.newRequest("ngsw.json?ngsw-cache-bust=" + Math.random()));
+      const res = await this.safeFetch(
+        this.adapter.newRequest('ngsw.json?ngsw-cache-bust=' + Math.random()),
+      );
       if (!res.ok) {
         if (res.status === 404) {
           await this.deleteAllCaches();
@@ -2014,7 +2183,9 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       this.idle.schedule(`initialization(${appVersion.manifestHash})`, initialize);
     }
     async versionFailed(appVersion, err) {
-      const broken = Array.from(this.versions.entries()).find(([hash, version]) => version === appVersion);
+      const broken = Array.from(this.versions.entries()).find(
+        ([hash, version]) => version === appVersion,
+      );
       if (broken === void 0) {
         return;
       }
@@ -2026,18 +2197,28 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     }
     async setupUpdate(manifest, hash) {
       try {
-        const newVersion = new AppVersion(this.scope, this.adapter, this.db, this.idle, this.debugger, manifest, hash);
+        const newVersion = new AppVersion(
+          this.scope,
+          this.adapter,
+          this.db,
+          this.idle,
+          this.debugger,
+          manifest,
+          hash,
+        );
         if (manifest.configVersion !== SUPPORTED_CONFIG_VERSION) {
           await this.deleteAllCaches();
           await this.scope.registration.unregister();
-          throw new Error(`Invalid config version: expected ${SUPPORTED_CONFIG_VERSION}, got ${manifest.configVersion}.`);
+          throw new Error(
+            `Invalid config version: expected ${SUPPORTED_CONFIG_VERSION}, got ${manifest.configVersion}.`,
+          );
         }
         await newVersion.initializeFully(this);
         this.versions.set(hash, newVersion);
         this.latestHash = hash;
         if (this.state === DriverReadyState.EXISTING_CLIENTS_ONLY) {
           this.state = DriverReadyState.NORMAL;
-          this.stateMessage = "(nominal)";
+          this.stateMessage = '(nominal)';
         }
         await this.sync();
         await this.notifyClientsAboutVersionReady(manifest, hash);
@@ -2047,11 +2228,11 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       }
     }
     async checkForUpdate() {
-      let hash = "(unknown)";
+      let hash = '(unknown)';
       try {
         const manifest = await this.fetchLatestManifest(true);
         if (manifest === null) {
-          this.debugger.log("Check for update aborted. (Client or server offline.)");
+          this.debugger.log('Check for update aborted. (Client or server offline.)');
           return false;
         }
         hash = hashManifest(manifest);
@@ -2083,22 +2264,26 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         assignments[clientId] = hash;
       });
       const latest = {
-        latest: this.latestHash
+        latest: this.latestHash,
       };
       await Promise.all([
-        table.write("manifests", manifests),
-        table.write("assignments", assignments),
-        table.write("latest", latest)
+        table.write('manifests', manifests),
+        table.write('assignments', assignments),
+        table.write('latest', latest),
       ]);
     }
     async cleanupCaches() {
       try {
-        const activeClients = new Set((await this.scope.clients.matchAll()).map((client) => client.id));
+        const activeClients = new Set(
+          (await this.scope.clients.matchAll()).map((client) => client.id),
+        );
         const knownClients = Array.from(this.clientVersionMap.keys());
         const obsoleteClients = knownClients.filter((id) => !activeClients.has(id));
         obsoleteClients.forEach((id) => this.clientVersionMap.delete(id));
         const usedVersions = new Set(this.clientVersionMap.values());
-        const obsoleteVersions = Array.from(this.versions.keys()).filter((version) => !usedVersions.has(version) && version !== this.latestHash);
+        const obsoleteVersions = Array.from(this.versions.keys()).filter(
+          (version) => !usedVersions.has(version) && version !== this.latestHash,
+        );
         obsoleteVersions.forEach((version) => this.versions.delete(version));
         await this.sync();
         const allCaches = await this.adapter.caches.keys();
@@ -2106,7 +2291,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         const cachesToDelete = allCaches.filter((name) => !usedCaches.has(name));
         await Promise.all(cachesToDelete.map((name) => this.adapter.caches.delete(name)));
       } catch (err) {
-        this.debugger.log(err, "cleanupCaches");
+        this.debugger.log(err, 'cleanupCaches');
       }
     }
     /**
@@ -2115,7 +2300,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
      */
     lookupResourceWithHash(url, hash) {
       return Array.from(this.versions.values()).reduce(async (prev, version) => {
-        if (await prev !== null) {
+        if ((await prev) !== null) {
           return prev;
         }
         return version.lookupResourceWithHash(url, hash);
@@ -2138,77 +2323,91 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
     mergeHashWithAppData(manifest, hash) {
       return {
         hash,
-        appData: manifest.appData
+        appData: manifest.appData,
       };
     }
     async notifyClientsAboutUnrecoverableState(appVersion, reason) {
-      const broken = Array.from(this.versions.entries()).find(([hash, version]) => version === appVersion);
+      const broken = Array.from(this.versions.entries()).find(
+        ([hash, version]) => version === appVersion,
+      );
       if (broken === void 0) {
         return;
       }
       const brokenHash = broken[0];
-      const affectedClients = Array.from(this.clientVersionMap.entries()).filter(([clientId, hash]) => hash === brokenHash).map(([clientId]) => clientId);
-      await Promise.all(affectedClients.map(async (clientId) => {
-        const client = await this.scope.clients.get(clientId);
-        if (client) {
-          client.postMessage({ type: "UNRECOVERABLE_STATE", reason });
-        }
-      }));
+      const affectedClients = Array.from(this.clientVersionMap.entries())
+        .filter(([clientId, hash]) => hash === brokenHash)
+        .map(([clientId]) => clientId);
+      await Promise.all(
+        affectedClients.map(async (clientId) => {
+          const client = await this.scope.clients.get(clientId);
+          if (client) {
+            client.postMessage({ type: 'UNRECOVERABLE_STATE', reason });
+          }
+        }),
+      );
     }
     async notifyClientsAboutVersionInstallationFailed(manifest, hash, error) {
       await this.initialized;
       const clients = await this.scope.clients.matchAll();
-      await Promise.all(clients.map(async (client) => {
-        client.postMessage({
-          type: "VERSION_INSTALLATION_FAILED",
-          version: this.mergeHashWithAppData(manifest, hash),
-          error: errorToString(error)
-        });
-      }));
+      await Promise.all(
+        clients.map(async (client) => {
+          client.postMessage({
+            type: 'VERSION_INSTALLATION_FAILED',
+            version: this.mergeHashWithAppData(manifest, hash),
+            error: errorToString(error),
+          });
+        }),
+      );
     }
     async notifyClientsAboutNoNewVersionDetected(manifest, hash) {
       await this.initialized;
       const clients = await this.scope.clients.matchAll();
-      await Promise.all(clients.map(async (client) => {
-        client.postMessage({
-          type: "NO_NEW_VERSION_DETECTED",
-          version: this.mergeHashWithAppData(manifest, hash)
-        });
-      }));
+      await Promise.all(
+        clients.map(async (client) => {
+          client.postMessage({
+            type: 'NO_NEW_VERSION_DETECTED',
+            version: this.mergeHashWithAppData(manifest, hash),
+          });
+        }),
+      );
     }
     async notifyClientsAboutVersionDetected(manifest, hash) {
       await this.initialized;
       const clients = await this.scope.clients.matchAll();
-      await Promise.all(clients.map(async (client) => {
-        const version = this.clientVersionMap.get(client.id);
-        if (version === void 0) {
-          return;
-        }
-        client.postMessage({
-          type: "VERSION_DETECTED",
-          version: this.mergeHashWithAppData(manifest, hash)
-        });
-      }));
+      await Promise.all(
+        clients.map(async (client) => {
+          const version = this.clientVersionMap.get(client.id);
+          if (version === void 0) {
+            return;
+          }
+          client.postMessage({
+            type: 'VERSION_DETECTED',
+            version: this.mergeHashWithAppData(manifest, hash),
+          });
+        }),
+      );
     }
     async notifyClientsAboutVersionReady(manifest, hash) {
       await this.initialized;
       const clients = await this.scope.clients.matchAll();
-      await Promise.all(clients.map(async (client) => {
-        const version = this.clientVersionMap.get(client.id);
-        if (version === void 0) {
-          return;
-        }
-        if (version === this.latestHash) {
-          return;
-        }
-        const current = this.versions.get(version);
-        const notice = {
-          type: "VERSION_READY",
-          currentVersion: this.mergeHashWithAppData(current.manifest, version),
-          latestVersion: this.mergeHashWithAppData(manifest, hash)
-        };
-        client.postMessage(notice);
-      }));
+      await Promise.all(
+        clients.map(async (client) => {
+          const version = this.clientVersionMap.get(client.id);
+          if (version === void 0) {
+            return;
+          }
+          if (version === this.latestHash) {
+            return;
+          }
+          const current = this.versions.get(version);
+          const notice = {
+            type: 'VERSION_READY',
+            currentVersion: this.mergeHashWithAppData(current.manifest, version),
+            latestVersion: this.mergeHashWithAppData(manifest, hash),
+          };
+          client.postMessage(notice);
+        }),
+      );
     }
     async broadcast(msg) {
       const clients = await this.scope.clients.matchAll();
@@ -2221,18 +2420,20 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         state: DriverReadyState[this.state],
         why: this.stateMessage,
         latestHash: this.latestHash,
-        lastUpdateCheck: this.lastUpdateCheck
+        lastUpdateCheck: this.lastUpdateCheck,
       };
     }
     async debugVersions() {
       return Array.from(this.versions.keys()).map((hash) => {
         const version = this.versions.get(hash);
-        const clients = Array.from(this.clientVersionMap.entries()).filter(([clientId, version2]) => version2 === hash).map(([clientId, version2]) => clientId);
+        const clients = Array.from(this.clientVersionMap.entries())
+          .filter(([clientId, version2]) => version2 === hash)
+          .map(([clientId, version2]) => clientId);
         return {
           hash,
           manifest: version.manifest,
           clients,
-          status: ""
+          status: '',
         };
       });
     }
@@ -2240,7 +2441,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       return {
         queue: this.idle.taskDescriptions,
         lastTrigger: this.idle.lastTrigger,
-        lastRun: this.idle.lastRun
+        lastRun: this.idle.lastRun,
       };
     }
     async safeFetch(req) {
@@ -2250,14 +2451,16 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         this.debugger.log(err, `Driver.fetch(${req.url})`);
         return this.adapter.newResponse(null, {
           status: 504,
-          statusText: "Gateway Timeout"
+          statusText: 'Gateway Timeout',
         });
       }
     }
     async getCacheNames() {
       const controlTable = await this.controlTable;
       const appVersions = Array.from(this.versions.values());
-      const appVersionCacheNames = await Promise.all(appVersions.map((version) => version.getCacheNames()));
+      const appVersionCacheNames = await Promise.all(
+        appVersions.map((version) => version.getCacheNames()),
+      );
       return [controlTable.cacheName].concat(...appVersionCacheNames);
     }
   };

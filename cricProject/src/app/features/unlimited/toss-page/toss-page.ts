@@ -11,29 +11,25 @@ import { Player } from '../../../shared/models/player.model';
   styleUrl: './toss-page.css',
 })
 export class TossPage {
-
   constructor(
     private cdr: ChangeDetectorRef,
-    private matchSetupService: MatchSetupService
+    private matchSetupService: MatchSetupService,
   ) {
-    this.teamACaptain =
-      this.matchSetupService.getTeamACaptain()
+    this.teamACaptain = this.matchSetupService.getTeamACaptain();
 
-    this.teamBCaptain =
-      this.matchSetupService.getTeamBCaptain()
+    this.teamBCaptain = this.matchSetupService.getTeamBCaptain();
   }
 
-  battingTeam: 'A' | 'B' | '' = ''
+  battingTeam: 'A' | 'B' | '' = '';
 
-  teamACaptain: Player | null = null
+  teamACaptain: Player | null = null;
 
-  teamBCaptain: Player | null = null
+  teamBCaptain: Player | null = null;
 
   selectBattingTeam(team: 'A' | 'B') {
-    this.battingTeam = team
-    this.matchSetupService.setFirstBattingTeam(team)
-    this.matchSetupService.setFirstBowlingTeam(team === 'A' ? 'B' : 'A')
-    this.cdr.detectChanges()
+    this.battingTeam = team;
+    this.matchSetupService.setFirstBattingTeam(team);
+    this.matchSetupService.setFirstBowlingTeam(team === 'A' ? 'B' : 'A');
+    this.cdr.detectChanges();
   }
-
 }

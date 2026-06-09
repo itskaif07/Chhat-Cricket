@@ -10,141 +10,103 @@ import { Player } from '../../shared/models/player.model';
   templateUrl: './scorecard.html',
   styleUrl: './scorecard.css',
 })
-export class Scorecard implements OnInit{
+export class Scorecard implements OnInit {
+  constructor(
+    private route: ActivatedRoute,
+    private matchService: MatchService,
+    private cdr: ChangeDetectorRef,
+    private matchSetupService: MatchSetupService,
+  ) {}
 
-  constructor(private route: ActivatedRoute, private matchService:MatchService, private cdr: ChangeDetectorRef, private matchSetupService:MatchSetupService){}
-
-  matchData:any = []
-  selectedInnings:any;
+  matchData: any = [];
+  selectedInnings: any;
   Object = Object;
-  captainA:Player | null = null
-  captainB:Player | null = null
-  loading = false
+  captainA: Player | null = null;
+  captainB: Player | null = null;
+  loading = false;
 
-  ngOnInit(){
-
-    this.getData()
-
-}
-
-getData(){
-
-  this.loading = true
-
-  try{
-    const id =
-  this.route.snapshot.paramMap.get('id')
-
-  if(id){
-
-    this.matchService
-    .getMatchById(id)
-    .subscribe((data)=>{
-
-
-      this.matchData = data
-
-      console.log(data)
-      this.selectedInnings = this.matchData.innings[0]
-      
-      this.getCaptains()
-      this.loading = false
-      this.cdr.detectChanges()
-    })
-    
+  ngOnInit() {
+    this.getData();
   }
 
-}
-catch(e){
-  this.loading = false
-  console.log(e)
-}
+  getData() {
+    this.loading = true;
 
+    try {
+      const id = this.route.snapshot.paramMap.get('id');
 
-}
+      if (id) {
+        this.matchService.getMatchById(id).subscribe((data) => {
+          this.matchData = data;
 
-getPlayers(playerStats:any): any[] {
+          console.log(data);
+          this.selectedInnings = this.matchData.innings[0];
 
-  return Object.entries(playerStats || {}).map(
-    ([id, player]: any) => ({
+          this.getCaptains();
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
+      }
+    } catch (e) {
+      this.loading = false;
+      console.log(e);
+    }
+  }
+
+  getPlayers(playerStats: any): any[] {
+    return Object.entries(playerStats || {}).map(([id, player]: any) => ({
       id,
-      ...player
-    })
-  )
-}
-
-
-setInnings(index:number){
-
-  this.selectedInnings =
-  this.matchData.innings[index]
-
-}
-
-getOvers(balls: number): string {
-
-  const overs = Math.floor(balls / 6);
-  const deliveries = balls % 6;
-
-  return `${overs}.${deliveries}`;
-
-}
-
-getBatters(playerStats:any){
-
-  return Object.values(playerStats || {})
-  .filter((player:any)=>
-
-    player.ballsFaced > 0 ||
-
-    player.dismissalType
-
-  )
-
-}
-
-getBowlers(playerStats:any){
-
-  return Object.values(playerStats || {})
-  .filter((player:any)=>
-
-    player.ballsDelivered > 0
-
-  )
-
-}
-
-getCaptains(){
- this.captainA = this.matchData.teamACaptain
- this.captainB = this.matchData.teamBCaptain
-
-}
-
-
-getDismissalText(player: any): string {
-
-  if (!player.dismissalType) {
-    return 'Not Out';
+      ...player,
+    }));
   }
 
-  if (player.dismissalType === 'caught') {
+  setInnings(index: number) {
+    this.selectedInnings = this.matchData.innings[index];
+  }
 
-    if (player.caughtBy === player.dismissedBy) {
-      return `c & b ${player.dismissedBy}`;
+  getOvers(balls: number): string {
+    const overs = Math.floor(balls / 6);
+    const deliveries = balls % 6;
+
+    return `${overs}.${deliveries}`;
+  }
+
+  getBatters(playerStats: any) {
+    return Object.values(playerStats || {}).filter(
+      (player: any) => player.ballsFaced > 0 || player.dismissalType,
+    );
+  }
+
+  getBowlers(playerStats: any) {
+    return Object.values(playerStats || {}).filter((player: any) => player.ballsDelivered > 0);
+  }
+
+  getCaptains() {
+    this.captainA = this.matchData.teamACaptain;
+    this.captainB = this.matchData.teamBCaptain;
+  }
+
+  getDismissalText(player: any): string {
+    if (!player.dismissalType) {
+      return 'Not Out';
     }
 
-    return `c ${player.caughtBy} b ${player.dismissedBy}`;
+    if (player.dismissalType === 'caught') {
+      if (player.caughtBy === player.dismissedBy) {
+        return `c & b ${player.dismissedBy}`;
+      }
+
+      return `c ${player.caughtBy} b ${player.dismissedBy}`;
+    }
+
+    if (player.dismissalType === 'bowled') {
+      return `b ${player.dismissedBy}`;
+    }
+
+    if (player.dismissalType === 'offside') {
+      return `b ${player.dismissedBy}`;
+    }
+
+    return player.dismissalType;
   }
-
-  if (player.dismissalType === 'bowled') {
-    return `b ${player.dismissedBy}`;
-  }
-
-  if(player.dismissalType === 'offside'){
-    return `b ${player.dismissedBy}`
-  }
-
-  return player.dismissalType;
-}
-
 }

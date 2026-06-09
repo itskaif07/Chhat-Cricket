@@ -8,7 +8,7 @@ type SavedMatchSetup = {
   teamB: Player[];
   teamACaptain?: Player | null;
   teamBCaptain?: Player | null;
-}
+};
 
 @Component({
   selector: 'app-welcome',
@@ -17,40 +17,33 @@ type SavedMatchSetup = {
   styleUrl: './welcome.css',
 })
 export class Welcome implements OnInit {
-
-  hasPreviousSetup = false
-  previousSetup: SavedMatchSetup | null = null
+  hasPreviousSetup = false;
+  previousSetup: SavedMatchSetup | null = null;
 
   constructor(
     private matchSetupService: MatchSetupService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
-    this.loadPreviousSetup()
+    this.loadPreviousSetup();
   }
 
   loadPreviousSetup() {
-    const savedSetup =
-      localStorage.getItem('lastMatchSetup')
+    const savedSetup = localStorage.getItem('lastMatchSetup');
 
     if (!savedSetup) return;
 
     try {
-      const parsedSetup =
-        JSON.parse(savedSetup) as SavedMatchSetup
+      const parsedSetup = JSON.parse(savedSetup) as SavedMatchSetup;
 
-      if (
-        parsedSetup.teamA?.length &&
-        parsedSetup.teamB?.length
-      ) {
-        this.previousSetup = parsedSetup
-        this.hasPreviousSetup = true
+      if (parsedSetup.teamA?.length && parsedSetup.teamB?.length) {
+        this.previousSetup = parsedSetup;
+        this.hasPreviousSetup = true;
       }
-    }
-    catch(error) {
-      console.log(error)
-      localStorage.removeItem('lastMatchSetup')
+    } catch (error) {
+      console.log(error);
+      localStorage.removeItem('lastMatchSetup');
     }
   }
 
@@ -61,14 +54,13 @@ export class Welcome implements OnInit {
       this.previousSetup.teamA,
       this.previousSetup.teamB,
       this.previousSetup.teamACaptain || null,
-      this.previousSetup.teamBCaptain || null
-    )
+      this.previousSetup.teamBCaptain || null,
+    );
 
-    this.router.navigate(['/unlimited/toss'])
+    this.router.navigate(['/unlimited/toss']);
   }
 
   startNewSetup() {
-    this.router.navigate(['/unlimited/select-players'])
+    this.router.navigate(['/unlimited/select-players']);
   }
-
 }

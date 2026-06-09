@@ -6,7 +6,7 @@ import {
   Firestore,
   getDocs,
   orderBy,
-  query
+  query,
 } from '@angular/fire/firestore';
 
 import { Player } from '../../shared/models/player.model';
@@ -16,7 +16,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RetrievePlayersService {
-
   constructor(private fireStore: Firestore) {}
 
   async getAllPlayers(): Promise<Player[]> {
@@ -26,16 +25,15 @@ export class RetrievePlayersService {
 
     const snapshot = await getDocs(q);
 
-    return snapshot.docs.map(doc => ({
+    return snapshot.docs.map((doc) => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data(),
     })) as Player[];
   }
 
-   getPlayer(playerId:string):Observable<Player>{
-    const playerRef = doc(this.fireStore, `players/${playerId}`)
+  getPlayer(playerId: string): Observable<Player> {
+    const playerRef = doc(this.fireStore, `players/${playerId}`);
 
-    return docData(playerRef, {idField: 'id'}) as Observable<Player>
+    return docData(playerRef, { idField: 'id' }) as Observable<Player>;
   }
-
 }

@@ -1,162 +1,92 @@
-<div class="w-full min-h-screen bg-[#050B18] text-white overflow-hidden relative flex items-center justify-center px-6">
+<div
+  class="w-full min-h-screen bg-[#050B18] text-white overflow-hidden relative flex items-center justify-center px-6"
+>
+  <!-- BACKGROUND GLOW -->
+  <div
+    class="absolute -top-30 left-1/2 -translate-x-1/2 w-125 h-125 bg-linear-to-b from-[#38BDF8] to-[#0EA5E9] blur-[140px] rounded-full opacity-20 pointer-events-none"
+  ></div>
 
-    <!-- BACKGROUND GLOW -->
-    <div class="absolute -top-30 left-1/2 -translate-x-1/2
-    w-125 h-125
-    bg-linear-to-b
-    from-[#38BDF8]
-    to-[#0EA5E9]
-    blur-[140px] rounded-full opacity-20
-    pointer-events-none">
-
+  <!-- CONTENT -->
+  <div class="relative z-10 w-full max-w-4xl flex flex-col items-center text-center py-10">
+    <!-- BADGE -->
+    <div class="px-4 py-2 rounded-full bg-[#38BDF8]/10 border border-[#38BDF8]/20 backdrop-blur-xl">
+      <h2 class="text-xs tracking-[0.3em] text-[#38BDF8] font-bold">UNLIMITED OVERS</h2>
     </div>
 
-    <!-- CONTENT -->
-    <div class="relative z-10 w-full max-w-4xl flex flex-col items-center text-center py-10">
+    <!-- TITLE -->
+    <h1 class="text-white text-4xl md:text-5xl font-black text-center leading-none mt-10">
+      Who Is Going To Bat?
+    </h1>
 
-        <!-- BADGE -->
-        <div class="px-4 py-2 rounded-full
-        bg-[#38BDF8]/10 border border-[#38BDF8]/20
-        backdrop-blur-xl">
+    <!-- SUBTEXT -->
+    <p class="text-zinc-500 text-center mt-5 max-w-md leading-relaxed">
+      Choose the batting team. If there is a leftover player, that player will join the batting
+      side.
+    </p>
 
-            <h2 class="text-xs tracking-[0.3em]
-            text-[#38BDF8] font-bold">
-
-                UNLIMITED OVERS
-
-            </h2>
-
+    <!-- TEAM OPTIONS -->
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-5 mt-12">
+      <!-- TEAM A -->
+      <button
+        (click)="selectBattingTeam('A')"
+        [ngClass]="{
+          'border-[#94F505] shadow-[0_0_55px_rgba(148,245,5,0.22)]': battingTeam === 'A',
+          'border-[#94F505]/20': battingTeam !== 'A',
+        }"
+        class="relative overflow-hidden rounded-3xl p-6 bg-[#94F505]/10 border-2 backdrop-blur-2xl flex items-center gap-5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+      >
+        <div
+          class="w-24 h-24 rounded-3xl overflow-hidden border border-[#94F505]/25 bg-[#94F505]/10 shrink-0"
+        >
+          <img [src]="teamACaptain?.photoURL || 'user.png'" class="w-full h-full object-cover" />
         </div>
 
-        <!-- TITLE -->
-        <h1 class="text-white text-4xl md:text-5xl font-black
-        text-center leading-none mt-10">
+        <div class="text-left min-w-0">
+          <p class="text-[#94F505] text-xs font-black tracking-[0.25em]">TEAM A</p>
 
-            Who Is Going To Bat?
+          <h2 class="text-white text-2xl font-black mt-2 truncate">
+            {{ teamACaptain?.displayName || 'Captain' }}
+          </h2>
 
-        </h1>
+          <p class="text-zinc-500 text-sm mt-2">Bat first</p>
+        </div>
+      </button>
 
-        <!-- SUBTEXT -->
-        <p class="text-zinc-500 text-center
-        mt-5 max-w-md leading-relaxed">
-
-            Choose the batting team. If there is a leftover player, that player will join the batting side.
-
-        </p>
-
-        <!-- TEAM OPTIONS -->
-        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-5 mt-12">
-
-            <!-- TEAM A -->
-            <button (click)="selectBattingTeam('A')"
-            [ngClass]="{
-                'border-[#94F505] shadow-[0_0_55px_rgba(148,245,5,0.22)]': battingTeam === 'A',
-                'border-[#94F505]/20': battingTeam !== 'A'
-            }"
-            class="relative overflow-hidden rounded-3xl p-6
-            bg-[#94F505]/10
-            border-2
-            backdrop-blur-2xl
-            flex items-center gap-5
-            hover:scale-[1.02]
-            active:scale-[0.98]
-            transition-all duration-300
-            cursor-pointer">
-
-                <div class="w-24 h-24 rounded-3xl overflow-hidden
-                border border-[#94F505]/25
-                bg-[#94F505]/10
-                shrink-0">
-
-                    <img [src]="teamACaptain?.photoURL || 'user.png'"
-                    class="w-full h-full object-cover">
-
-                </div>
-
-                <div class="text-left min-w-0">
-
-                    <p class="text-[#94F505] text-xs font-black tracking-[0.25em]">
-                        TEAM A
-                    </p>
-
-                    <h2 class="text-white text-2xl font-black mt-2 truncate">
-                        {{ teamACaptain?.displayName || 'Captain' }}
-                    </h2>
-
-                    <p class="text-zinc-500 text-sm mt-2">
-                        Bat first
-                    </p>
-
-                </div>
-
-            </button>
-
-            <!-- TEAM B -->
-            <button (click)="selectBattingTeam('B')"
-            [ngClass]="{
-                'border-purple-400 shadow-[0_0_55px_rgba(192,132,252,0.22)]': battingTeam === 'B',
-                'border-purple-400/20': battingTeam !== 'B'
-            }"
-            class="relative overflow-hidden rounded-3xl p-6
-            bg-purple-400/10
-            border-2
-            backdrop-blur-2xl
-            flex items-center gap-5
-            hover:scale-[1.02]
-            active:scale-[0.98]
-            transition-all duration-300
-            cursor-pointer">
-
-                <div class="w-24 h-24 rounded-3xl overflow-hidden
-                border border-purple-400/25
-                bg-purple-400/10
-                shrink-0">
-
-                    <img [src]="teamBCaptain?.photoURL || 'user.png'"
-                    class="w-full h-full object-cover">
-
-                </div>
-
-                <div class="text-left min-w-0">
-
-                    <p class="text-purple-300 text-xs font-black tracking-[0.25em]">
-                        TEAM B
-                    </p>
-
-                    <h2 class="text-white text-2xl font-black mt-2 truncate">
-                        {{ teamBCaptain?.displayName || 'Captain' }}
-                    </h2>
-
-                    <p class="text-zinc-500 text-sm mt-2">
-                        Bat first
-                    </p>
-
-                </div>
-
-            </button>
-
+      <!-- TEAM B -->
+      <button
+        (click)="selectBattingTeam('B')"
+        [ngClass]="{
+          'border-purple-400 shadow-[0_0_55px_rgba(192,132,252,0.22)]': battingTeam === 'B',
+          'border-purple-400/20': battingTeam !== 'B',
+        }"
+        class="relative overflow-hidden rounded-3xl p-6 bg-purple-400/10 border-2 backdrop-blur-2xl flex items-center gap-5 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+      >
+        <div
+          class="w-24 h-24 rounded-3xl overflow-hidden border border-purple-400/25 bg-purple-400/10 shrink-0"
+        >
+          <img [src]="teamBCaptain?.photoURL || 'user.png'" class="w-full h-full object-cover" />
         </div>
 
-        <!-- CONTINUE -->
-        @if(battingTeam !== ''){
+        <div class="text-left min-w-0">
+          <p class="text-purple-300 text-xs font-black tracking-[0.25em]">TEAM B</p>
 
-        <button [routerLink]="['/unlimited/leftover-player']" class="w-full md:w-1/2 mt-12 h-16 rounded-3xl
-        bg-linear-to-b
-        from-[#38BDF8]
-        to-[#0EA5E9]
-        border border-[#38BDF8]/30
-        text-black text-lg font-black
-        shadow-[0_0_40px_rgba(56,189,248,0.2)]
-        active:scale-[0.98]
-        transition-all duration-300
-        cursor-pointer">
+          <h2 class="text-white text-2xl font-black mt-2 truncate">
+            {{ teamBCaptain?.displayName || 'Captain' }}
+          </h2>
 
-            CONTINUE
-
-        </button>
-
-        }
-
+          <p class="text-zinc-500 text-sm mt-2">Bat first</p>
+        </div>
+      </button>
     </div>
 
+    <!-- CONTINUE -->
+    @if (battingTeam !== '') {
+      <button
+        [routerLink]="['/unlimited/leftover-player']"
+        class="w-full md:w-1/2 mt-12 h-16 rounded-3xl bg-linear-to-b from-[#38BDF8] to-[#0EA5E9] border border-[#38BDF8]/30 text-black text-lg font-black shadow-[0_0_40px_rgba(56,189,248,0.2)] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+      >
+        CONTINUE
+      </button>
+    }
+  </div>
 </div>

@@ -1,0 +1,221 @@
+@if(players.length === 0){
+
+<div class="mt-10 rounded-3xl border border-white/10
+  bg-white/5 p-8 text-center">
+
+    <div class="text-5xl mb-3">
+        🏏
+    </div>
+
+    <h2 class="text-xl font-bold">
+        No Data Available
+    </h2>
+
+    <p class="text-zinc-500 mt-2">
+        Play some matches to see rankings.
+    </p>
+
+</div>
+
+}
+@else
+{
+
+
+<div class="w-full min-h-screen bg-[#050B18] text-white px-5 py-6">
+
+    <!-- Header -->
+
+    <div class="mb-8 rounded-3xl border border-white/10
+        bg-linear-to-r from-[#0C1627] to-[#12231B]
+        p-6">
+
+        <h1 class="text-4xl font-black">
+            {{ title }}
+        </h1>
+
+        <p class="text-zinc-400 mt-2 text-sm">
+
+            Live career rankings
+
+        </p>
+
+    </div>
+
+    <!-- Top 3 Podium -->
+
+    @if(players.length >= 3){
+
+    <div class="flex items-end gap-3 mb-10">
+
+        <!-- Silver -->
+
+        <div class="flex-1 rounded-3xl
+            border border-white/10
+            bg-white/5 space-y-3 text-center h-60 flex items-center justify-center flex-col">
+
+            <div class="text-3xl">
+                🥈
+            </div>
+
+            <img [src]="players[1].playerPhoto" class="w-16 h-16 rounded-full mx-auto
+                object-cover border-2 border-white/20">
+
+            <h2 class="font-bold truncate">
+
+                {{ players[1].playerName }}
+
+            </h2>
+
+            <p class="text-2xl font-black">
+
+                {{ getRankValue(players[1]) }}
+
+            </p>
+
+            <p class="text-xs text-zinc-500">
+
+                {{ players[1].totalInnings }}
+                innings
+
+            </p>
+
+        </div>
+
+        <!-- Gold -->
+
+        <div class="flex-1 rounded-3xl space-y-3
+            border border-[#94F505]/30
+            bg-[#94F505]/10
+             text-center h-72 flex items-center justify-center flex-col">
+
+            <div class="text-4xl">
+                👑
+            </div>
+
+            <img [src]="players[0].playerPhoto" class="w-20 h-20 rounded-full mx-auto
+                object-cover border-2 border-[#94F505]">
+
+            <h2 class="font-bold truncate">
+
+                {{ players[0].playerName }}
+
+            </h2>
+
+            <p class="text-4xl font-black
+                text-[#94F505]">
+
+                {{ getRankValue(players[0]) }}
+
+            </p>
+
+            <p class="text-xs text-zinc-500">
+
+                {{ players[0].totalInnings }}
+                innings
+
+            </p>
+
+        </div>
+
+        <!-- Bronze -->
+
+        <div class="flex-1 rounded-3xl
+            border border-white/10
+            bg-white/5 space-y-3 text-center h-60 flex items-center justify-center flex-col">
+
+            <div class="text-3xl">
+                🥉
+            </div>
+
+            <img [src]="players[2].playerPhoto" class="w-16 h-16 rounded-full mx-auto 
+                object-cover border-2 border-white/20">
+
+            <h2 class="font-bold truncate">
+
+                {{ players[2].playerName }}
+
+            </h2>
+
+            <p class="text-2xl font-black">
+
+                {{ getRankValue(players[2]) }}
+
+            </p>
+
+            <p class="text-xs text-zinc-500">
+
+                {{ players[2].totalInnings }}
+                innings
+
+            </p>
+
+        </div>
+
+    </div>
+
+    }
+
+    <!-- Remaining Rankings -->
+
+    <div class="space-y-3">
+
+        @for(
+        player of players.slice(3);
+        track player.playerId;
+        let i = $index
+        ){
+
+        <div class="rounded-2xl border border-white/10
+            bg-white/5 p-4
+            flex items-center justify-between">
+
+            <div class="flex items-center gap-4">
+
+                <div class="w-10 h-10 rounded-full
+                    bg-black/30
+                    flex items-center justify-center
+                    font-bold text-zinc-400">
+
+                    {{ i + 4 }}
+
+                </div>
+
+                <img [src]="player.playerPhoto" class="w-12 h-12 rounded-full
+                    object-cover">
+
+                <div>
+
+                    <h3 class="font-semibold">
+
+                        {{ player.playerName }}
+
+                    </h3>
+
+                    <p class="text-xs text-zinc-500">
+
+                        {{ player.totalInnings }}
+                        innings
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="text-2xl font-black
+                text-[#94F505]">
+
+                {{ getRankValue(player) }}
+
+            </div>
+
+        </div>
+
+        }
+
+    </div>
+
+</div>
+
+}

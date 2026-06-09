@@ -4,15 +4,11 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class OfflinePersistanceService {
-
   private readonly STORAGE_KEY = 'active-match';
 
   saveMatch(matchData: unknown): void {
     try {
-      localStorage.setItem(
-        this.STORAGE_KEY,
-        JSON.stringify(matchData)
-      );
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(matchData));
     } catch (error) {
       console.error('Failed to save match:', error);
     }

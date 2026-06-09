@@ -1,1185 +1,757 @@
 <div class="w-full h-full bg-[#050B18] text-white relative">
+  <div id="section1" class="w-full h-[60vh] flex bg-transparent">
+    <!-- LEFT SIDE -->
+    <div
+      class="w-full text-center lg:text-left lg:w-1/2 flex flex-col justify-center lg:px-16 bg-[#050B18] space-y-4"
+    >
+      <div class="space-y-2">
+        @if (user) {
+          <h1 class="text-4xl font-bold tracking-wide uppercase">Welcome Back,</h1>
+          <h1 class="text-6xl font-bold uppercase text-[#44d43b]">{{ user.displayName }}</h1>
+        } @else {
+          <h1 class="text-4xl font-bold tracking-wide uppercase">WELCOME TO,</h1>
+          <h1 class="text-5xl font-bold uppercase text-[#44d43b]">Chhat Cricket</h1>
+        }
+      </div>
 
+      <p class="mt-4 text-zinc-400 w-full">
+        Manage matches, track players and own the <br />
+        chhat records
+      </p>
+    </div>
 
+    <!-- RIGHT SIDE -->
+    <div class="relative w-1/2 overflow-hidden hidden lg:block">
+      <img
+        src="https://images.pexels.com/photos/36230651/pexels-photo-36230651.jpeg"
+        class="w-full h-full object-cover object-bottom"
+      />
 
-    <div id="section1" class="w-full h-[60vh] flex bg-transparent">
+      <div
+        class="absolute inset-0 bg-linear-to-r from-[#050B18] via-transparent to-transparent"
+      ></div>
 
-        <!-- LEFT SIDE -->
+      <div
+        class="absolute inset-0 bg-linear-to-t from-[#050B18] via-transparent to-transparent"
+      ></div>
+    </div>
+  </div>
+
+  <div
+    id="section2"
+    class="w-full h-screen lg:h-[30vh] bg-transparent text-white flex flex-col lg:flex-row items-center justify-between px-4 lg:px-10 gap-4 relative"
+  >
+    <!-- CARD 1 -->
+    <div
+      id="glassBox1"
+      class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center"
+    >
+      <div id="glassBox1Left" class="w-1/3 h-full flex items-center justify-center">
         <div
-            class="w-full text-center lg:text-left lg:w-1/2 flex flex-col justify-center lg:px-16 bg-[#050B18] space-y-4">
-            <div class="space-y-2">
-                @if(user){
-                <h1 class="text-4xl font-bold tracking-wide uppercase">Welcome Back,</h1>
-                <h1 class="text-6xl font-bold uppercase text-[#44d43b]">{{user.displayName}}</h1>
-                }
-                @else {
-                <h1 class="text-4xl font-bold tracking-wide uppercase">WELCOME TO,</h1>
-                <h1 class="text-5xl font-bold uppercase text-[#44d43b]">Chhat Cricket</h1>
-                }
-            </div>
+          class="h-20 w-20 rounded-2xl bg-[#44d43b]/15 border border-[#44d43b]/20 flex items-center justify-center shadow-lg shadow-[#44d43b]/20"
+        >
+          <img
+            src="/icons/community.png"
+            class="w-10 transition-all duration-300 hover:scale-110"
+          />
+        </div>
+      </div>
 
-            <p class="mt-4 text-zinc-400 w-full ">
-                Manage matches, track players and own the <br> chhat records
-            </p>
+      <div
+        routerLink="/players-list"
+        id="glassBox1Right"
+        class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer"
+      >
+        <div class="flex flex-col">
+          <h1 class="font-bold text-4xl tracking-tight">{{ playersCount }}</h1>
 
-
+          <h2 class="text-lg font-semibold text-zinc-200">Total Players</h2>
         </div>
 
-        <!-- RIGHT SIDE -->
-        <div class="relative w-1/2 overflow-hidden hidden lg:block">
-
-            <img src="https://images.pexels.com/photos/36230651/pexels-photo-36230651.jpeg"
-                class="w-full h-full object-cover object-bottom" />
-
-            <div class="absolute inset-0 
-    bg-linear-to-r from-[#050B18] via-transparent to-transparent">
-            </div>
-
-            <div class="absolute inset-0 
-    bg-linear-to-t from-[#050B18] via-transparent to-transparent">
-            </div>
-
-
-
-        </div>
-
+        <p class="text-[#44d43b] text-sm mt-3">View all players →</p>
+      </div>
     </div>
 
-    <div id="section2"
-        class="w-full h-screen lg:h-[30vh] bg-transparent text-white flex flex-col lg:flex-row items-center justify-between px-4 lg:px-10 gap-4 relative">
+    <!-- CARD 2 -->
+    <div
+      id="glassBox2"
+      class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center"
+    >
+      <!-- LEFT -->
+      <div id="glassBox2Left" class="w-1/3 h-full flex items-center justify-center cursor-pointer">
+        <div
+          class="h-20 w-20 rounded-2xl bg-blue-500/15 border border-blue-500/20 flex items-center justify-center shadow-lg shadow-blue-500/20"
+        >
+          <img src="/icons/trophy.png" class="w-10 transition-all duration-300 hover:scale-110" />
+        </div>
+      </div>
 
-        <!-- CARD 1 -->
-        <div id="glassBox1"
-            class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
+      <!-- RIGHT -->
+      <div
+        [routerLink]="['/matches-history']"
+        id="glassBox2Right"
+        class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer"
+      >
+        <div class="flex flex-col">
+          <h1 class="font-bold text-4xl tracking-tight">
+            {{ matchesCount }}
+          </h1>
 
-            <div id="glassBox1Left" class="w-1/3 h-full flex items-center justify-center">
-
-                <div
-                    class="h-20 w-20 rounded-2xl bg-[#44d43b]/15 border border-[#44d43b]/20 flex items-center justify-center shadow-lg shadow-[#44d43b]/20">
-
-                    <img src="/icons/community.png" class="w-10 transition-all duration-300 hover:scale-110">
-
-                </div>
-            </div>
-
-            <div routerLink="/players-list" id="glassBox1Right"
-                class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer">
-
-                <div class="flex flex-col">
-                    <h1 class="font-bold text-4xl tracking-tight">{{playersCount}}</h1>
-
-                    <h2 class="text-lg font-semibold text-zinc-200">
-                        Total Players
-                    </h2>
-                </div>
-
-                <p class="text-[#44d43b] text-sm mt-3">
-                    View all players →
-                </p>
-
-            </div>
+          <h2 class="text-lg font-semibold text-zinc-200">Total Matches Played</h2>
         </div>
 
-        <!-- CARD 2 -->
-        <div id="glassBox2"
-            class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
-
-            <!-- LEFT -->
-            <div id="glassBox2Left" class="w-1/3 h-full flex items-center justify-center cursor-pointer">
-
-                <div class="h-20 w-20 rounded-2xl
-        bg-blue-500/15
-        border border-blue-500/20
-        flex items-center justify-center
-        shadow-lg shadow-blue-500/20">
-
-                    <img src="/icons/trophy.png" class="w-10 transition-all duration-300 hover:scale-110">
-
-                </div>
-            </div>
-
-            <!-- RIGHT -->
-            <div [routerLink]="['/matches-history']" id="glassBox2Right"
-                class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer">
-
-                <div class="flex flex-col">
-
-                    <h1 class="font-bold text-4xl tracking-tight">
-                        {{matchesCount}}
-                    </h1>
-
-                    <h2 class="text-lg font-semibold text-zinc-200">
-                        Total Matches Played
-                    </h2>
-
-                </div>
-
-                <p class="text-blue-400 text-sm mt-3">
-                    View matches history →
-                </p>
-
-            </div>
-
-        </div>
-
-        <!-- CARD 3 -->
-        <div id="glassBox3"
-            class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
-
-            <!-- LEFT -->
-            <div id="glassBox3Left" class="w-1/3 h-full flex items-center justify-center">
-
-                <div class="h-20 w-20 rounded-2xl
-        bg-orange-400/15
-        border border-orange-400/20
-        flex items-center justify-center
-        shadow-lg shadow-blue-500/20">
-
-                    <img src="/icons/bat.png" class="w-10 transition-all duration-300 hover:scale-110">
-
-                </div>
-            </div>
-
-            <!-- RIGHT -->
-            <div id="glassBox3Right" class="w-2/3 h-full flex flex-col justify-center items-start p-6">
-
-                <div class="flex flex-col">
-
-                    <h1 class="font-bold text-4xl tracking-tight">
-                        {{totalRuns}}
-                    </h1>
-
-                    <h2 class="text-lg font-semibold text-zinc-200">
-                        Total Runs Scored
-                    </h2>
-
-                </div>
-
-                <p class="text-orange-400 text-sm mt-3">
-                    View top scorers →
-                </p>
-
-            </div>
-
-        </div>
-
-        <!-- CARD 4 -->
-        <div id="glassBox4"
-            class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center">
-
-            <!-- LEFT -->
-            <div id="glassBox4Left" class="w-1/3 h-full flex items-center justify-center">
-
-                <div class="h-20 w-20 rounded-2xl
-        bg-purple-400/15
-        border border-purple-400/20
-        flex items-center justify-center
-        shadow-lg shadow-blue-500/20">
-
-                    <img src="/icons/ball.png" class="w-10 transition-all duration-300 hover:scale-110">
-
-                </div>
-            </div>
-
-            <!-- RIGHT -->
-            <div id="glassBox4Right" class="w-2/3 h-full flex flex-col justify-center items-start p-6">
-
-                <div class="flex flex-col">
-
-                    <h1 class="font-bold text-4xl tracking-tight">
-                        {{totalWickets}}
-                    </h1>
-
-                    <h2 class="text-lg font-semibold text-zinc-200">
-                        Total Wickets Taken
-                    </h2>
-
-                </div>
-
-                <p class="text-purple-400 text-sm mt-3">
-                    View top bowlers →
-                </p>
-
-            </div>
-
-        </div>
-
+        <p class="text-blue-400 text-sm mt-3">View matches history →</p>
+      </div>
     </div>
 
+    <!-- CARD 3 -->
+    <div
+      id="glassBox3"
+      class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center"
+    >
+      <!-- LEFT -->
+      <div id="glassBox3Left" class="w-1/3 h-full flex items-center justify-center">
+        <div
+          class="h-20 w-20 rounded-2xl bg-orange-400/15 border border-orange-400/20 flex items-center justify-center shadow-lg shadow-blue-500/20"
+        >
+          <img src="/icons/bat.png" class="w-10 transition-all duration-300 hover:scale-110" />
+        </div>
+      </div>
 
+      <!-- RIGHT -->
+      <div routerLink="rankings/runs" id="glassBox3Right" class="w-2/3 h-full flex flex-col justify-center items-start p-6">
+        <div class="flex flex-col">
+          <h1 class="font-bold text-4xl tracking-tight">
+            {{ totalRuns }}
+          </h1>
 
-    <div id="section3"
-        class="w-full h-full lg:h-[60vh] bg-transparent text-white flex flex-col items-center lg:items-start justify-start px-2 lg:px-10 py-10 space-y-10 lg:space-y-0">
+          <h2 class="text-lg font-semibold text-zinc-200">Total Runs Scored</h2>
+        </div>
 
-        <h1 class="text-2xl font-bold">Quick Actions</h1>
+        <p class="text-orange-400 text-sm mt-3">View top scorers →</p>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div
+      id="glassBox4"
+      class="w-full sm:w-4/5 md:w-1/2 lg:w-[24%] glass-card h-4/5 flex items-center justify-center"
+    >
+      <!-- LEFT -->
+      <div id="glassBox4Left" class="w-1/3 h-full flex items-center justify-center">
+        <div
+          class="h-20 w-20 rounded-2xl bg-purple-400/15 border border-purple-400/20 flex items-center justify-center shadow-lg shadow-blue-500/20"
+        >
+          <img src="/icons/ball.png" class="w-10 transition-all duration-300 hover:scale-110" />
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div routerLink="rankings/wickets" id="glassBox4Right" class="w-2/3 h-full flex flex-col justify-center items-start p-6">
+        <div class="flex flex-col">
+          <h1 class="font-bold text-4xl tracking-tight">
+            {{ totalWickets }}
+          </h1>
+
+          <h2 class="text-lg font-semibold text-zinc-200">Total Wickets Taken</h2>
+        </div>
+
+        <p class="text-purple-400 text-sm mt-3">View top bowlers →</p>
+      </div>
+    </div>
+  </div>
+
+  <div
+    id="section3"
+    class="w-full h-full lg:h-[60vh] bg-transparent text-white flex flex-col items-center lg:items-start justify-start px-2 lg:px-10 py-10 space-y-10 lg:space-y-0"
+  >
+    <h1 class="text-2xl font-bold">Quick Actions</h1>
+
+    <div
+      class="w-full h-full bg-transparent flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0"
+    >
+      <!-- ========================= -->
+      <!-- UNLIMITED OVERS CARD -->
+      <!-- ========================= -->
+
+      <div
+        [routerLink]="['/unlimited/welcome']"
+        class="group relative w-full sm:w-4/5 md:w-1/2 lg:w-[32%] min-h-70 rounded-3xl overflow-hidden cursor-pointer flex items-center justify-center"
+      >
+        <!-- BG IMAGE -->
+        <img
+          src="unlimited.png"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:blur-sm"
+        />
+
+        <!-- DARK OVERLAY -->
+        <div
+          class="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500"
+        ></div>
+
+        <!-- GLASS LAYER -->
+        <div class="absolute inset-0 backdrop-blur-[2px] bg-white/3 border border-white/5"></div>
+
+        <!-- AMBER GLOW -->
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#F59E0B]/20 blur-[80px]"
+        ></div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full w-full flex flex-col justify-end p-6">
+          <p class="text-sm uppercase tracking-widest text-[#FBBF24] font-semibold">
+            Endless Cricket
+          </p>
+
+          <h1 class="text-3xl font-black mt-1">Start Unlimited Match</h1>
+
+          <p
+            class="text-zinc-300 mt-3 text-sm leading-relaxed opacity-80 group-hover:opacity-100 transition-all duration-300"
+          >
+            Play without overs, pressure or limits. Track every big hit, wicket and performance in
+            endless rooftop battles.
+          </p>
+
+          <button
+            class="mt-5 w-fit px-5 py-2 rounded-xl bg-[#FBBF24]/15 border border-[#FBBF24]/20 text-[#FBBF24] backdrop-blur-md hover:bg-[#FBBF24]/20 transition-all duration-300"
+          >
+            Start Match →
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================= -->
+      <!-- LIMITED OVERS CARD -->
+      <!-- ========================= -->
+
+      <div
+        class="group relative w-full sm:w-4/5 md:w-1/2 lg:w-[32%] min-h-70 rounded-3xl overflow-hidden cursor-pointer flex items-center justify-center"
+      >
+        <!-- BG IMAGE -->
+        <img
+          src="limited.png"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:blur-sm"
+        />
+
+        <!-- DARK OVERLAY -->
+        <div
+          class="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500"
+        ></div>
+
+        <!-- GLASS LAYER -->
+        <div class="absolute inset-0 backdrop-blur-[2px] bg-white/3 border border-white/5"></div>
+
+        <!-- RED GLOW -->
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#ef4444]/20 blur-[80px]"
+        ></div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full w-full flex flex-col justify-end p-6">
+          <p class="text-sm uppercase tracking-widest text-[#ef4444] font-semibold">Quick Match</p>
+
+          <h1 class="text-3xl font-black mt-1">Start Limited Match</h1>
+
+          <p
+            class="text-zinc-300 mt-3 text-sm leading-relaxed opacity-80 group-hover:opacity-100 transition-all duration-300"
+          >
+            Play intense rooftop cricket with limited overs, live scoring and pressure-packed
+            innings.
+          </p>
+
+          <button
+            class="mt-5 w-fit px-5 py-2 rounded-xl bg-[#ef4444]/15 border border-[#ef4444]/20 text-[#ef4444] backdrop-blur-md hover:bg-[#ef4444]/20 transition-all duration-300"
+          >
+            Start Match →
+          </button>
+        </div>
+      </div>
+
+      <!-- ========================= -->
+      <!-- STATS CARD -->
+      <!-- ========================= -->
+
+      <div
+        class="group relative w-full sm:w-4/5 md:w-1/2 lg:w-[32%] min-h-70 rounded-3xl overflow-hidden cursor-pointer flex items-center justify-center"
+      >
+        <!-- BG IMAGE -->
+        <img
+          src="stats.png"
+          class="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:blur-sm"
+        />
+
+        <!-- DARK OVERLAY -->
+        <div
+          class="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-all duration-500"
+        ></div>
+
+        <!-- GLASS LAYER -->
+        <div class="absolute inset-0 backdrop-blur-[2px] bg-white/3 border border-white/5"></div>
+
+        <!-- GREEN GLOW -->
+        <div
+          class="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-[#22c55e]/20 blur-[80px]"
+        ></div>
+
+        <!-- CONTENT -->
+        <div class="relative z-10 h-full w-full flex flex-col justify-end p-6">
+          <p class="text-sm uppercase tracking-widest text-green-400 font-semibold">
+            Performance Hub
+          </p>
+
+          <h1 class="text-3xl font-black mt-1">Player Statistics</h1>
+
+          <p
+            class="text-zinc-300 mt-3 text-sm leading-relaxed opacity-80 group-hover:opacity-100 transition-all duration-300"
+          >
+            Explore batting records, match performances, win impact and all-time rooftop cricket
+            legends.
+          </p>
+
+          <button
+            class="mt-5 w-fit px-5 py-2 rounded-xl bg-green-500/15 border border-green-500/20 text-green-400 backdrop-blur-md hover:bg-green-500/20 transition-all duration-300"
+          >
+            View Stats →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="section4" class="w-full bg-[#050B18] text-white px-4 lg:px-12 py-12 flex flex-col gap-6">
+    <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+      <div>
+        <p class="text-orange-400 text-sm font-semibold uppercase tracking-[0.3em]">STANDINGS</p>
+
+        <h1 class="text-2xl lg:text-3xl font-bold mt-2">Leaders & MVP</h1>
+      </div>
+
+      <p class="text-zinc-400 text-sm max-w-xl">
+        The top run-scorer and wicket-taker across all recorded matches.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div
+        class="lg:col-span-2 relative overflow-hidden rounded-4xl border border-orange-400/20 bg-linear-to-br from-orange-500/15 via-[#08111F] to-[#08111F] p-8 min-h-80"
+      >
+        <!-- giant background number -->
+        <div class="absolute right-6 top-4 text-[140px] font-black text-orange-500/5 leading-none">
+          1
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div
+            class="h-16 w-16 rounded-2xl bg-orange-400/20 border border-orange-400/30 flex items-center justify-center"
+          >
+            <img src="/icons/bat.png" class="w-9" />
+          </div>
+
+          <div>
+            <p class="text-orange-300 text-xs uppercase tracking-[0.25em]">Orange Cap</p>
+
+            <h3 class="text-zinc-400 text-sm">Leading Run Scorer</h3>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <h1 class="text-6xl font-black uppercase">
+            {{ orangeCap?.totalRuns > 0 ? orangeCap?.playerName : 'No Records Yet' }}
+          </h1>
+
+          <div class="mt-8 flex items-end gap-3">
+            <span class="text-8xl font-black text-orange-300">
+              {{ orangeCap?.totalRuns > 0 ? orangeCap?.totalRuns : '--' }}
+            </span>
+
+            <span class="text-zinc-500 text-xl mb-3"> runs </span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="relative overflow-hidden rounded-4xl border border-purple-400/20 bg-linear-to-br from-purple-500/15 via-[#08111F] to-[#08111F] p-6 min-h-80"
+      >
+        <div class="absolute right-4 top-4 text-[100px] font-black text-purple-500/5 leading-none">
+          1
+        </div>
 
         <div
-            class="w-full h-full bg-transparent flex flex-col lg:flex-row items-center justify-between space-y-12 lg:space-y-0">
-
-            <!-- ========================= -->
-            <!-- UNLIMITED OVERS CARD -->
-            <!-- ========================= -->
-
-            <div [routerLink]="['/unlimited/welcome']" class="group relative w-full sm:w-4/5 md:w-1/2 lg:w-[32%]
-    min-h-70 rounded-3xl overflow-hidden
-    cursor-pointer flex items-center justify-center">
-
-                <!-- BG IMAGE -->
-                <img src="unlimited.png" class="absolute inset-0 w-full h-full object-cover
-
-        transition-all duration-500
-
-        group-hover:scale-110
-        group-hover:blur-sm">
-
-                <!-- DARK OVERLAY -->
-                <div class="absolute inset-0
-    bg-black/40
-    group-hover:bg-black/60
-
-    transition-all duration-500">
-
-                </div>
-
-                <!-- GLASS LAYER -->
-                <div class="absolute inset-0
-    backdrop-blur-[2px]
-    bg-white/3
-    border border-white/5">
-
-                </div>
-
-                <!-- AMBER GLOW -->
-                <div class="absolute -bottom-10 -right-10
-    w-40 h-40 rounded-full
-    bg-[#F59E0B]/20 blur-[80px]">
-
-                </div>
-
-                <!-- CONTENT -->
-                <div class="relative z-10 h-full w-full
-    flex flex-col justify-end
-    p-6">
-
-                    <p class="text-sm uppercase tracking-widest
-        text-[#FBBF24] font-semibold">
-
-                        Endless Cricket
-
-                    </p>
-
-                    <h1 class="text-3xl font-black mt-1">
-
-                        Start Unlimited Match
-
-                    </h1>
-
-                    <p class="text-zinc-300 mt-3 text-sm
-        leading-relaxed
-
-        opacity-80
-        group-hover:opacity-100
-
-        transition-all duration-300">
-
-                        Play without overs, pressure or limits.
-                        Track every big hit, wicket and performance
-                        in endless rooftop battles.
-
-                    </p>
-
-                    <button class="mt-5 w-fit px-5 py-2 rounded-xl
-
-        bg-[#FBBF24]/15
-        border border-[#FBBF24]/20
-
-        text-[#FBBF24]
-
-        backdrop-blur-md
-
-        hover:bg-[#FBBF24]/20
-
-        transition-all duration-300">
-
-                        Start Match →
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ========================= -->
-            <!-- LIMITED OVERS CARD -->
-            <!-- ========================= -->
-
-            <div class="group relative w-full sm:w-4/5 md:w-1/2 lg:w-[32%]
-    min-h-70 rounded-3xl overflow-hidden
-    cursor-pointer flex items-center justify-center">
-
-                <!-- BG IMAGE -->
-                <img src="limited.png" class="absolute inset-0 w-full h-full object-cover
-
-        transition-all duration-500
-
-        group-hover:scale-110
-        group-hover:blur-sm">
-
-                <!-- DARK OVERLAY -->
-                <div class="absolute inset-0
-    bg-black/40
-    group-hover:bg-black/60
-
-    transition-all duration-500">
-
-                </div>
-
-                <!-- GLASS LAYER -->
-                <div class="absolute inset-0
-    backdrop-blur-[2px]
-    bg-white/3
-    border border-white/5">
-
-                </div>
-
-                <!-- RED GLOW -->
-                <div class="absolute -bottom-10 -right-10
-    w-40 h-40 rounded-full
-    bg-[#ef4444]/20 blur-[80px]">
-
-                </div>
-
-                <!-- CONTENT -->
-                <div class="relative z-10 h-full w-full
-    flex flex-col justify-end
-    p-6">
-
-                    <p class="text-sm uppercase tracking-widest
-        text-[#ef4444] font-semibold">
-
-                        Quick Match
-
-                    </p>
-
-                    <h1 class="text-3xl font-black mt-1">
-
-                        Start Limited Match
-
-                    </h1>
-
-                    <p class="text-zinc-300 mt-3 text-sm
-        leading-relaxed
-
-        opacity-80
-        group-hover:opacity-100
-
-        transition-all duration-300">
-
-                        Play intense rooftop cricket with limited overs,
-                        live scoring and pressure-packed innings.
-
-                    </p>
-
-                    <button class="mt-5 w-fit px-5 py-2 rounded-xl
-
-        bg-[#ef4444]/15
-        border border-[#ef4444]/20
-
-        text-[#ef4444]
-
-        backdrop-blur-md
-
-        hover:bg-[#ef4444]/20
-
-        transition-all duration-300">
-
-                        Start Match →
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ========================= -->
-            <!-- STATS CARD -->
-            <!-- ========================= -->
-
-            <div class="group relative w-full sm:w-4/5 md:w-1/2 lg:w-[32%]
-    min-h-70 rounded-3xl overflow-hidden
-    cursor-pointer flex items-center justify-center">
-
-                <!-- BG IMAGE -->
-                <img src="stats.png" class="absolute inset-0 w-full h-full object-cover
-
-        transition-all duration-500
-
-        group-hover:scale-110
-        group-hover:blur-sm">
-
-                <!-- DARK OVERLAY -->
-                <div class="absolute inset-0
-    bg-black/40
-    group-hover:bg-black/60
-
-    transition-all duration-500">
-
-                </div>
-
-                <!-- GLASS LAYER -->
-                <div class="absolute inset-0
-    backdrop-blur-[2px]
-    bg-white/3
-    border border-white/5">
-
-                </div>
-
-                <!-- GREEN GLOW -->
-                <div class="absolute -bottom-10 -right-10
-    w-40 h-40 rounded-full
-    bg-[#22c55e]/20 blur-[80px]">
-
-                </div>
-
-                <!-- CONTENT -->
-                <div class="relative z-10 h-full w-full
-    flex flex-col justify-end
-    p-6">
-
-                    <p class="text-sm uppercase tracking-widest
-        text-green-400 font-semibold">
-
-                        Performance Hub
-
-                    </p>
-
-                    <h1 class="text-3xl font-black mt-1">
-
-                        Player Statistics
-
-                    </h1>
-
-                    <p class="text-zinc-300 mt-3 text-sm
-        leading-relaxed
-
-        opacity-80
-        group-hover:opacity-100
-
-        transition-all duration-300">
-
-                        Explore batting records, match performances,
-                        win impact and all-time rooftop cricket legends.
-
-                    </p>
-
-                    <button class="mt-5 w-fit px-5 py-2 rounded-xl
-
-        bg-green-500/15
-        border border-green-500/20
-
-        text-green-400
-
-        backdrop-blur-md
-
-        hover:bg-green-500/20
-
-        transition-all duration-300">
-
-                        View Stats →
-
-                    </button>
-
-                </div>
-
-            </div>
-
+          class="h-14 w-14 rounded-2xl bg-purple-400/20 border border-purple-400/30 flex items-center justify-center"
+        >
+          <img src="/icons/ball.png" class="w-8" />
         </div>
 
+        <div class="mt-8">
+          <p class="text-purple-300 text-xs uppercase tracking-[0.25em]">Purple Cap</p>
+
+          <p class="text-zinc-500 text-sm mt-1">Leading Wicket Taker</p>
+
+          <h2 class="text-4xl font-black mt-8 uppercase">
+            {{ purpleCap?.totalWickets > 0 ? purpleCap?.playerName : 'No Records Yet' }}
+          </h2>
+
+          <div class="mt-6">
+            <span class="text-7xl font-black text-purple-300">
+              {{ purpleCap?.totalWickets > 0 ? purpleCap?.totalWickets : '--' }}
+            </span>
+
+            <p class="text-zinc-500 mt-2">wickets</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MVP -->
+      <div routerLink="rankings/mvp"
+        class="lg:col-span-3 relative overflow-hidden rounded-4xl border border-yellow-400/20 bg-linear-to-br from-yellow-500/15 via-[#08111F] to-[#08111F] p-8 min-h-72"
+      >
+        <!-- giant trophy -->
+        <div class="absolute right-6 top-4 text-[120px] font-black text-yellow-500/5 leading-none">
+          🏆
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div
+            class="h-16 w-16 rounded-2xl bg-yellow-400/20 border border-yellow-400/30 flex items-center justify-center"
+          >
+            <span class="text-3xl">🏆</span>
+          </div>
+
+          <div>
+            <p class="text-yellow-300 text-xs uppercase tracking-[0.25em]">MVP</p>
+
+            <h3 class="text-zinc-400 text-sm">Most Valuable Player</h3>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <h1 class="text-5xl lg:text-7xl font-black uppercase">
+            {{ mostMotm > 0 ? mostMotmPlayer?.playerName : 'No MVP Yet' }}
+          </h1>
+
+          <div class="mt-8 flex items-end gap-3">
+            <span class="text-7xl lg:text-8xl font-black text-yellow-300">
+              {{ mostMotm > 0 ? mostMotm : '--' }}
+            </span>
+
+            <span class="text-zinc-500 text-xl mb-3">
+              {{ mostMotm === 1 ? 'award' : 'awards' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="section5" class="w-full bg-[#050B18] text-white px-4 lg:px-12 py-12 flex flex-col gap-6">
+    <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+      <div>
+        <p class="text-cyan-400 text-sm font-semibold uppercase tracking-[0.3em]">
+          PERFORMANCE METRICS
+        </p>
+
+        <h1 class="text-2xl lg:text-3xl font-bold mt-2">Elite Performers</h1>
+      </div>
+
+      <p class="text-zinc-400 text-sm max-w-xl">
+        Beyond totals, these players are setting the benchmark for efficiency and consistency.
+      </p>
     </div>
 
-    <div id="section4" class="w-full bg-[#050B18] text-white px-4 lg:px-12 py-12 flex flex-col gap-6">
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Strike Rate -->
 
-        <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+      <div routerLink="rankings/strike-rate" class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
+        <div class="flex items-start justify-between">
+          <div
+            class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10"
+          >
+            <img src="/icons/bat.png" class="w-8" alt="" />
+          </div>
 
-            <div>
-
-                <p class="text-orange-400 text-sm font-semibold uppercase tracking-[0.3em]">
-                    STANDINGS
-                </p>
-
-                <h1 class="text-2xl lg:text-3xl font-bold mt-2">
-                    Leaders & MVP
-                </h1>
-
-            </div>
-
-            <p class="text-zinc-400 text-sm max-w-xl">
-                The top run-scorer and wicket-taker across all recorded matches.
-            </p>
-
+          <span
+            class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider"
+          >
+            Strike Rate
+          </span>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div  class="mt-8">
+          <h2 class="text-3xl font-bold leading-tight uppercase">
+            {{ bestStrikeRate > 0 ? bestStrikeRatePlayer?.playerName : 'No Records Yet' }}
+          </h2>
 
-            <div class="lg:col-span-2 relative overflow-hidden
-                       rounded-4xl
-                       border border-orange-400/20
-                       bg-linear-to-br
-                       from-orange-500/15
-                       via-[#08111F]
-                       to-[#08111F]
-                       p-8 min-h-80">
+          <p class="text-zinc-400 text-sm mt-2">Best Strike Rate</p>
 
-                <!-- giant background number -->
-                <div class="absolute right-6 top-4
-                           text-[140px]
-                           font-black
-                           text-orange-500/5
-                           leading-none">
-                    1
-                </div>
+          <div class="mt-5 flex items-end gap-2">
+            <span class="text-5xl font-black text-orange-300">
+              {{ bestStrikeRate > 0 ? bestStrikeRate.toFixed(2) : '--' }}
+            </span>
+          </div>
+        </div>
+      </div>
 
-                <div class="flex items-center gap-3">
+      <!-- Economy -->
 
-                    <div class="h-16 w-16 rounded-2xl
-                               bg-orange-400/20
-                               border border-orange-400/30
-                               flex items-center justify-center">
+      <div routerLink="rankings/economy" class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
+        <div class="flex items-start justify-between">
+          <div
+            class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10"
+          >
+            <img src="/icons/ball.png" class="w-8" alt="" />
+          </div>
 
-                        <img src="/icons/bat.png" class="w-9">
-
-                    </div>
-
-                    <div>
-
-                        <p class="text-orange-300 text-xs uppercase tracking-[0.25em]">
-                            Orange Cap
-                        </p>
-
-                        <h3 class="text-zinc-400 text-sm">
-                            Leading Run Scorer
-                        </h3>
-
-                    </div>
-
-                </div>
-
-                <div class="mt-10">
-
-                    <h1 class="text-6xl font-black uppercase">
-                    {{ orangeCap?.totalRuns > 0
-                    ? orangeCap?.playerName
-                    : 'No Records Yet' }}
-                    </h1>
-
-                    <div class="mt-8 flex items-end gap-3">
-
-                        <span class="text-8xl font-black text-orange-300">
-                        {{ orangeCap?.totalRuns > 0
-                        ? orangeCap?.totalRuns
-                        : '--' }}
-                        </span>
-
-                        <span class="text-zinc-500 text-xl mb-3">
-                            runs
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="relative overflow-hidden
-                   rounded-4xl
-                   border border-purple-400/20
-                   bg-linear-to-br
-                   from-purple-500/15
-                   via-[#08111F]
-                   to-[#08111F]
-                   p-6 min-h-80">
-
-                <div class="absolute right-4 top-4
-                       text-[100px]
-                       font-black
-                       text-purple-500/5
-                       leading-none">
-                    1
-                </div>
-
-                <div class="h-14 w-14 rounded-2xl
-                       bg-purple-400/20
-                       border border-purple-400/30
-                       flex items-center justify-center">
-
-                    <img src="/icons/ball.png" class="w-8">
-
-                </div>
-
-                <div class="mt-8">
-
-                    <p class="text-purple-300 text-xs uppercase tracking-[0.25em]">
-                        Purple Cap
-                    </p>
-
-                    <p class="text-zinc-500 text-sm mt-1">
-                        Leading Wicket Taker
-                    </p>
-
-                    <h2 class="text-4xl font-black mt-8 uppercase">
-                        {{ purpleCap?.totalWickets > 0
-                        ? purpleCap?.playerName
-                        : 'No Records Yet' }}
-                    </h2>
-
-                    <div class="mt-6">
-
-                        <span class="text-7xl font-black text-purple-300">
-                            {{ purpleCap?.totalWickets > 0
-                            ? purpleCap?.totalWickets
-                            : '--' }}
-                        </span>
-
-                        <p class="text-zinc-500 mt-2">
-                            wickets
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- MVP -->
-            <div class="lg:col-span-3 relative overflow-hidden
-                            rounded-4xl
-                            border border-yellow-400/20
-                            bg-linear-to-br
-                            from-yellow-500/15
-                            via-[#08111F]
-                            to-[#08111F]
-                            p-8 min-h-72">
-            
-                <!-- giant trophy -->
-                <div class="absolute right-6 top-4
-                                text-[120px]
-                                font-black
-                                text-yellow-500/5
-                                leading-none">
-                    🏆
-                </div>
-            
-                <div class="flex items-center gap-3">
-            
-                    <div class="h-16 w-16 rounded-2xl
-                                    bg-yellow-400/20
-                                    border border-yellow-400/30
-                                    flex items-center justify-center">
-            
-                        <span class="text-3xl">🏆</span>
-            
-                    </div>
-            
-                    <div>
-            
-                        <p class="text-yellow-300 text-xs uppercase tracking-[0.25em]">
-                            MVP
-                        </p>
-            
-                        <h3 class="text-zinc-400 text-sm">
-                            Most Valuable Player
-                        </h3>
-            
-                    </div>
-            
-                </div>
-            
-                <div class="mt-10">
-            
-                    <h1 class="text-5xl lg:text-7xl font-black uppercase">
-            
-                        {{ mostMotm > 0
-                        ? mostMotmPlayer?.playerName
-                        : 'No MVP Yet' }}
-            
-                    </h1>
-            
-                    <div class="mt-8 flex items-end gap-3">
-            
-                        <span class="text-7xl lg:text-8xl font-black text-yellow-300">
-            
-                            {{ mostMotm > 0
-                            ? mostMotm
-                            : '--' }}
-            
-                        </span>
-            
-                        <span class="text-zinc-500 text-xl mb-3">
-            
-                            {{ mostMotm === 1
-                            ? 'award'
-                            : 'awards' }}
-            
-                        </span>
-            
-                    </div>
-            
-                </div>
-            
-            </div>
-
-
+          <span
+            class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider"
+          >
+            Economy
+          </span>
         </div>
 
+        <div class="mt-8">
+          <h2 class="text-3xl font-bold leading-tight uppercase">
+            {{ bestEconomyPlayer ? bestEconomyPlayer.playerName : 'No Records Yet' }}
+          </h2>
+
+          <p class="text-zinc-400 text-sm mt-2">Best Economy</p>
+
+          <div class="mt-5 flex items-end gap-2">
+            <span class="text-5xl font-black text-purple-300">
+              {{ bestEconomyPlayer ? bestEconomy.toFixed(2) : '--' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Batting Average -->
+
+      <div routerLink="rankings/batting-average" class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
+        <div class="flex items-start justify-between">
+          <div
+            class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10"
+          >
+            <img src="/icons/bat.png" class="w-8" alt="" />
+          </div>
+
+          <span
+            class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider"
+          >
+            Batting Average
+          </span>
+        </div>
+
+        <div class="mt-8">
+          <h2 class="text-3xl font-bold leading-tight uppercase">
+            {{ bestBattingAverage > 0 ? bestBattingAveragePlayer?.playerName : 'No Records Yet' }}
+          </h2>
+
+          <p class="text-zinc-400 text-sm mt-2">Best Batting Average</p>
+
+          <div class="mt-5 flex items-end gap-2">
+            <span class="text-5xl font-black text-orange-300">{{
+              bestBattingAverage > 0 ? bestBattingAverage.toFixed(2) : '--'
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bowling Average -->
+
+      <div routerLink="rankings/bowling-average" class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
+        <div class="flex items-start justify-between">
+          <div
+            class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10"
+          >
+            <img src="/icons/ball.png" class="w-8" alt="" />
+          </div>
+
+          <span
+            class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider"
+          >
+            Bowling Average
+          </span>
+        </div>
+
+        <div class="mt-8">
+          <h2 class="text-3xl font-bold leading-tight uppercase">
+            {{ bestBowlingAveragePlayer ? bestBowlingAveragePlayer.playerName : 'No Records Yet' }}
+          </h2>
+
+          <p class="text-zinc-400 text-sm mt-2">Best Bowling Average</p>
+
+          <div class="mt-5 flex items-end gap-2">
+            <span class="text-5xl font-black text-purple-300">
+              {{ bestBowlingAveragePlayer ? bestBowlingAverage.toFixed(2) : '--' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="section6" class="space-y-5 px-4 py-12 lg:px-12 w-full">
+    <!-- HEADER -->
+    <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between pb-3">
+      <div>
+        <p class="text-amber-400 text-sm font-semibold uppercase tracking-widest">
+          Hall of Records
+        </p>
+
+        <h1 class="text-3xl font-black mt-2">Historic Achievements</h1>
+      </div>
+
+      <p class="text-zinc-400 mt-2">The greatest performances ever recorded on the rooftop.</p>
     </div>
 
-    <div id="section5" class="w-full bg-[#050B18] text-white px-4 lg:px-12 py-12 flex flex-col gap-6">
+    <!-- FEATURED RECORDS -->
+    <div class="grid md:grid-cols-2 gap-4">
+      <!-- Highest Score -->
+      <div
+        class="relative overflow-hidden rounded-4xl border border-amber-400/20 bg-linear-to-br from-amber-400/10 to-transparent p-6"
+      >
+        <p class="text-amber-300 uppercase text-xs tracking-widest">Highest Score</p>
 
-        <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+        <h1 class="text-6xl font-black mt-4">
+          {{ highestScore > 0 ? highestScore : '--' }}
+        </h1>
 
-            <div>
-                <p class="text-cyan-400 text-sm font-semibold uppercase tracking-[0.3em]">
-                    PERFORMANCE METRICS
-                </p>
+        <p class="text-zinc-300 mt-2">
+          {{ highestScorePlayer ? highestScorePlayer.playerName : 'No Records Yet' }}
+        </p>
+      </div>
 
-                <h1 class="text-2xl lg:text-3xl font-bold mt-2">
-                    Elite Performers
-                </h1>
+      <!-- Best Bowling Figures -->
+      <div
+        class="relative overflow-hidden rounded-4xl border border-sky-400/20 bg-linear-to-br from-sky-400/10 to-transparent p-6"
+      >
+        <p class="text-sky-300 uppercase text-xs tracking-widest">Best Figures</p>
 
-            </div>
+        <h1 class="text-6xl font-black mt-4">
+          {{ bestFigures.length > 0 ? bestFigures : '--' }}
+        </h1>
 
-            <p class="text-zinc-400 text-sm max-w-xl">
-                Beyond totals, these players are setting the benchmark for efficiency and consistency.
-            </p>
-
-        </div>
-
-        <div class="w-full grid grid-cols-1 md:grid-cols-2  gap-4">
-
-            <!-- Strike Rate -->
-
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
-
-                <div class="flex items-start justify-between">
-
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10">
-                        <img src="/icons/bat.png" class="w-8" alt="">
-                    </div>
-
-                    <span
-                        class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider">
-                        Strike Rate
-                    </span>
-
-                </div>
-
-                <div class="mt-8">
-
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ bestStrikeRate > 0
-                        ? bestStrikeRatePlayer?.playerName
-                        : 'No Records Yet' }}
-                    </h2>
-
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Best Strike Rate
-                    </p>
-
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-orange-300">
-                            {{ bestStrikeRate > 0
-                            ? bestStrikeRate.toFixed(2)
-                            : '--' }}
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Economy -->
-
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
-
-                <div class="flex items-start justify-between">
-
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10">
-                        <img src="/icons/ball.png" class="w-8" alt="">
-                    </div>
-
-                    <span
-                        class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider">
-                        Economy
-                    </span>
-
-                </div>
-
-                <div class="mt-8">
-
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ bestEconomyPlayer
-                        ? bestEconomyPlayer.playerName
-                        : 'No Records Yet' }}
-                    </h2>
-                    
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Best Economy
-                    </p>
-                    
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">
-                            {{ bestEconomyPlayer
-                            ? bestEconomy.toFixed(2)
-                            : '--' }}
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- Batting Average -->
-
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-orange-400/20">
-
-                <div class="flex items-start justify-between">
-
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-orange-400/15 border border-orange-400/25 flex items-center justify-center shadow-lg shadow-orange-400/10">
-                        <img src="/icons/bat.png" class="w-8" alt="">
-                    </div>
-
-                    <span
-                        class="px-3 py-1 rounded-full bg-orange-400/15 border border-orange-400/25 text-orange-300 text-xs font-bold uppercase tracking-wider">
-                        Batting Average
-                    </span>
-
-                </div>
-
-                <div class="mt-8">
-
-                    <h2 class="text-3xl font-bold leading-tight uppercase">
-                        {{ bestBattingAverage > 0
-                        ? bestBattingAveragePlayer?.playerName
-                        : 'No Records Yet' }}
-                    </h2>
-
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Best Batting Average
-                    </p>
-
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-orange-300">{{ bestBattingAverage > 0
-                        ? bestBattingAverage.toFixed(2)
-                        : '--' }}</span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- Bowling Average -->
-
-            <div class="glass-card min-h-56 p-5 flex flex-col justify-between border-purple-400/20">
-
-                <div class="flex items-start justify-between">
-
-                    <div
-                        class="h-14 w-14 rounded-2xl bg-purple-400/15 border border-purple-400/25 flex items-center justify-center shadow-lg shadow-purple-400/10">
-                        <img src="/icons/ball.png" class="w-8" alt="">
-                    </div>
-
-                    <span
-                        class="px-3 py-1 rounded-full bg-purple-400/15 border border-purple-400/25 text-purple-300 text-xs font-bold uppercase tracking-wider">
-                        Bowling Average
-                    </span>
-
-                </div>
-
-                <div class="mt-8">
-
-                <h2 class="text-3xl font-bold leading-tight uppercase">
-                    {{ bestBowlingAveragePlayer
-                    ? bestBowlingAveragePlayer.playerName
-                    : 'No Records Yet' }}
-                </h2>
-
-                    <p class="text-zinc-400 text-sm mt-2">
-                        Best Bowling Average
-                    </p>
-
-                    <div class="mt-5 flex items-end gap-2">
-                        <span class="text-5xl font-black text-purple-300">
-                            {{ bestBowlingAveragePlayer
-                            ? bestBowlingAverage.toFixed(2)
-                            : '--' }}
-                        </span>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
+        <p class="text-zinc-300 mt-2">
+          {{ bestFiguresPlayer ? bestFiguresPlayer?.playerName : 'No Records Yet' }}
+        </p>
+      </div>
     </div>
 
-
-    <section id="section6" class="space-y-5 px-4 py-12 lg:px-12 w-full">
-
-        <!-- HEADER -->
-        <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between pb-3">
-
-            <div>
-
-                <p class="text-amber-400 text-sm font-semibold uppercase tracking-widest">
-                    Hall of Records
-                </p>
-
-                <h1 class="text-3xl font-black mt-2">
-                    Historic Achievements
-                </h1>
-            </div>
-
-            <p class="text-zinc-400 mt-2">
-                The greatest performances ever recorded on the rooftop.
-            </p>
-
-        </div>
-
-        <!-- FEATURED RECORDS -->
-        <div class="grid md:grid-cols-2 gap-4">
-
-            <!-- Highest Score -->
-            <div class="relative overflow-hidden
-                        rounded-4xl
-                        border border-amber-400/20
-                        bg-linear-to-br
-                        from-amber-400/10
-                        to-transparent
-                        p-6">
-
-                <p class="text-amber-300 uppercase text-xs tracking-widest">
-                    Highest Score
-                </p>
-
-                <h1 class="text-6xl font-black mt-4">
-                    {{highestScore > 0 ? highestScore : '--'}}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ highestScorePlayer
-                    ? highestScorePlayer.playerName
-                    : 'No Records Yet' }}
-                </p>
-
-            </div>
-
-            <!-- Best Bowling Figures -->
-            <div class="relative overflow-hidden
-                        rounded-4xl
-                        border border-sky-400/20
-                        bg-linear-to-br
-                        from-sky-400/10
-                        to-transparent
-                        p-6">
-
-                <p class="text-sky-300 uppercase text-xs tracking-widest">
-                    Best Figures
-                </p>
-
-                <h1 class="text-6xl font-black mt-4">
-                    {{ bestFigures.length  > 0 ? bestFigures : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ bestFiguresPlayer
-                    ? bestFiguresPlayer?.playerName
-                    : 'No Records Yet' }}
-                </p>
-
-            </div>
-
-        </div>
-
-        <!-- MINI RECORDS -->
+    <!-- MINI RECORDS -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-    
-        <!-- Most Sixes -->
-        <div class="glass-card p-5 text-center">
-            <p class="text-zinc-500 text-xs uppercase">Most Sixes</p>
-    
-            <h1 class="text-4xl font-black mt-3">
-                {{ mostSixes > 0 ? mostSixes : '--' }}
-            </h1>
-    
-            <p class="text-zinc-300 mt-2">
-                {{ mostSixes > 0
-                ? mostSixesPlayer?.playerName
-                : 'No Records Yet' }}
-            </p>
-        </div>
-    
-        <!-- Most Fours -->
-        <div class="glass-card p-5 text-center">
-            <p class="text-zinc-500 text-xs uppercase">Most Fours</p>
-    
-            <h1 class="text-4xl font-black mt-3">
-                {{ mostFours > 0 ? mostFours : '--' }}
-            </h1>
-    
-            <p class="text-zinc-300 mt-2">
-                {{ mostFours > 0
-                ? mostFoursPlayer?.playerName
-                : 'No Records Yet' }}
-            </p>
-        </div>
-    
-        <!-- Most Fifties -->
-        <div class="glass-card p-5 text-center">
-            <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
-    
-            <h1 class="text-4xl font-black mt-3">
-                {{ mostFifties > 0 ? mostFifties : '--' }}
-            </h1>
-    
-            <p class="text-zinc-300 mt-2">
-                {{ mostFifties > 0
-                ? mostFiftiesPlayer?.playerName
-                : 'No Records Yet' }}
-            </p>
-        </div>
-    
-        <!-- Most Catches -->
-        <div class="glass-card p-5 text-center">
-            <p class="text-zinc-500 text-xs uppercase">Most Catches</p>
-    
-            <h1 class="text-4xl font-black mt-3">
-                {{ mostCatches > 0 ? mostCatches : '--' }}
-            </h1>
-    
-            <p class="text-zinc-300 mt-2">
-                {{ mostCatches > 0
-                ? mostCatchesPlayer?.playerName
-                : 'No Records Yet' }}
-            </p>
-        </div>
-    
+      <!-- Most Sixes -->
+      <div routerLink="/rankings/sixes" class="glass-card p-5 text-center">
+        <p class="text-zinc-500 text-xs uppercase">Most Sixes</p>
+
+        <h1 class="text-4xl font-black mt-3">
+          {{ mostSixes > 0 ? mostSixes : '--' }}
+        </h1>
+
+        <p class="text-zinc-300 mt-2">
+          {{ mostSixes > 0 ? mostSixesPlayer?.playerName : 'No Records Yet' }}
+        </p>
+      </div>
+
+      <!-- Most Fours -->
+      <div routerLink="/rankings/fours" class="glass-card p-5 text-center">
+        <p class="text-zinc-500 text-xs uppercase">Most Fours</p>
+
+        <h1 class="text-4xl font-black mt-3">
+          {{ mostFours > 0 ? mostFours : '--' }}
+        </h1>
+
+        <p class="text-zinc-300 mt-2">
+          {{ mostFours > 0 ? mostFoursPlayer?.playerName : 'No Records Yet' }}
+        </p>
+      </div>
+
+      <!-- Most Fifties -->
+      <div routerLink="/rankings/fifties" class="glass-card p-5 text-center">
+        <p class="text-zinc-500 text-xs uppercase">Most Fifties</p>
+
+        <h1 class="text-4xl font-black mt-3">
+          {{ mostFifties > 0 ? mostFifties : '--' }}
+        </h1>
+
+        <p class="text-zinc-300 mt-2">
+          {{ mostFifties > 0 ? mostFiftiesPlayer?.playerName : 'No Records Yet' }}
+        </p>
+      </div>
+
+      <!-- Most Catches -->
+      <div routerLink="/rankings/catches" class="glass-card p-5 text-center cursor-pointer">
+        <p class="text-zinc-500 text-xs uppercase">Most Catches</p>
+
+        <h1 class="text-4xl font-black mt-3">
+          {{ mostCatches > 0 ? mostCatches : '--' }}
+        </h1>
+
+        <p class="text-zinc-300 mt-2">
+          {{ mostCatches > 0 ? mostCatchesPlayer?.playerName : 'No Records Yet' }}
+        </p>
+      </div>
     </div>
-    </section>
+  </section>
 
-    <section id="section7" class="space-y-5 px-4 py-12 lg:px-12 w-full">
-        <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 pb-3">
+  <section id="section7" class="space-y-5 px-4 py-12 lg:px-12 w-full">
+    <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 pb-3">
+      <div>
+        <p class="text-yellow-400 text-sm font-semibold uppercase tracking-[0.3em]">LEGENDS CLUB</p>
 
-            <div>
+        <h1 class="text-2xl lg:text-3xl font-bold mt-2">Elite Milestones</h1>
+      </div>
 
-                <p class="text-yellow-400 text-sm font-semibold uppercase tracking-[0.3em]">
-                    LEGENDS CLUB
-                </p>
+      <p class="text-zinc-400 text-sm max-w-xl">
+        Rare achievements that only a select few players may ever unlock.
+      </p>
+    </div>
 
-                <h1 class="text-2xl lg:text-3xl font-bold mt-2">
-                    Elite Milestones
-                </h1>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      <!-- Century -->
+      <div routerLink="/rankings/hundreds"
+        class="relative overflow-hidden rounded-4xl border border-yellow-400/20 bg-linear-to-br from-yellow-500/10 to-transparent p-6"
+      >
+        <p class="text-yellow-300 uppercase text-xs tracking-widest">Centuries</p>
 
-            </div>
+        <h1 class="text-6xl font-black mt-4">
+          {{ mostHundreds > 0 ? mostHundreds : '--' }}
+        </h1>
 
-            <p class="text-zinc-400 text-sm max-w-xl">
-                Rare achievements that only a select few players may ever unlock.
-            </p>
+        <p class="text-zinc-300 mt-2">
+          {{ mostHundreds > 0 ? mostHundredsPlayer?.playerName : 'No Century Yet' }}
+        </p>
+      </div>
 
-        </div>
+      <!-- Five Wicket Hauls -->
 
+      <div
+        class="relative overflow-hidden rounded-4xl border border-emerald-400/20 bg-linear-to-br from-emerald-500/10 to-transparent p-6"
+      >
+        <p class="text-emerald-300 uppercase text-xs tracking-widest">Five-Fers</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+        <h1 class="text-6xl font-black mt-4">
+          {{ mostFifers > 0 ? mostFifers : '--' }}
+        </h1>
 
-            <!-- Century -->
-            <div class="relative overflow-hidden
-                       rounded-4xl
-                       border border-yellow-400/20
-                       bg-linear-to-br
-                       from-yellow-500/10
-                       to-transparent
-                       p-6">
+        <p class="text-zinc-300 mt-2">
+          {{ mostFifers > 0 ? mostFifersPlayer?.playerName : 'No Five-Wicket Haul Yet' }}
+        </p>
+      </div>
 
-                <p class="text-yellow-300 uppercase text-xs tracking-widest">
-                    Centuries
-                </p>
+      <!-- Hattricks -->
 
-                <h1 class="text-6xl font-black mt-4">
-                    {{ mostHundreds > 0 ? mostHundreds : '--' }}
-                </h1>
+      <div
+        class="relative overflow-hidden rounded-4xl border border-cyan-400/20 bg-linear-to-br from-cyan-500/10 to-transparent p-6"
+      >
+        <p class="text-cyan-300 uppercase text-xs tracking-widest">Hattricks</p>
 
-                <p class="text-zinc-300 mt-2">
-                    {{ mostHundreds > 0
-                    ? mostHundredsPlayer?.playerName
-                    : 'No Century Yet' }}
-                </p>
+        <h1 class="text-6xl font-black mt-4">
+          {{ mosthattricks > 0 ? mosthattricks : '--' }}
+        </h1>
 
-            </div>
-
-            <!-- Five Wicket Hauls -->
-
-            <div class="relative overflow-hidden
-                       rounded-4xl
-                       border border-emerald-400/20
-                       bg-linear-to-br
-                       from-emerald-500/10
-                       to-transparent
-                       p-6">
-
-                <p class="text-emerald-300 uppercase text-xs tracking-widest">
-                    Five-Fers
-                </p>
-
-                <h1 class="text-6xl font-black mt-4">
-                    {{ mostFifers > 0 ? mostFifers : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ mostFifers > 0
-                    ? mostFifersPlayer?.playerName
-                    : 'No Five-Wicket Haul Yet' }}
-                </p>
-
-            </div>
-
-            <!-- Hattricks -->
-
-            <div class="relative overflow-hidden
-                       rounded-4xl
-                       border border-cyan-400/20
-                       bg-linear-to-br
-                       from-cyan-500/10
-                       to-transparent
-                       p-6">
-
-                <p class="text-cyan-300 uppercase text-xs tracking-widest">
-                    Hattricks
-                </p>
-
-                <h1 class="text-6xl font-black mt-4">
-                    {{ mosthattricks > 0 ? mosthattricks : '--' }}
-                </h1>
-
-                <p class="text-zinc-300 mt-2">
-                    {{ mosthattricks > 0
-                    ? mostHattricksPlayer?.playerName
-                    : 'No Hattrick Yet' }}
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
+        <p class="text-zinc-300 mt-2">
+          {{ mosthattricks > 0 ? mostHattricksPlayer?.playerName : 'No Hattrick Yet' }}
+        </p>
+      </div>
+    </div>
+  </section>
 </div>

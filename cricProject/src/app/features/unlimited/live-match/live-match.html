@@ -1,1770 +1,990 @@
-<div class="w-full h-full bg-[#050B18] overflow-hidden relative flex flex-col items-center py-0 space-y-4">
+<div
+  class="w-full h-full bg-[#050B18] overflow-hidden relative flex flex-col items-center py-0 space-y-4"
+>
+  <!-- BADGE -->
+  <div class="px-4 py-2 rounded-full bg-[#F59E0B]/20 border border-[#F59E0B]/20 backdrop-blur-xl">
+    <h2 class="text-xs tracking-[0.3em] text-[#FBBF24] font-bold">UNLIMITED OVERS</h2>
+  </div>
 
-    <!-- BADGE -->
-    <div class="px-4 py-2 rounded-full
-                bg-[#F59E0B]/20 border border-[#F59E0B]/20
-                backdrop-blur-xl">
+  <!-- LIVE MATCH PAGE -->
+  <section
+    class="w-full h-full bg-[#050B18] text-white overflow-hidden flex flex-col items-center justify-between px-4 py-4 space-y-4"
+  >
+    <!-- ========================= -->
+    <!-- TOP SCORE SECTION -->
+    <!-- ========================= -->
 
-        <h2 class="text-xs tracking-[0.3em]
-                    text-[#FBBF24] font-bold">
+    <div
+      class="w-full h-[28vh] rounded-4xl border border-white/10 bg-white/3 backdrop-blur-2xl relative overflow-hidden flex flex-col items-center justify-center"
+    >
+      <!-- AMBER GLOW -->
+      <div
+        class="absolute -top-10 right-0 w-52 h-52 rounded-full bg-[#FBBF24]/15 blur-[90px]"
+      ></div>
 
-            UNLIMITED OVERS
+      <!-- TEAM -->
+      <p class="text-sm uppercase tracking-[0.3em] text-[#FBBF24] font-bold">
+        Team {{ battingFirst }}
+      </p>
 
-        </h2>
+      <!-- SCORE -->
+      <h1 class="text-7xl font-black mt-3 tracking-tight">
+        {{ totalRuns }} <span class="text-zinc-500">/{{ totalWickets }}</span>
+      </h1>
 
+      <!-- OVERS -->
+      <div class="mt-3 flex items-center gap-3">
+        <p class="text-zinc-300 font-semibold">{{ overs }} Overs</p>
+
+        <div class="w-1 h-1 rounded-full bg-zinc-500"></div>
+
+        <p class="text-zinc-400 text-sm">CRR {{ currentRunRate }}</p>
+
+        @if (currentInnings === 2) {
+          <p class="text-zinc-400 text-sm">Required {{ runsNeeded }} runs</p>
+        }
+      </div>
     </div>
 
-    <!-- LIVE MATCH PAGE -->
-    <section
-        class="w-full h-full bg-[#050B18] text-white overflow-hidden flex flex-col items-center justify-between px-4 py-4 space-y-4">
+    <!-- ========================= -->
+    <!-- MATCH PLAYERS -->
+    <!-- ========================= -->
+    <div
+      class="w-full rounded-4xl border border-white/10 bg-white/3 backdrop-blur-2xl relative overflow-hidden flex items-center px-4 py-5 sm:px-6 sm:py-6 gap-4"
+    >
+      <!-- BATTER -->
+      <div class="flex-1 min-w-0">
+        <!-- LABEL -->
+        <p
+          class="text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.25em] text-zinc-500 font-black"
+        >
+          Current Batsman
+        </p>
 
-        <!-- ========================= -->
-        <!-- TOP SCORE SECTION -->
-        <!-- ========================= -->
+        <!-- NAME -->
+        <h1 class="text-2xl sm:text-3xl font-black mt-2 truncate">
+          {{ selectedBatsman?.displayName || 'Batsman' }}
+        </h1>
 
-        <div
-            class="w-full h-[28vh] rounded-4xl border border-white/10 bg-white/3 backdrop-blur-2xl relative overflow-hidden flex flex-col items-center justify-center">
+        <!-- STATS -->
+        <div class="flex items-end gap-3 mt-3">
+          <!-- RUNS -->
+          <h1 class="text-4xl sm:text-5xl font-black text-[#FBBF24] leading-none">
+            {{ playerStats[currentBatsman?.id!]?.runs || 0 }}
+          </h1>
 
-            <!-- AMBER GLOW -->
-            <div class="absolute -top-10 right-0 w-52 h-52 rounded-full bg-[#FBBF24]/15 blur-[90px]"></div>
-
-            <!-- TEAM -->
-            <p class="text-sm uppercase tracking-[0.3em] text-[#FBBF24] font-bold">
-                Team {{battingFirst}}
+          <!-- BALLS / SR -->
+          <div class="pb-1">
+            <p class="text-zinc-400 text-xs sm:text-sm">
+              {{ playerStats[currentBatsman?.id!]?.ballsFaced || 0 }}
+              Balls
             </p>
 
-            <!-- SCORE -->
-            <h1 class="text-7xl font-black mt-3
-        tracking-tight">
+            <p class="text-zinc-500 text-xs sm:text-sm mt-1">SR {{ currentBatsmanStrikeRate }}</p>
+          </div>
+        </div>
+      </div>
 
-                {{totalRuns}} <span class="text-zinc-500">/{{totalWickets}}</span>
+      <!-- DIVIDER -->
+      <div
+        class="self-stretch w-px bg-linear-to-b from-transparent via-white/10 to-transparent"
+      ></div>
 
+      <!-- BOWLER -->
+      <div class="flex-1 min-w-0 text-right">
+        <!-- LABEL -->
+        <p
+          class="text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-[0.25em] text-zinc-500 font-black"
+        >
+          Current Bowler
+        </p>
+
+        <!-- NAME -->
+        <h1 class="text-2xl sm:text-3xl font-black mt-2 truncate">
+          {{ selectedBowler?.displayName || 'Bowler' }}
+        </h1>
+
+        <!-- STATS -->
+        <div class="flex items-end justify-end gap-3 mt-3">
+          <!-- OVERS / ECO -->
+          <div class="pb-1 text-right shrink-0">
+            <p class="text-zinc-400 text-xs sm:text-sm">{{ currentBowlerOvers }} Overs</p>
+
+            <p class="text-zinc-500 text-xs sm:text-sm mt-1">Eco {{ currentBowlerEconomy || 0 }}</p>
+          </div>
+
+          <!-- FIGURES -->
+          <h1 class="text-3xl sm:text-4xl font-black text-blue-400 leading-none shrink-0">
+            {{ playerStats[currentBowler?.id!]?.runsConceded || 0 }}/{{
+              playerStats[currentBowler?.id!]?.wickets || 0
+            }}
+          </h1>
+        </div>
+      </div>
+    </div>
+    <!-- ========================= -->
+    <!-- RECENT BALLS -->
+    <!-- ========================= -->
+
+    @if (recentDeliveries.length > 0) {
+      <div
+        class="w-full rounded-3xl border border-white/10 bg-white/3 backdrop-blur-2xl px-4 py-2 overflow-x-auto"
+      >
+        <div class="flex items-center justify-start gap-3 min-w-max">
+          @for (ball of recentDeliveries; track $index) {
+            <div
+              class="recent-ball"
+              [ngClass]="{
+                'recent-ball-four': ball.type === 'four',
+                'recent-ball-six': ball.type === 'six',
+                'recent-ball-wicket': ball.type === 'wicket',
+                'recent-ball-wide': ball.type === 'wide',
+                'recent-ball-noball': ball.type === 'noball',
+              }"
+            >
+              {{ ball.value }}
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- DISMISSAL TYPE DIALOG -->
+    @if (isDismissalDialogOpen) {
+      <div
+        class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-start justify-center pt-16 p-4"
+      >
+        <!-- CARD -->
+        <div
+          class="w-full max-w-md rounded-[2.5rem] border border-white/10 bg-[#09111F]/95 overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.7)]"
+        >
+          <!-- HEADER -->
+
+          <div class="w-full flex items-center justify-between px-2">
+            <div class="px-7 pt-7 pb-5 border-b border-white/10">
+              <p class="uppercase tracking-[0.35em] text-xs text-zinc-500 font-black">
+                Wicket Fallen
+              </p>
+
+              <h1 class="text-4xl font-black text-white mt-3">Select Dismissal</h1>
+
+              <p class="text-zinc-400 mt-3 leading-relaxed">How did the batter get out?</p>
+            </div>
+
+            <!-- CLOSE -->
+            <button
+              (click)="isDismissalDialogOpen = false"
+              class="w-11 h-11 rounded-2xl cursor-pointer bg-white/5 border border-white/10 text-zinc-400 text-xl hover:bg-white/10 transition-all"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- OPTIONS -->
+          <div class="p-6 space-y-4 bg-[#09111F]/80 backdrop-blur-xl">
+            <!-- BOWLED -->
+            <button
+              (click)="selectDismissalType('bowled')"
+              class="w-full rounded-3xl cursor-pointer px-5 py-5 flex items-center justify-between transition-all duration-300 border"
+              [ngClass]="{
+                'border-red-400 bg-red-400/20 scale-[1.02]': dismissalType === 'bowled',
+
+                'border-red-400/15 bg-red-400/10': dismissalType !== 'bowled',
+              }"
+            >
+              <div class="text-left">
+                <p class="text-red-400 font-black text-xl">Bowled</p>
+
+                <p class="text-zinc-400 text-sm mt-1">Cleaned up by the bowler</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                @if (dismissalType === 'bowled') {
+                  <div
+                    class="w-8 h-8 rounded-full bg-red-400 text-black flex items-center justify-center font-black"
+                  >
+                    ✓
+                  </div>
+                }
+
+                <h1 class="text-3xl">🎯</h1>
+              </div>
+            </button>
+
+            <!-- CAUGHT -->
+            <button
+              (click)="selectDismissalType('caught')"
+              class="w-full rounded-3xl cursor-pointer px-5 py-5 flex items-center justify-between transition-all duration-300 border"
+              [ngClass]="{
+                'border-blue-400 bg-blue-400/20 scale-[1.02]': dismissalType === 'caught',
+
+                'border-blue-400/15 bg-blue-400/10': dismissalType !== 'caught',
+              }"
+            >
+              <div class="text-left">
+                <p class="text-blue-400 font-black text-xl">Caught</p>
+
+                <p class="text-zinc-400 text-sm mt-1">Ball caught by a fielder</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                @if (dismissalType === 'caught') {
+                  <div
+                    class="w-8 h-8 rounded-full bg-blue-400 text-black flex items-center justify-center font-black"
+                  >
+                    ✓
+                  </div>
+                }
+
+                <h1 class="text-3xl">🧤</h1>
+              </div>
+            </button>
+
+            <!-- OFFSIDE -->
+            <button
+              (click)="selectDismissalType('offside')"
+              class="w-full rounded-3xl cursor-pointer px-5 py-5 flex items-center justify-between transition-all duration-300 border"
+              [ngClass]="{
+                'border-amber-400 bg-amber-400/20 scale-[1.02]': dismissalType === 'offside',
+
+                'border-amber-400/15 bg-amber-400/10': dismissalType !== 'offside',
+              }"
+            >
+              <div class="text-left">
+                <p class="text-amber-400 font-black text-xl">Offside</p>
+
+                <p class="text-zinc-400 text-sm mt-1">Hit the offside wall zone</p>
+              </div>
+
+              <div class="flex items-center gap-3">
+                @if (dismissalType === 'offside') {
+                  <div
+                    class="w-8 h-8 rounded-full bg-amber-400 text-black flex items-center justify-center font-black"
+                  >
+                    ✓
+                  </div>
+                }
+
+                <h1 class="text-3xl">🧱</h1>
+              </div>
+            </button>
+
+            <!-- CONTINUE -->
+            <button
+              (click)="continueAfterDismissal()"
+              [disabled]="!dismissalType"
+              class="w-full rounded-3xl mt-6 py-4 cursor-pointer font-black text-lg transition-all duration-300"
+              [ngClass]="{
+                'bg-white text-black hover:scale-[1.02]': dismissalType,
+
+                'bg-white/10 text-zinc-500 cursor-not-allowed': !dismissalType,
+              }"
+            >
+              Continue
+            </button>
+
+            <!-- CATCHING DIALOG -->
+            @if (isShowingCatchingDialog) {
+              <div
+                class="fixed inset-0 z-130 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+              >
+                <!-- DIALOG -->
+                <div
+                  class="w-full max-w-sm rounded-[2.2rem] border border-white/10 bg-[#09111F]/95 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
+                >
+                  <!-- HEADER -->
+                  <div class="px-5 pt-5 pb-4 border-b border-white/10">
+                    <p class="uppercase tracking-[0.3em] text-[10px] text-zinc-500 font-black">
+                      Caught Out
+                    </p>
+
+                    <h1 class="text-2xl font-black text-white mt-2">Who Took The Catch?</h1>
+                  </div>
+
+                  <!-- PLAYERS -->
+                  <div class="p-4 grid grid-cols-2 gap-3 max-h-[45vh] overflow-y-auto">
+                    @for (player of currentBowlingTeam; track player.id) {
+                      <button
+                        (click)="selectCaughtBy(player)"
+                        class="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all duration-200"
+                      >
+                        <!-- PHOTO -->
+                        <img
+                          [src]="player.photoURL"
+                          class="w-11 h-11 rounded-full object-cover border border-white/10"
+                        />
+
+                        <!-- NAME -->
+                        <div class="min-w-0">
+                          <p class="text-white text-sm font-bold truncate">
+                            {{ player.displayName }}
+                          </p>
+                        </div>
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ========================= -->
+    <!-- ACTION BUTTONS -->
+    <!-- ========================= -->
+
+    <div class="w-full h-[32vh] grid grid-cols-3 gap-1">
+      <!-- 0 -->
+      <button (click)="addDot()" class="score-btn">0</button>
+
+      <!-- 4 -->
+      <button (click)="addFour()" class="score-btn-four">4</button>
+
+      <!-- 6 -->
+      <button (click)="addSix()" class="score-btn-six">6</button>
+
+      <!-- W -->
+      <button (click)="addWicket()" class="score-btn-wicket">W</button>
+
+      <!-- WD -->
+      <button (click)="addWide()" class="score-btn-wide">Wide</button>
+
+      <!-- NB -->
+      <button (click)="addNoBall()" class="score-btn-noball">NB</button>
+    </div>
+
+    <div class="w-full flex items-center justify-between gap-3 mt-3">
+      <!-- STATS -->
+      <button (click)="isShowingScoreCard = true" class="score-btn w-1/2 h-20">Stats</button>
+
+      <!-- UNDO -->
+      <button
+        (click)="undo()"
+        [disabled]="!canUndo"
+        class="score-btn-undo w-1/2 h-20"
+        [ngClass]="{ 'opacity-50': lastAction === '' || !canUndo }"
+      >
+        Undo
+      </button>
+    </div>
+  </section>
+
+  <!-- STRIKER DIALOG -->
+  @if (showBatsmenDialog) {
+    <div
+      class="fixed inset-0 z-40 bg-black/70 backdrop-blur-md flex items-center justify-center p-4"
+    >
+      <!-- MODAL -->
+      <div
+        class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden"
+      >
+        <!-- HEADER -->
+        <div class="p-6 border-b border-white/10">
+          <!-- TOP ROW -->
+          <div class="flex items-center justify-between">
+            <!-- LABEL -->
+            <p
+              class="text-sm uppercase tracking-[0.25em] font-bold"
+              [ngClass]="{ 'text-[#FBBF24]': !isWicketFallen, 'text-red-400': isWicketFallen }"
+            >
+              {{ isWicketFallen ? 'WICKET FALLEN' : 'OPENING BATSMAN' }}
+            </p>
+
+            <!-- TEAM -->
+            <h1
+              class="font-black text-lg"
+              [ngClass]="{
+                'text-[#94F505]': battingFirst === 'A',
+                'text-purple-400': battingFirst === 'B',
+              }"
+            >
+              Team {{ battingFirst }}
             </h1>
+          </div>
 
-            <!-- OVERS -->
-            <div class="mt-3 flex items-center gap-3">
+          <!-- TITLE -->
+          <h1 class="text-2xl font-black mt-2 text-white">
+            {{ isWicketFallen ? 'Select Next Batsman' : 'Select Opening Batsman' }}
+          </h1>
 
-                <p class="text-zinc-300 font-semibold">
+          <div class="flex flex-col sm:flex-row sm:space-y-0 space-y-4 items-start justify-between">
+            <!-- DESCRIPTION -->
+            <p class="text-zinc-400 mt-2">
+              {{
+                isWicketFallen
+                  ? 'Choose who comes to the crease next.'
+                  : 'Choose who will open the innings.'
+              }}
+            </p>
 
-                    {{overs}} Overs
+            @if (selectedBatsman != null) {
+              <button
+                (click)="confirmBatsman()"
+                class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20 backdrop-blur-xl text-[#FBBF24] font-black tracking-wide shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20 hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 cursor-pointer"
+              >
+                <!-- GLOW -->
+                <div
+                  class="absolute inset-0 opacity-0 hover:opacity-100 bg-linear-to-r from-[#FBBF24]/0 via-[#FBBF24]/10 to-[#F59E0B]/0 transition-all duration-500"
+                ></div>
 
-                </p>
-
-                <div class="w-1 h-1 rounded-full bg-zinc-500">
-
-                </div>
-
-                <p class="text-zinc-400 text-sm">
-
-                    CRR {{currentRunRate}}
-
-                </p>
-
-                @if(currentInnings===2){
-
-                <p class="text-zinc-400 text-sm">
-
-                    Required {{runsNeeded}} runs
-
-                </p>
-                }
-
-            </div>
-
+                <!-- TEXT -->
+                <span class="relative z-10"> Continue → </span>
+              </button>
+            }
+          </div>
         </div>
 
+        <!-- PLAYERS -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-6 max-h-[60vh] overflow-y-auto">
+          @for (player of availableBatsmen; track player.id) {
+            <div
+              (click)="selectBatsman(player)"
+              class="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
+              [ngClass]="{
+                'border-[#FBBF24] bg-[#FBBF24]/10 border-4 shadow-[0_0_30px_rgba(251,191,36,0.25)]':
+                  selectedBatsman?.id === player.id,
+                'opacity-50': selectedBatsman?.id !== player.id,
+              }"
+            >
+              <!-- IMAGE -->
+              <img [src]="player.photoURL" class="absolute inset-0 w-full h-full object-cover" />
 
+              <!-- OVERLAY -->
+              <div
+                class="absolute inset-0 bg-linear-to-t from-black/95 via-black/20 to-transparent"
+              ></div>
 
-        <!-- ========================= -->
-        <!-- MATCH PLAYERS -->
-        <!-- ========================= -->
-        <div class="w-full rounded-4xl
-                border border-white/10
-                 bg-white/3 backdrop-blur-2xl
-                        relative overflow-hidden
-                        flex items-center
-                    px-4 py-5 sm:px-6 sm:py-6
-                gap-4">
+              <!-- GLOW -->
+              <div
+                class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[#FBBF24]/10 transition-all duration-300"
+              ></div>
 
-            <!-- BATTER -->
-            <div class="flex-1 min-w-0">
-
-                <!-- LABEL -->
-                <p class="text-[10px] sm:text-xs
-            uppercase tracking-[0.18em]
-            sm:tracking-[0.25em]
-            text-zinc-500 font-black">
-
-                    Current Batsman
-
-                </p>
-
-                <!-- NAME -->
-                <h1 class="text-2xl sm:text-3xl
-            font-black mt-2 truncate">
-
-                    {{selectedBatsman?.displayName || 'Batsman'}}
-
+              <!-- NAME -->
+              <div class="absolute bottom-0 left-0 w-full p-4">
+                <h1 class="text-lg font-black text-white truncate">
+                  {{ player.displayName }}
                 </h1>
-
-                <!-- STATS -->
-                <div class="flex items-end gap-3 mt-3">
-
-                    <!-- RUNS -->
-                    <h1 class="text-4xl sm:text-5xl
-                font-black text-[#FBBF24]
-                leading-none">
-
-                        {{playerStats[currentBatsman?.id!]?.runs || 0}}
-
-                    </h1>
-
-                    <!-- BALLS / SR -->
-                    <div class="pb-1">
-
-                        <p class="text-zinc-400 text-xs sm:text-sm">
-
-                            {{playerStats[currentBatsman?.id!]?.ballsFaced || 0}}
-                            Balls
-
-                        </p>
-
-                        <p class="text-zinc-500 text-xs sm:text-sm mt-1">
-
-                            SR {{currentBatsmanStrikeRate}}
-
-                        </p>
-
-                    </div>
-
-                </div>
-
+              </div>
             </div>
-
-            <!-- DIVIDER -->
-            <div class="self-stretch w-px
-        bg-linear-to-b
-        from-transparent
-        via-white/10
-        to-transparent">
-            </div>
-
-            <!-- BOWLER -->
-            <div class="flex-1 min-w-0 text-right">
-
-                <!-- LABEL -->
-                <p class="text-[10px] sm:text-xs
-            uppercase tracking-[0.18em]
-            sm:tracking-[0.25em]
-            text-zinc-500 font-black">
-
-                    Current Bowler
-
-                </p>
-
-                <!-- NAME -->
-                <h1 class="text-2xl sm:text-3xl
-            font-black mt-2 truncate">
-
-                    {{selectedBowler?.displayName || 'Bowler'}}
-
-                </h1>
-
-                <!-- STATS -->
-                <div class="flex items-end
-            justify-end gap-3 mt-3">
-
-                    <!-- OVERS / ECO -->
-                    <div class="pb-1 text-right shrink-0">
-
-                        <p class="text-zinc-400 text-xs sm:text-sm">
-
-                            {{currentBowlerOvers}} Overs
-
-                        </p>
-
-                        <p class="text-zinc-500 text-xs sm:text-sm mt-1">
-
-                            Eco {{currentBowlerEconomy || 0}}
-
-                        </p>
-
-                    </div>
-
-                    <!-- FIGURES -->
-                    <h1 class="text-3xl sm:text-4xl
-                font-black text-blue-400
-                leading-none shrink-0">
-
-                        {{playerStats[currentBowler?.id!]?.runsConceded ||
-                        0}}/{{playerStats[currentBowler?.id!]?.wickets || 0}}
-
-                    </h1>
-
-                </div>
-
-            </div>
-
+          }
         </div>
-        <!-- ========================= -->
-        <!-- RECENT BALLS -->
-        <!-- ========================= -->
-
-        @if(recentDeliveries.length > 0){
-
-        <div class="w-full rounded-3xl border border-white/10 bg-white/3 backdrop-blur-2xl px-4 py-2 overflow-x-auto">
-
-            <div class="flex items-center justify-start gap-3 min-w-max">
-                @for (ball of recentDeliveries; track $index) {
-
-                <div class="recent-ball" [ngClass]="{
-
-                    'recent-ball-four': ball.type === 'four',
-                    'recent-ball-six': ball.type === 'six',
-                    'recent-ball-wicket': ball.type === 'wicket',
-                    'recent-ball-wide': ball.type === 'wide',
-                    'recent-ball-noball': ball.type === 'noball'
-
-                }">{{ball.value}}</div>
-                }
-            </div>
-
-        </div>
-        }
-
-
-
-        <!-- DISMISSAL TYPE DIALOG -->
-        @if(isDismissalDialogOpen){
-
-        <div class="fixed inset-0 z-50
-            bg-black/70 backdrop-blur-md
-            flex items-start justify-center
-            pt-16 p-4">
-
-            <!-- CARD -->
-            <div class="w-full max-w-md
-                rounded-[2.5rem]
-                border border-white/10
-                bg-[#09111F]/95
-                overflow-hidden
-                shadow-[0_0_80px_rgba(0,0,0,0.7)]">
-
-                <!-- HEADER -->
-
-                <div class="w-full flex items-center justify-between px-2">
-
-                    <div class="px-7 pt-7 pb-5
-                    border-b border-white/10">
-
-                        <p class="uppercase tracking-[0.35em]
-                        text-xs text-zinc-500
-                        font-black">
-
-                            Wicket Fallen
-
-                        </p>
-
-                        <h1 class="text-4xl font-black
-                    text-white mt-3">
-
-                            Select Dismissal
-
-                        </h1>
-
-                        <p class="text-zinc-400 mt-3
-                leading-relaxed">
-
-                            How did the batter get out?
-
-                        </p>
-
-                    </div>
-
-                    <!-- CLOSE -->
-                    <button (click)="isDismissalDialogOpen=false" class="w-11 h-11 rounded-2xl cursor-pointer
-                                bg-white/5 border border-white/10
-                                text-zinc-400 text-xl
-                                hover:bg-white/10 transition-all">
-
-                        ✕
-
-                    </button>
-                </div>
-
-                <!-- OPTIONS -->
-                <div class="p-6 space-y-4 bg-[#09111F]/80 backdrop-blur-xl">
-
-                    <!-- BOWLED -->
-                    <button (click)="selectDismissalType('bowled')" class="w-full rounded-3xl cursor-pointer
-                        px-5 py-5
-                        flex items-center justify-between
-                        transition-all duration-300
-                        border" [ngClass]="{
-        
-                        'border-red-400 bg-red-400/20 scale-[1.02]':
-                        dismissalType === 'bowled',
-        
-                        'border-red-400/15 bg-red-400/10':
-                        dismissalType !== 'bowled'
-        
-                        }">
-
-                        <div class="text-left ">
-
-                            <p class="text-red-400
-                                font-black text-xl">
-
-                                Bowled
-
-                            </p>
-
-                            <p class="text-zinc-400
-                                text-sm mt-1">
-
-                                Cleaned up by the bowler
-
-                            </p>
-
-                        </div>
-
-                        <div class="flex items-center gap-3">
-
-                            @if(dismissalType === 'bowled'){
-
-                            <div class="w-8 h-8 rounded-full
-                                bg-red-400 text-black
-                                flex items-center justify-center
-                                font-black">
-
-                                ✓
-
-                            </div>
-
-                            }
-
-                            <h1 class="text-3xl">
-
-                                🎯
-
-                            </h1>
-
-                        </div>
-
-                    </button>
-
-                    <!-- CAUGHT -->
-                    <button (click)="selectDismissalType('caught')" class="w-full rounded-3xl cursor-pointer
-                        px-5 py-5
-                        flex items-center justify-between
-                        transition-all duration-300
-                        border" [ngClass]="{
-        
-                        'border-blue-400 bg-blue-400/20 scale-[1.02]':
-                        dismissalType === 'caught',
-        
-                        'border-blue-400/15 bg-blue-400/10':
-                        dismissalType !== 'caught'
-        
-                        }">
-
-                        <div class="text-left">
-
-                            <p class="text-blue-400
-                                font-black text-xl">
-
-                                Caught
-
-                            </p>
-
-                            <p class="text-zinc-400
-                                text-sm mt-1">
-
-                                Ball caught by a fielder
-
-                            </p>
-
-                        </div>
-
-                        <div class="flex items-center gap-3">
-
-                            @if(dismissalType === 'caught'){
-
-                            <div class="w-8 h-8 rounded-full
-                                bg-blue-400 text-black
-                                flex items-center justify-center
-                                font-black">
-
-                                ✓
-
-                            </div>
-
-                            }
-
-                            <h1 class="text-3xl">
-
-                                🧤
-
-                            </h1>
-
-                        </div>
-
-                    </button>
-
-
-                    <!-- OFFSIDE -->
-                    <button (click)="selectDismissalType('offside')" class="w-full rounded-3xl cursor-pointer px-5 py-5
-                        flex items-center justify-between
-                        transition-all duration-300
-                        border" [ngClass]="{
-        
-                        'border-amber-400 bg-amber-400/20 scale-[1.02]':
-                        dismissalType === 'offside',
-        
-                        'border-amber-400/15 bg-amber-400/10':
-                        dismissalType !== 'offside'
-        
-                        }">
-
-                        <div class="text-left">
-
-                            <p class="text-amber-400
-                                font-black text-xl">
-
-                                Offside
-
-                            </p>
-
-                            <p class="text-zinc-400
-                                text-sm mt-1">
-
-                                Hit the offside wall zone
-
-                            </p>
-
-                        </div>
-
-                        <div class="flex items-center gap-3">
-
-                            @if(dismissalType === 'offside'){
-
-                            <div class="w-8 h-8 rounded-full
-                                bg-amber-400 text-black
-                                flex items-center justify-center
-                                font-black">
-
-                                ✓
-
-                            </div>
-
-                            }
-
-                            <h1 class="text-3xl">
-
-                                🧱
-
-                            </h1>
-
-                        </div>
-
-                    </button>
-
-
-                    <!-- CONTINUE -->
-                    <button (click)="continueAfterDismissal()" [disabled]="!dismissalType" class="w-full rounded-3xl
-                        mt-6 py-4 cursor-pointer
-                        font-black text-lg
-                        transition-all duration-300" [ngClass]="{
-        
-                        'bg-white text-black hover:scale-[1.02]':
-                        dismissalType,
-        
-                        'bg-white/10 text-zinc-500 cursor-not-allowed':
-                        !dismissalType
-        
-                        }">
-
-                        Continue
-
-                    </button>
-
-
-                    <!-- CATCHING DIALOG -->
-                    @if(isShowingCatchingDialog){
-                    
-                    <div class="fixed inset-0 z-130
-                    
-                    bg-black/60
-                    backdrop-blur-sm
-                    
-                    flex items-center justify-center
-                    
-                    p-4">
-                    
-                        <!-- DIALOG -->
-                        <div class="w-full max-w-sm
-                    
-                        rounded-[2.2rem]
-                    
-                        border border-white/10
-                    
-                        bg-[#09111F]/95
-                    
-                        shadow-[0_0_60px_rgba(0,0,0,0.6)]
-                    
-                        overflow-hidden">
-                    
-                            <!-- HEADER -->
-                            <div class="px-5 pt-5 pb-4
-                    
-                            border-b border-white/10">
-                    
-                                <p class="uppercase tracking-[0.3em]
-                    
-                                text-[10px]
-                    
-                                text-zinc-500
-                                font-black">
-                    
-                                    Caught Out
-                    
-                                </p>
-                    
-                                <h1 class="text-2xl
-                    
-                                font-black text-white
-                    
-                                mt-2">
-                    
-                                    Who Took The Catch?
-                    
-                                </h1>
-                    
-                            </div>
-                    
-                            <!-- PLAYERS -->
-                            <div class="p-4
-                    
-                            grid grid-cols-2 gap-3
-                    
-                            max-h-[45vh]
-                            overflow-y-auto">
-                    
-                                @for(player of currentBowlingTeam; track player.id){
-                    
-                                <button (click)="selectCaughtBy(player)" class="flex items-center gap-3
-                    
-                                p-3 rounded-2xl
-                    
-                                bg-white/5
-                                border border-white/5
-                    
-                                hover:bg-white/10
-                    
-                                transition-all duration-200">
-                    
-                                    <!-- PHOTO -->
-                                    <img [src]="player.photoURL" class="w-11 h-11
-                    
-                                    rounded-full
-                    
-                                    object-cover
-                    
-                                    border border-white/10">
-                    
-                                    <!-- NAME -->
-                                    <div class="min-w-0">
-                    
-                                        <p class="text-white
-                    
-                                        text-sm
-                    
-                                        font-bold
-                    
-                                        truncate">
-                    
-                                            {{player.displayName}}
-                    
-                                        </p>
-                    
-                                    </div>
-                    
-                                </button>
-                    
-                                }
-                    
-                            </div>
-                    
-                        </div>
-                    
-                    </div>
-                    
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-
-        }
-
-
-
-
-        <!-- ========================= -->
-        <!-- ACTION BUTTONS -->
-        <!-- ========================= -->
-
-        <div class="w-full h-[32vh]
-        
-        grid grid-cols-3 gap-1">
-
-            <!-- 0 -->
-            <button (click)="addDot()" class="score-btn">
-                0
-            </button>
-
-            <!-- 4 -->
-            <button (click)="addFour()" class="score-btn-four">
-                4
-            </button>
-
-            <!-- 6 -->
-            <button (click)="addSix()" class="score-btn-six">
-                6
-            </button>
-
-            <!-- W -->
-            <button (click)="addWicket()" class="score-btn-wicket">
-                W
-            </button>
-
-            <!-- WD -->
-            <button (click)="addWide()" class="score-btn-wide">
-                Wide
-            </button>
-
-            <!-- NB -->
-            <button (click)="addNoBall()" class="score-btn-noball">
-                NB
-            </button>
-
-        </div>
-
-        <div class="w-full flex items-center
-        justify-between gap-3 mt-3">
-
-            <!-- STATS -->
-            <button (click)="isShowingScoreCard = true" class="score-btn w-1/2 h-20">
-                Stats
-            </button>
-
-            <!-- UNDO -->
-            <button (click)="undo()" [disabled]="!canUndo" class="score-btn-undo w-1/2 h-20"
-                [ngClass]="{'opacity-50':lastAction === '' || !canUndo}">
-                Undo
-            </button>
-
-        </div>
-
-
-    </section>
-
-    <!-- STRIKER DIALOG -->
-    @if(showBatsmenDialog){
-
-    <div class="fixed inset-0 z-40 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
-
-        <!-- MODAL -->
-        <div
-            class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
-
-            <!-- HEADER -->
-            <div class="p-6 border-b border-white/10">
-
-
-                <!-- TOP ROW -->
-                <div class="flex items-center justify-between">
-
-                    <!-- LABEL -->
-                    <p class="text-sm uppercase tracking-[0.25em] font-bold"
-                        [ngClass]="{'text-[#FBBF24]': !isWicketFallen, 'text-red-400': isWicketFallen}">
-
-                        {{ isWicketFallen
-                        ? 'WICKET FALLEN'
-                        : 'OPENING BATSMAN' }}
-
-                    </p>
-
-                    <!-- TEAM -->
-                    <h1 class="font-black text-lg" [ngClass]="{
-              'text-[#94F505]': battingFirst === 'A',
-              'text-purple-400': battingFirst === 'B'
-            }">
-                        Team {{ battingFirst }}
-
-                    </h1>
-
-                </div>
-
-                <!-- TITLE -->
-                <h1 class="text-2xl font-black mt-2 text-white">
-
-                    {{ isWicketFallen
-                    ? 'Select Next Batsman'
-                    : 'Select Opening Batsman' }}
-
-                </h1>
-
-                <div class="flex flex-col sm:flex-row sm:space-y-0 space-y-4 items-start justify-between">
-                    <!-- DESCRIPTION -->
-                    <p class="text-zinc-400 mt-2">
-
-                        {{ isWicketFallen
-                        ? 'Choose who comes to the crease next.'
-                        : 'Choose who will open the innings.' }}
-
-                    </p>
-
-                    @if(selectedBatsman != null){
-                    <button (click)="confirmBatsman()"
-                        class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20
-                        backdrop-blur-xl text-[#FBBF24] font-black tracking-wide shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20
-                        hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 cursor-pointer">
-
-                        <!-- GLOW -->
-                        <div class="absolute inset-0  opacity-0 hover:opacity-100  bg-linear-to-r  from-[#FBBF24]/0  via-[#FBBF24]/10 to-[#F59E0B]/0
-                            transition-all duration-500">
-                        </div>
-
-                        <!-- TEXT -->
-                        <span class="relative z-10">
-                            Continue →
-                        </span>
-
-                    </button>
-                    }
-                </div>
-
-            </div>
-
-            <!-- PLAYERS -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-6 max-h-[60vh] overflow-y-auto">
-
-                @for(player of availableBatsmen;
-                track player.id){
-
-                <div (click)="selectBatsman(player)" class="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer hover:scale-[1.03]
-                    active:scale-[0.98] transition-all duration-300"
-                    [ngClass]="{'border-[#FBBF24] bg-[#FBBF24]/10 border-4 shadow-[0_0_30px_rgba(251,191,36,0.25)]': selectedBatsman?.id === player.id, 'opacity-50': selectedBatsman?.id !== player.id}">
-
-                    <!-- IMAGE -->
-                    <img [src]="player.photoURL" class="absolute inset-0
-                        w-full h-full object-cover">
-
-                    <!-- OVERLAY -->
-                    <div class="absolute inset-0 bg-linear-to-t from-black/95 via-black/20 to-transparent"></div>
-
-                    <!-- GLOW -->
-                    <div
-                        class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[#FBBF24]/10 transition-all duration-300">
-                    </div>
-
-                    <!-- NAME -->
-                    <div class="absolute bottom-0 left-0 w-full p-4">
-
-                        <h1 class="text-lg font-black
-                        text-white truncate">
-
-                            {{player.displayName}}
-
-                        </h1>
-
-                    </div>
-
-                </div>
-
-                }
-
-            </div>
-
-        </div>
-
+      </div>
     </div>
+  }
 
-    }
+  <!-- Bowler DIALOG -->
+  @if (showBowlerDialog) {
+    <div
+      class="fixed inset-0 z-40 bg-black/70 backdrop-blur-md flex items-center justify-center p-4"
+    >
+      <!-- MODAL -->
+      <div
+        class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden"
+      >
+        <!-- HEADER -->
+        <div class="p-6 border-b border-white/10">
+          <!-- TOP ROW -->
+          <div class="flex items-center justify-between">
+            <!-- LABEL -->
+            <p
+              class="text-sm uppercase tracking-[0.25em] font-bold"
+              [ngClass]="{
+                'text-[#FBBF24]': !isOverComplete,
+                'text-green-500': isOverComplete,
+              }"
+            >
+              {{ isOverComplete ? 'NEXT OVER' : 'OPENING BOWLER' }}
+            </p>
 
-    <!-- Bowler DIALOG -->
-    @if(showBowlerDialog){
+            <!-- TEAM -->
+            <h1
+              class="font-black text-lg"
+              [ngClass]="{
+                'text-[#94F505]': battingFirst === 'B',
+                'text-purple-400': battingFirst === 'A',
+              }"
+            >
+              Team {{ battingFirst === 'A' ? 'B' : 'A' }}
+            </h1>
+          </div>
 
-    <div class="fixed inset-0 z-40 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+          <!-- TITLE -->
+          <h1 class="text-2xl font-black mt-2 text-white">
+            {{ isOverComplete ? 'Select Next Bowler' : 'Select Opening Bowler' }}
+          </h1>
 
-        <!-- MODAL -->
-        <div
-            class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
+          <div class="flex flex-col sm:flex-row sm:space-y-0 space-y-4 items-start justify-between">
+            <!-- DESCRIPTION -->
+            <p class="text-zinc-400 mt-2">
+              {{
+                isOverComplete
+                  ? 'Choose who comes to bowl next.'
+                  : 'Choose who will bowl the opening over.'
+              }}
+            </p>
 
-            <!-- HEADER -->
-            <div class="p-6 border-b border-white/10">
+            @if (selectedBowler) {
+              <button
+                (click)="confirmBowler()"
+                class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20 backdrop-blur-xl text-[#FBBF24] font-black tracking-wide shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20 hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
+              >
+                <!-- GLOW -->
+                <div
+                  class="absolute inset-0 opacity-0 hover:opacity-100 bg-linear-to-r from-[#FBBF24]/0 via-[#FBBF24]/10 to-[#F59E0B]/0 transition-all duration-500"
+                ></div>
 
-                <!-- TOP ROW -->
-                <div class="flex items-center justify-between">
-
-                    <!-- LABEL -->
-                    <p class="text-sm uppercase
-            tracking-[0.25em]
-        
-            font-bold" [ngClass]="{
-              'text-[#FBBF24]': !isOverComplete,
-              'text-green-500': isOverComplete
-            }">
-
-                        {{ isOverComplete
-                        ? 'NEXT OVER'
-                        : 'OPENING BOWLER' }}
-
-                    </p>
-
-                    <!-- TEAM -->
-                    <h1 class="font-black text-lg" [ngClass]="{
-              'text-[#94F505]': battingFirst === 'B',
-              'text-purple-400': battingFirst === 'A'
-            }">
-
-                        Team {{ battingFirst === "A" ? "B" : "A" }}
-
-                    </h1>
-
-                </div>
-
-                <!-- TITLE -->
-                <h1 class="text-2xl font-black mt-2 text-white">
-
-                    {{ isOverComplete
-                    ? 'Select Next Bowler'
-                    : 'Select Opening Bowler' }}
-
-                </h1>
-
-                <div class="flex flex-col sm:flex-row sm:space-y-0 space-y-4 items-start justify-between">
-                    <!-- DESCRIPTION -->
-                    <p class="text-zinc-400 mt-2">
-
-                        {{ isOverComplete
-                        ? 'Choose who comes to bowl next.'
-                        : 'Choose who will bowl the opening over.' }}
-
-                    </p>
-
-                    @if(selectedBowler){
-                    <button (click)="confirmBowler()"
-                        class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20 backdrop-blur-xl text-[#FBBF24]
-                        font-black tracking-wide  shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20
-                        hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
-
-                        <!-- GLOW -->
-                        <div class="absolute inset-0 opacity-0 hover:opacity-100 bg-linear-to-r from-[#FBBF24]/0 via-[#FBBF24]/10
-                            to-[#F59E0B]/0 transition-all duration-500">
-
-                        </div>
-
-                        <!-- TEXT -->
-                        <span class="cursor-pointer relative z-10">
-
-                            Continue →
-
-                        </span>
-
-                    </button>
-                    }
-                </div>
-
-            </div>
-
-            <!-- PLAYERS -->
-            <div class="grid grid-cols-2 sm:grid-cols-3
-            gap-4 p-6 max-h-[60vh] overflow-y-auto">
-
-                @for(player of availableBowlers;
-                track player.id){
-
-                <div (click)="selectBowler(player)" class="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer hover:scale-[1.03]
-                    active:scale-[0.98] transition-all duration-300"
-                    [ngClass]="{'border-[#FBBF24] bg-[#FBBF24]/10 border-4 shadow-[0_0_30px_rgba(251,191,36,0.25)]': selectedBowler?.id === player.id, 'opacity-50': selectedBowler?.id !== player.id}">
-
-                    <!-- IMAGE -->
-                    <img [src]="player.photoURL" class="absolute inset-0
-                        w-full h-full object-cover">
-
-                    <!-- OVERLAY -->
-                    <div class="absolute inset-0 bg-linear-to-t from-black/95 via-black/20 to-transparent"></div>
-
-                    <!-- GLOW -->
-                    <div
-                        class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[#FBBF24]/10 transition-all duration-300">
-                    </div>
-
-                    <!-- NAME -->
-                    <div class="absolute bottom-0 left-0 w-full p-4">
-
-                        <h1 class="text-lg font-black
-                        text-white truncate">
-
-                            {{player.displayName}}
-
-                        </h1>
-
-                    </div>
-
-                </div>
-
-                }
-
-            </div>
-
+                <!-- TEXT -->
+                <span class="cursor-pointer relative z-10"> Continue → </span>
+              </button>
+            }
+          </div>
         </div>
 
+        <!-- PLAYERS -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-6 max-h-[60vh] overflow-y-auto">
+          @for (player of availableBowlers; track player.id) {
+            <div
+              (click)="selectBowler(player)"
+              class="group relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
+              [ngClass]="{
+                'border-[#FBBF24] bg-[#FBBF24]/10 border-4 shadow-[0_0_30px_rgba(251,191,36,0.25)]':
+                  selectedBowler?.id === player.id,
+                'opacity-50': selectedBowler?.id !== player.id,
+              }"
+            >
+              <!-- IMAGE -->
+              <img [src]="player.photoURL" class="absolute inset-0 w-full h-full object-cover" />
+
+              <!-- OVERLAY -->
+              <div
+                class="absolute inset-0 bg-linear-to-t from-black/95 via-black/20 to-transparent"
+              ></div>
+
+              <!-- GLOW -->
+              <div
+                class="absolute inset-0 opacity-0 group-hover:opacity-100 bg-[#FBBF24]/10 transition-all duration-300"
+              ></div>
+
+              <!-- NAME -->
+              <div class="absolute bottom-0 left-0 w-full p-4">
+                <h1 class="text-lg font-black text-white truncate">
+                  {{ player.displayName }}
+                </h1>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
     </div>
-
-    }
-
+  }
 </div>
-
-
 
 <!-- Innings break overlay -->
 
-@if(totalWickets >= maxWickets){
-
-<div class="fixed inset-0 z-40
-  bg-[#050B18]/95 backdrop-blur-2xl
-  flex items-center justify-center p-6">
-
+@if (totalWickets >= maxWickets) {
+  <div
+    class="fixed inset-0 z-40 bg-[#050B18]/95 backdrop-blur-2xl flex items-center justify-center p-6"
+  >
     <!-- CARD -->
-    <div class="w-full max-w-xl rounded-[2.5rem]
-    border border-white/10
-    bg-linear-to-b from-[#0B1220] to-[#07101C]
-    shadow-[0_0_80px_rgba(0,0,0,0.7)]
-    overflow-hidden">
+    <div
+      class="w-full max-w-xl rounded-[2.5rem] border border-white/10 bg-linear-to-b from-[#0B1220] to-[#07101C] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden"
+    >
+      <!-- TOP GLOW -->
+      <div class="h-2 w-full bg-linear-to-r from-amber-400 via-orange-500 to-amber-400"></div>
 
-        <!-- TOP GLOW -->
-        <div class="h-2 w-full
-      bg-linear-to-r
-      from-amber-400
-      via-orange-500
-      to-amber-400">
+      <!-- CONTENT -->
+      <div class="p-8 sm:p-10 text-center">
+        <!-- LABEL -->
+        <p class="uppercase tracking-[0.4em] text-xs font-black text-amber-400">Innings Break</p>
+
+        <!-- TITLE -->
+        <h1 class="mt-4 text-5xl sm:text-6xl font-black text-white">Chase Begins</h1>
+
+        <!-- SCORE -->
+        <div class="mt-8 rounded-4xl border border-white/10 bg-white/5 p-6">
+          <p class="text-zinc-400 text-lg font-semibold">
+            Team
+            {{ currentBattingTeamName }}
+
+            scored:
+          </p>
+
+          <h1 class="mt-3 text-7xl font-black text-amber-400">
+            {{ totalRuns }}
+          </h1>
+
+          <p class="mt-2 text-zinc-500">Runs</p>
         </div>
 
-        <!-- CONTENT -->
-        <div class="p-8 sm:p-10 text-center">
+        <!-- TARGET -->
+        <div class="mt-6 flex items-center justify-center gap-3">
+          <p class="text-zinc-400 text-xl">Target:</p>
 
-            <!-- LABEL -->
-            <p class="uppercase tracking-[0.4em]
-        text-xs font-black text-amber-400">
-
-                Innings Break
-
-            </p>
-
-            <!-- TITLE -->
-            <h1 class="mt-4 text-5xl sm:text-6xl
-        font-black text-white">
-
-                Chase Begins
-
-            </h1>
-
-            <!-- SCORE -->
-            <div class="mt-8 rounded-4xl
-        border border-white/10
-        bg-white/5 p-6">
-
-                <p class="text-zinc-400 text-lg font-semibold">
-
-                    Team
-                    {{ currentBattingTeamName }}
-
-                    scored:
-
-                </p>
-
-                <h1 class="mt-3 text-7xl
-          font-black text-amber-400">
-
-                    {{ totalRuns }}
-
-                </h1>
-
-                <p class="mt-2 text-zinc-500">
-
-                    Runs
-
-                </p>
-
-            </div>
-
-            <!-- TARGET -->
-            <div class="mt-6 flex items-center
-        justify-center gap-3">
-
-                <p class="text-zinc-400 text-xl">
-
-                    Target:
-
-                </p>
-
-                <h1 class="text-4xl font-black
-          text-green-400">
-
-                    {{ totalRuns + 1 }}
-
-                </h1>
-
-            </div>
-
-            <!-- BUTTON -->
-            <button (click)="startSecondInnings()" class="mt-10 relative overflow-hidden cursor-pointer
-        px-10 py-4 rounded-3xl
-        bg-amber-400/15
-        border border-amber-400/20
-        text-amber-400
-        font-black text-lg tracking-wide
-        hover:scale-[1.03]
-        active:scale-[0.98]
-        transition-all duration-300
-        shadow-[0_0_30px_rgba(251,191,36,0.18)]">
-
-                <!-- GLOW -->
-                <div class="absolute inset-0
-          bg-linear-to-r
-          from-transparent
-          via-amber-400/10
-          to-transparent">
-                </div>
-
-                <span class="relative z-10">
-
-                    Start Second Innings →
-
-                </span>
-
-            </button>
-
+          <h1 class="text-4xl font-black text-green-400">
+            {{ totalRuns + 1 }}
+          </h1>
         </div>
 
+        <!-- BUTTON -->
+        <button
+          (click)="startSecondInnings()"
+          class="mt-10 relative overflow-hidden cursor-pointer px-10 py-4 rounded-3xl bg-amber-400/15 border border-amber-400/20 text-amber-400 font-black text-lg tracking-wide hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_30px_rgba(251,191,36,0.18)]"
+        >
+          <!-- GLOW -->
+          <div
+            class="absolute inset-0 bg-linear-to-r from-transparent via-amber-400/10 to-transparent"
+          ></div>
+
+          <span class="relative z-10"> Start Second Innings → </span>
+        </button>
+      </div>
     </div>
-
-</div>
-
+  </div>
 }
 
 <!-- Match results overlay -->
 
-@if(matchResult){
-<!-- MATCH RESULT OVERLAY -->
-<div class="fixed inset-0 z-50
-  bg-[#050B18]/95 backdrop-blur-2xl
-  flex items-center justify-center w-full h-full min-[400px]:p-6">
-
+@if (matchResult) {
+  <!-- MATCH RESULT OVERLAY -->
+  <div
+    class="fixed inset-0 z-50 bg-[#050B18]/95 backdrop-blur-2xl flex items-center justify-center w-full h-full min-[400px]:p-6"
+  >
     <!-- CARD -->
-    <div class="relative
-    w-full h-full overflow-auto max-w-2xl rounded-[2.8rem]
-    border border-white/10
-    bg-linear-to-b from-[#0B1220] to-[#07101C]
-    shadow-[0_0_100px_rgba(0,0,0,0.7)]">
-
-        <!-- TOP STRIP -->
-        <div class="h-2 w-full" [ngClass]="{
-  'text-green-400': matchResult === 'won',
-  'text-red-400': matchResult === 'lost',
-  'text-amber-400': matchResult === 'tie'
-}">
-        </div>
-
-        <!-- GLOW ORB -->
-        <div class="absolute -top-24 left-1/2
-      -translate-x-1/2 w-72 h-72
-      rounded-full blur-3xl opacity-20" [ngClass]="{
-  'text-green-400': matchResult === 'won',
-  'text-red-400': matchResult === 'lost',
-  'text-amber-400': matchResult === 'tie'
-}">
-        </div>
-
-        <!-- CONTENT -->
-        <div class="relative z-10
-      px-8 py-12 sm:px-14
-      text-center">
-
-            <!-- SMALL LABEL -->
-            <p class="uppercase tracking-[0.45em]
-        text-xs font-black" [ngClass]="{
-  'text-green-400': matchResult === 'won',
-  'text-red-400': matchResult === 'lost',
-  'text-amber-400': matchResult === 'tie'
-}">
-
-                MATCH RESULT
-
-            </p>
-
-            <!-- BIG RESULT -->
-            <h1 class="mt-5 text-6xl sm:text-7xl
-        font-black leading-none" [ngClass]="{
-                    'text-[#94F505]':
-                        winningTeam === 'A',
-
-                    'text-purple-400':
-                     winningTeam === 'B',
-
-                    'text-amber-400':
-                        matchResult === 'tie'
-
-                    }">
-                {{ resultMessage }}
-
-            </h1>
-
-            <!-- MESSAGE -->
-            <p class="mt-6 text-xl text-zinc-300
-        leading-relaxed">
-
-                {{ matchResultMessage}}
-
-            </p>
-
-            <!-- SCORE BLOCK -->
-            <div class="mt-10 rounded-4xl
-        border border-white/10
-        bg-white/5 backdrop-blur-xl
-        p-7">
-
-                <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs font-bold">
-
-                    Final Score
-
-                </p>
-
-                <h1 class="mt-4 text-7xl
-          font-black text-white">
-
-                    {{ totalRuns }}
-
-                    <span class="text-zinc-500">
-
-                        /{{ totalWickets }}
-
-                    </span>
-
-                </h1>
-
-                <p class="mt-3 text-zinc-400 text-lg">
-
-                    in {{ overs }} Overs
-
-                </p>
-
-            </div>
-
-            <!-- MOTM -->
-            <div class="mt-8 rounded-4xl
-        border border-white/10
-        bg-linear-to-r from-white/5 to-white/3
-        p-6">
-
-                <p class="uppercase tracking-[0.35em]
-          text-xs font-black text-amber-400">
-
-                    MAN OF THE MATCH
-
-                </p>
-
-                <div class="mt-5 flex items-center
-          justify-center w-full space-x-3 min-[450px]:space-x-6">
-
-                    <!-- PHOTO -->
-                    <img [src]="Motm?.playerPhoto" class="w-24 h-24 rounded-full
-            object-cover border-2 border-amber-400">
-
-                    <!-- INFO -->
-                    <div class="text-left">
-
-                        <h1 class="text-3xl font-black
-              text-white">
-
-                            {{ Motm?.playerName }}
-
-                        </h1>
-
-                        <p class="mt-1 text-sm text-zinc-400">
-
-                            @if(
-                            (Motm?.runs || 0) > 0
-                            &&
-                            (Motm?.wickets || 0) > 0
-                            ){
-                            
-                            {{Motm?.runs}} Runs &
-                            {{Motm?.wickets}} Wickets
-                            
-                            }
-                            
-                            @else if((Motm?.runs || 0) > 0){
-                            
-                            {{Motm?.runs}} Runs
-                            
-                            }
-                            
-                            @else if((Motm?.wickets || 0) > 0){
-                            
-                            {{Motm?.wickets}} Wickets
-                            
-                            }
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!-- BUTTONS -->
-            <div class="mt-10 flex flex-col sm:flex-row
-        items-center justify-center gap-4">
-
-                <!-- SCORECARD -->
-                <button (click)="isShowingScoreCard=true" class="px-8 py-4 rounded-3xl
-          bg-white/8 border border-white/10
-          text-white font-black tracking-wide
-          hover:bg-white/12
-          hover:scale-[1.03]
-          active:scale-[0.98]
-          transition-all duration-300">
-
-                    View Scorecard
-
-                </button>
-
-                <!-- HOME -->
-                <button (click)="saveCompletedMatch()" class="px-8 py-4 rounded-3xl
-          font-black tracking-wide
-          transition-all duration-300
-          hover:scale-[1.03]
-          active:scale-[0.98] text-white cursor-pointer">
-
-                    Finish Match
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-}
-
-
-
-@if(isShowingScoreCard){
-
-<!-- SCORECARD OVERLAY -->
-<div class="fixed inset-0 z-120
-
-bg-black/70
-backdrop-blur-md
-
-flex items-center justify-center
-
-p-3 sm:p-4">
-
-    <!-- PANEL -->
-    <div class="w-full max-w-5xl
-
-    max-h-[92vh]
-    overflow-hidden
-
-    rounded-[2.5rem]
-
-    border border-white/10
-
-    bg-[#09111F]/95
-
-    shadow-[0_0_80px_rgba(0,0,0,0.7)]
-
-    flex flex-col">
-
-        <!-- HEADER -->
-        <div class="p-5 sm:p-6
-
-        border-b border-white/10
-
-        flex items-center justify-between">
-
-            <!-- LEFT -->
-            <div>
-
-                <p class="uppercase tracking-[0.35em]
-
-                text-[10px] sm:text-xs
-
-                text-zinc-500
-                font-black">
-
-                    Live Match Stats
-
-                </p>
-
-                <h1 class="text-4xl sm:text-3xl
-
-                font-black text-white
-
-                mt-2">
-
-                    Scorecard
-
-                </h1>
-
-            </div>
-
-            <!-- CLOSE -->
-            <button (click)="isShowingScoreCard=false" class="w-14 h-14
-            sm:w-11 sm:h-11
-
-            rounded-3xl sm:rounded-2xl
-
-            bg-white/5
-            border border-white/10
-
-            text-zinc-400
-            text-2xl sm:text-xl
-
-            hover:bg-white/10
-
-            transition-all">
-
-                ✕
-
-            </button>
-
-        </div>
-
-        <!-- CONTENT -->
-        <div class="flex-1 overflow-y-auto
-
-        p-4 sm:p-6
-
-        space-y-10">
-
-            <!-- ========================= -->
-            <!-- BATTING -->
-            <!-- ========================= -->
-
-            <div>
-
-                <!-- TITLE -->
-                <div class="flex items-center justify-between
-
-                mb-5">
-
-                    <h1 class="text-3xl sm:text-2xl
-
-                    font-black text-white">
-
-                        Batting
-
-                    </h1>
-
-                    <div class="px-4 py-2 rounded-2xl
-
-                    bg-amber-400/10
-
-                    border border-amber-400/20">
-
-                        <p class="text-amber-400
-
-                        text-2xl sm:text-xl
-
-                        font-black">
-
-                            {{totalRuns}}/{{totalWickets}}
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-                <!-- CARD -->
-                <div class="rounded-4xl
-
-                border border-white/10
-
-                overflow-hidden
-
-                bg-white/2">
-
-                    @for(player of currentBattingTeam; track player.id){
-
-                    <!-- PLAYER -->
-                    <div class="px-5 py-5
-
-                    border-t border-white/5
-                    first:border-t-0
-
-                    flex items-center
-                    justify-between gap-4">
-
-                        <!-- LEFT -->
-                        <div class="min-w-0 flex-1">
-
-                            <!-- NAME -->
-                            <div class="flex items-center gap-3">
-
-                                <h1 class="text-white
-
-                                font-black
-
-                                text-xl sm:text-lg
-
-                                truncate">
-
-                                    {{player.displayName}}
-
-                                </h1>
-
-                                @if(
-                                playerStats[player.id!].hasScoredHundred
-                                ){
-
-                                <span class="text-xs
-
-                                px-2 py-1
-
-                                rounded-full
-
-                                bg-purple-400/15
-                                text-purple-300
-
-                                font-black">
-
-                                    100
-
-                                </span>
-
-                                }
-
-                                @else if(
-                                playerStats[player.id!].hasScoredFifty
-                                ){
-
-                                <span class="text-xs
-
-                                px-2 py-1
-
-                                rounded-full
-
-                                bg-amber-400/15
-                                text-amber-300
-
-                                font-black">
-
-                                    50
-
-                                </span>
-
-                                }
-
-                            </div>
-
-                            <!-- DISMISSAL -->
-                            <p class="text-zinc-400
-
-                            text-sm sm:text-xs
-
-                            mt-2 leading-relaxed">
-
-                                @if(playerStats[player.id!].dismissalType === 'bowled'){
-
-                                b {{playerStats[player.id!].dismissedBy}}
-
-                                }
-
-                                @else if(playerStats[player.id!].dismissalType === 'caught'){
-
-                                c {{playerStats[player.id!].caughtBy}} b {{playerStats[player.id!].dismissedBy}}
-
-                                }
-
-                                @else if(playerStats[player.id!].dismissalType === 'offside'){
-
-                                offside b {{playerStats[player.id!].dismissedBy}}
-
-                                }
-
-                                @else {
-
-                                not out
-
-                                }
-
-                            </p>
-
-                        </div>
-
-                        <!-- RIGHT -->
-                        <div class="text-right
-
-                        shrink-0">
-
-                            <!-- RUNS -->
-                            <h1 class="text-[#FBBF24]
-
-                            font-black
-
-                            text-3xl sm:text-2xl">
-
-                                {{playerStats[player.id!].runs}}
-
-                            </h1>
-
-                            <!-- DETAILS -->
-                            <p class="text-zinc-400
-
-                            text-sm mt-1">
-
-                                {{playerStats[player.id!].ballsFaced}}
-                                balls
-
-                                •
-
-                                SR
-
-                                {{
-
-                                playerStats[player.id!].ballsFaced
-
-                                ?
-
-                                (
-                                (
-                                playerStats[player.id!].runs
-                                /
-                                playerStats[player.id!].ballsFaced
-                                ) * 100
-                                ).toFixed(1)
-
-                                :
-
-                                '0.0'
-
-                                }}
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    }
-
-                </div>
-
-            </div>
-
-            <!-- ========================= -->
-            <!-- BOWLING -->
-            <!-- ========================= -->
-
-            <div>
-
-                <!-- TITLE -->
-                <div class="mb-5">
-
-                    <h1 class="text-3xl sm:text-2xl
-
-                    font-black text-white">
-
-                        Bowling
-
-                    </h1>
-
-                </div>
-
-                <!-- CARD -->
-                <div class="rounded-4xl
-
-                border border-white/10
-
-                overflow-hidden
-
-                bg-white/2">
-
-                    @for(player of currentBowlingTeam; track player.id){
-
-                    <!-- PLAYER -->
-                    <div class="px-5 py-5
-
-                    border-t border-white/5
-                    first:border-t-0
-
-                    flex items-center
-                    justify-between gap-4">
-
-                        <!-- LEFT -->
-                        <div class="min-w-0 flex-1">
-
-                            <!-- NAME -->
-                            <h1 class="text-white
-
-                            font-black
-
-                            text-xl sm:text-lg">
-
-                                {{player.displayName}}
-
-                            </h1>
-
-                            <!-- DETAILS -->
-                            <div class="flex items-center
-
-                            gap-3 flex-wrap
-
-                            mt-2">
-
-                                <p class="text-zinc-400
-                                text-sm">
-
-                                    Ov
-
-                                    {{
-
-                                    Math.floor(
-                                    playerStats[player.id!].ballsDelivered / 6
-                                    )
-
-                                    }}.
-
-                                    {{
-
-                                    playerStats[player.id!].ballsDelivered % 6
-
-                                    }}
-
-                                </p>
-
-                                <p class="text-zinc-400
-                                text-sm">
-
-                                    M
-
-                                    {{playerStats[player.id!].maiden}}
-
-                                </p>
-
-                                <p class="text-red-400
-                                text-sm font-bold">
-
-                                    W
-
-                                    {{playerStats[player.id!].wickets}}
-
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                        <!-- RIGHT -->
-                        <div class="text-right
-
-                        shrink-0">
-
-                            <!-- RUNS -->
-                            <h1 class="text-white
-
-                            font-black
-
-                            text-2xl">
-
-                                {{playerStats[player.id!].runsConceded}}
-
-                            </h1>
-
-                            <!-- ECO -->
-                            <p class="text-blue-400
-
-                            text-sm mt-1
-
-                            font-bold">
-
-                                Eco
-
-                                {{
-
-                                playerStats[player.id!].ballsDelivered
-
-                                ?
-
-                                (
-
-                                playerStats[player.id!].runsConceded
-
-                                /
-
-                                (
-                                playerStats[player.id!].ballsDelivered / 6
-                                )
-
-                                ).toFixed(2)
-
-                                :
-
-                                '0.00'
-
-                                }}
-
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                    }
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-@if(showHatTrickAnimation){
-
-<div class="fixed inset-0 z-50
-         flex items-center justify-center
-         bg-black/80">
-
-    <div class="text-center">
-
-        <h1 class="text-7xl font-black
-             text-cyan-400 animate-pulse">
-
-            🔥 HAT-TRICK 🔥
-
+    <div
+      class="relative w-full h-full overflow-auto max-w-2xl rounded-[2.8rem] border border-white/10 bg-linear-to-b from-[#0B1220] to-[#07101C] shadow-[0_0_100px_rgba(0,0,0,0.7)]"
+    >
+      <!-- TOP STRIP -->
+      <div
+        class="h-2 w-full"
+        [ngClass]="{
+          'text-green-400': matchResult === 'won',
+          'text-red-400': matchResult === 'lost',
+          'text-amber-400': matchResult === 'tie',
+        }"
+      ></div>
+
+      <!-- GLOW ORB -->
+      <div
+        class="absolute -top-24 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl opacity-20"
+        [ngClass]="{
+          'text-green-400': matchResult === 'won',
+          'text-red-400': matchResult === 'lost',
+          'text-amber-400': matchResult === 'tie',
+        }"
+      ></div>
+
+      <!-- CONTENT -->
+      <div class="relative z-10 px-8 py-12 sm:px-14 text-center">
+        <!-- SMALL LABEL -->
+        <p
+          class="uppercase tracking-[0.45em] text-xs font-black"
+          [ngClass]="{
+            'text-green-400': matchResult === 'won',
+            'text-red-400': matchResult === 'lost',
+            'text-amber-400': matchResult === 'tie',
+          }"
+        >
+          MATCH RESULT
+        </p>
+
+        <!-- BIG RESULT -->
+        <h1
+          class="mt-5 text-6xl sm:text-7xl font-black leading-none"
+          [ngClass]="{
+            'text-[#94F505]': winningTeam === 'A',
+
+            'text-purple-400': winningTeam === 'B',
+
+            'text-amber-400': matchResult === 'tie',
+          }"
+        >
+          {{ resultMessage }}
         </h1>
 
+        <!-- MESSAGE -->
+        <p class="mt-6 text-xl text-zinc-300 leading-relaxed">
+          {{ matchResultMessage }}
+        </p>
+
+        <!-- SCORE BLOCK -->
+        <div class="mt-10 rounded-4xl border border-white/10 bg-white/5 backdrop-blur-xl p-7">
+          <p class="text-zinc-500 uppercase tracking-[0.3em] text-xs font-bold">Final Score</p>
+
+          <h1 class="mt-4 text-7xl font-black text-white">
+            {{ totalRuns }}
+
+            <span class="text-zinc-500"> /{{ totalWickets }} </span>
+          </h1>
+
+          <p class="mt-3 text-zinc-400 text-lg">in {{ overs }} Overs</p>
+        </div>
+
+        <!-- MOTM -->
+        <div
+          class="mt-8 rounded-4xl border border-white/10 bg-linear-to-r from-white/5 to-white/3 p-6"
+        >
+          <p class="uppercase tracking-[0.35em] text-xs font-black text-amber-400">
+            MAN OF THE MATCH
+          </p>
+
+          <div class="mt-5 flex items-center justify-center w-full space-x-3 min-[450px]:space-x-6">
+            <!-- PHOTO -->
+            <img
+              [src]="Motm?.playerPhoto"
+              class="w-24 h-24 rounded-full object-cover border-2 border-amber-400"
+            />
+
+            <!-- INFO -->
+            <div class="text-left">
+              <h1 class="text-3xl font-black text-white">
+                {{ Motm?.playerName }}
+              </h1>
+
+              <p class="mt-1 text-sm text-zinc-400">
+                @if ((Motm?.runs || 0) > 0 && (Motm?.wickets || 0) > 0) {
+                  {{ Motm?.runs }} Runs & {{ Motm?.wickets }} Wickets
+
+                } @else if ((Motm?.runs || 0) > 0) {
+                  {{ Motm?.runs }} Runs
+
+                } @else if ((Motm?.wickets || 0) > 0) {
+                  {{ Motm?.wickets }} Wickets
+                }
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUTTONS -->
+        <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <!-- SCORECARD -->
+          <button
+            (click)="isShowingScoreCard = true"
+            class="px-8 py-4 rounded-3xl bg-white/8 border border-white/10 text-white font-black tracking-wide hover:bg-white/12 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300"
+          >
+            View Scorecard
+          </button>
+
+          <!-- HOME -->
+          <button
+            (click)="saveCompletedMatch()"
+            class="px-8 py-4 rounded-3xl font-black tracking-wide transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] text-white cursor-pointer"
+          >
+            Finish Match
+          </button>
+        </div>
+      </div>
     </div>
-
-</div>
-
+  </div>
 }
 
+@if (isShowingScoreCard) {
+  <!-- SCORECARD OVERLAY -->
+  <div
+    class="fixed inset-0 z-120 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4"
+  >
+    <!-- PANEL -->
+    <div
+      class="w-full max-w-5xl max-h-[92vh] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#09111F]/95 shadow-[0_0_80px_rgba(0,0,0,0.7)] flex flex-col"
+    >
+      <!-- HEADER -->
+      <div class="p-5 sm:p-6 border-b border-white/10 flex items-center justify-between">
+        <!-- LEFT -->
+        <div>
+          <p class="uppercase tracking-[0.35em] text-[10px] sm:text-xs text-zinc-500 font-black">
+            Live Match Stats
+          </p>
 
+          <h1 class="text-4xl sm:text-3xl font-black text-white mt-2">Scorecard</h1>
+        </div>
+
+        <!-- CLOSE -->
+        <button
+          (click)="isShowingScoreCard = false"
+          class="w-14 h-14 sm:w-11 sm:h-11 rounded-3xl sm:rounded-2xl bg-white/5 border border-white/10 text-zinc-400 text-2xl sm:text-xl hover:bg-white/10 transition-all"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-10">
+        <!-- ========================= -->
+        <!-- BATTING -->
+        <!-- ========================= -->
+
+        <div>
+          <!-- TITLE -->
+          <div class="flex items-center justify-between mb-5">
+            <h1 class="text-3xl sm:text-2xl font-black text-white">Batting</h1>
+
+            <div class="px-4 py-2 rounded-2xl bg-amber-400/10 border border-amber-400/20">
+              <p class="text-amber-400 text-2xl sm:text-xl font-black">
+                {{ totalRuns }}/{{ totalWickets }}
+              </p>
+            </div>
+          </div>
+
+          <!-- CARD -->
+          <div class="rounded-4xl border border-white/10 overflow-hidden bg-white/2">
+            @for (player of currentBattingTeam; track player.id) {
+              <!-- PLAYER -->
+              <div
+                class="px-5 py-5 border-t border-white/5 first:border-t-0 flex items-center justify-between gap-4"
+              >
+                <!-- LEFT -->
+                <div class="min-w-0 flex-1">
+                  <!-- NAME -->
+                  <div class="flex items-center gap-3">
+                    <h1 class="text-white font-black text-xl sm:text-lg truncate">
+                      {{ player.displayName }}
+                    </h1>
+
+                    @if (playerStats[player.id!].hasScoredHundred) {
+                      <span
+                        class="text-xs px-2 py-1 rounded-full bg-purple-400/15 text-purple-300 font-black"
+                      >
+                        100
+                      </span>
+
+                    } @else if (playerStats[player.id!].hasScoredFifty) {
+                      <span
+                        class="text-xs px-2 py-1 rounded-full bg-amber-400/15 text-amber-300 font-black"
+                      >
+                        50
+                      </span>
+                    }
+                  </div>
+
+                  <!-- DISMISSAL -->
+                  <p class="text-zinc-400 text-sm sm:text-xs mt-2 leading-relaxed">
+                    @if (playerStats[player.id!].dismissalType === 'bowled') {
+                      b {{ playerStats[player.id!].dismissedBy }}
+
+                    } @else if (playerStats[player.id!].dismissalType === 'caught') {
+                      c {{ playerStats[player.id!].caughtBy }} b
+                      {{ playerStats[player.id!].dismissedBy }}
+
+                    } @else if (playerStats[player.id!].dismissalType === 'offside') {
+                      offside b {{ playerStats[player.id!].dismissedBy }}
+
+                    } @else {
+                      not out
+                    }
+                  </p>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="text-right shrink-0">
+                  <!-- RUNS -->
+                  <h1 class="text-[#FBBF24] font-black text-3xl sm:text-2xl">
+                    {{ playerStats[player.id!].runs }}
+                  </h1>
+
+                  <!-- DETAILS -->
+                  <p class="text-zinc-400 text-sm mt-1">
+                    {{ playerStats[player.id!].ballsFaced }}
+                    balls • SR
+
+                    {{
+                      playerStats[player.id!].ballsFaced
+                        ? (
+                            (playerStats[player.id!].runs / playerStats[player.id!].ballsFaced) *
+                            100
+                          ).toFixed(1)
+                        : '0.0'
+                    }}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- ========================= -->
+        <!-- BOWLING -->
+        <!-- ========================= -->
+
+        <div>
+          <!-- TITLE -->
+          <div class="mb-5">
+            <h1 class="text-3xl sm:text-2xl font-black text-white">Bowling</h1>
+          </div>
+
+          <!-- CARD -->
+          <div class="rounded-4xl border border-white/10 overflow-hidden bg-white/2">
+            @for (player of currentBowlingTeam; track player.id) {
+              <!-- PLAYER -->
+              <div
+                class="px-5 py-5 border-t border-white/5 first:border-t-0 flex items-center justify-between gap-4"
+              >
+                <!-- LEFT -->
+                <div class="min-w-0 flex-1">
+                  <!-- NAME -->
+                  <h1 class="text-white font-black text-xl sm:text-lg">
+                    {{ player.displayName }}
+                  </h1>
+
+                  <!-- DETAILS -->
+                  <div class="flex items-center gap-3 flex-wrap mt-2">
+                    <p class="text-zinc-400 text-sm">
+                      Ov
+
+                      {{ Math.floor(playerStats[player.id!].ballsDelivered / 6) }}.
+
+                      {{ playerStats[player.id!].ballsDelivered % 6 }}
+                    </p>
+
+                    <p class="text-zinc-400 text-sm">
+                      M
+
+                      {{ playerStats[player.id!].maiden }}
+                    </p>
+
+                    <p class="text-red-400 text-sm font-bold">
+                      W
+
+                      {{ playerStats[player.id!].wickets }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="text-right shrink-0">
+                  <!-- RUNS -->
+                  <h1 class="text-white font-black text-2xl">
+                    {{ playerStats[player.id!].runsConceded }}
+                  </h1>
+
+                  <!-- ECO -->
+                  <p class="text-blue-400 text-sm mt-1 font-bold">
+                    Eco
+
+                    {{
+                      playerStats[player.id!].ballsDelivered
+                        ? (
+                            playerStats[player.id!].runsConceded /
+                            (playerStats[player.id!].ballsDelivered / 6)
+                          ).toFixed(2)
+                        : '0.00'
+                    }}
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (showHatTrickAnimation) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div class="text-center">
+        <h1 class="text-7xl font-black text-cyan-400 animate-pulse">🔥 HAT-TRICK 🔥</h1>
+      </div>
+    </div>
+  }
 }

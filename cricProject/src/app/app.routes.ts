@@ -11,73 +11,77 @@ import { LiveMatch } from './features/unlimited/live-match/live-match';
 import { LeftoverPlayer } from './features/unlimited/leftover-player/leftover-player';
 import { MainPage } from './match-history/main-page/main-page';
 import { Scorecard } from './match-history/scorecard/scorecard';
+import { Rankings } from './rankings/rankings';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: Home,
+  },
 
-    {
-        path: "",
-        component: Home
-    },
+  {
+    path: 'add-player',
+    component: AddPlayer,
+  },
 
-    {
-        path: 'add-player',
-        component: AddPlayer
-    },
+  {
+    path: 'about',
+    component: About,
+  },
 
-    {
-        path: 'about',
-        component: About
-    },
+  {
+    path: 'players-list',
+    component: PlayersList,
+  },
 
-    {
-        path: 'players-list',
-        component: PlayersList
+  {
+    path: 'player-info/:id',
+    component: PlayerInfo,
+  },
 
-    },
+  // Matches History
 
-    {
-        path: 'player-info/:id',
-        component: PlayerInfo
-    },
+  {
+    path: 'matches-history',
+    component: MainPage,
+  },
 
-    // Matches History
+  {
+    path: 'match-scorecard/:id',
+    component: Scorecard,
+  },
 
-    {
-        path: 'matches-history',
-        component: MainPage
-    },
+  // Unlimited Match
 
-    {
-        path:'match-scorecard/:id',
-        component:Scorecard
-    },
+  {
+    path: 'unlimited/welcome',
+    component: Welcome,
+  },
 
-    // Unlimited Match
+  {
+    path: 'unlimited/select-players',
+    component: SelectPlayers,
+  },
 
-    {
-        path: 'unlimited/welcome',
-        component: Welcome
-    },
+  {
+    path: 'unlimited/toss',
+    component: TossPage,
+  },
 
-    {
-        path: 'unlimited/select-players',
-        component: SelectPlayers
-    },
+  {
+    path: 'unlimited/leftover-player',
+    component: LeftoverPlayer,
+  },
 
-    {
-        path: 'unlimited/toss',
-        component:TossPage
-    },
+  {
+    path: 'unlimited/live-match',
+    component: LiveMatch,
+  },
 
-    {
-        path: 'unlimited/leftover-player',
-        component: LeftoverPlayer
-    },
+  // Rankings
 
-    {
-        path: 'unlimited/live-match',
-        component:LiveMatch
-    }
-
-
+  {
+    path: 'rankings/:type',
+    component: Rankings,
+  },
 ];

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Player } from '../shared/models/player.model'
+import { Player } from '../shared/models/player.model';
 import { CommonModule } from '@angular/common';
 import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -13,101 +13,81 @@ import { getDownloadURL, ref, Storage, uploadBytes } from '@angular/fire/storage
   styleUrl: './add-player.css',
 })
 export class AddPlayer {
-
-
   player: Player = {
-
     fullName: '',
     displayName: '',
     style: '',
     createdAt: Date.now(),
-    photoURL: ''
+    photoURL: '',
+  };
 
-  }
-  
   previewImage: any = null;
-  selectedFile: File | null = null
-  isLoading:boolean = false
+  selectedFile: File | null = null;
+  isLoading: boolean = false;
 
-  constructor(private firestore: Firestore, private cdr: ChangeDetectorRef, private router: Router, private storage: Storage){}
-
-
+  constructor(
+    private firestore: Firestore,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private storage: Storage,
+  ) {}
 
   onImageSelect(event: any) {
-    console.log('event triggered')
+    console.log('event triggered');
 
-    const file = event.target.files[0]
+    const file = event.target.files[0];
 
-    if(!file) return;
+    if (!file) return;
 
-    this.selectedFile = file
+    this.selectedFile = file;
 
-    const reader = new FileReader()
+    const reader = new FileReader();
 
-    reader.onload = (()=>{
-      this.previewImage = reader.result
-      this.cdr.detectChanges()
-    })
+    reader.onload = () => {
+      this.previewImage = reader.result;
+      this.cdr.detectChanges();
+    };
 
-    reader.readAsDataURL(file)
-
+    reader.readAsDataURL(file);
   }
 
- 
-async addPlayer(playerForm: NgForm) {
+  async addPlayer(playerForm: NgForm) {
+    try {
+      this.isLoading = true;
 
-  try {
+      let imageURL = '';
 
-    this.isLoading = true;
+      // upload image if exists
+      if (this.selectedFile) {
+        const filePath = `players/${Date.now()}_${this.selectedFile.name}`;
 
-    let imageURL = '';
+        const storageRef = ref(this.storage, filePath);
 
-    // upload image if exists
-    if (this.selectedFile) {
+        await uploadBytes(storageRef, this.selectedFile);
 
-      const filePath =
-        `players/${Date.now()}_${this.selectedFile.name}`;
+        imageURL = await getDownloadURL(storageRef);
+      }
 
-      const storageRef = ref(this.storage, filePath);
+      // save firestore document
+      const playersRef = collection(this.firestore, 'players');
 
-      await uploadBytes(storageRef, this.selectedFile);
+      await addDoc(playersRef, {
+        ...this.player,
 
-      imageURL = await getDownloadURL(storageRef);
+        photoURL:
+          imageURL ||
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4YreOWfDX3kK-QLAbAL4ufCPc84ol2MA8Xg&s',
+      });
 
+      playerForm.reset();
+      this.previewImage = null;
+      this.selectedFile = null;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.isLoading = false;
+      this.router.navigate(['/players-list']);
+      this.cdr.detectChanges();
     }
-
-    // save firestore document
-    const playersRef = collection(this.firestore, 'players');
-
-    await addDoc(playersRef, {
-
-      ...this.player,
-
-      photoURL: imageURL || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4YreOWfDX3kK-QLAbAL4ufCPc84ol2MA8Xg&s'
-
-    });
-
-    playerForm.reset()
-    this.previewImage = null
-    this.selectedFile = null
-    
-
-
   }
-
-  catch(error) {
-
-    console.log(error);
-
-  }
-
-  finally {
-
-    this.isLoading = false;
-    this.router.navigate(['/players-list'])
-    this.cdr.detectChanges();
-
-  }
-
-}
 }
