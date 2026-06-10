@@ -266,8 +266,10 @@ export class Home implements OnInit {
   }
 
   getStrikeRate() {
+    const MIN_BALLS = 30;
+
     const players = Object.values(this.careerStats).filter(
-      (player: any) => player.totalBallsFaced > 0,
+      (player: any) => player.totalBallsFaced >= MIN_BALLS,
     );
 
     if (players.length === 0) {
@@ -276,16 +278,22 @@ export class Home implements OnInit {
       return;
     }
 
-    this.bestStrikeRatePlayer = players.reduce((winner: any, challenger: any) => {
-      const winnerSR = (winner.totalRuns / winner.totalBallsFaced) * 100;
+    this.bestStrikeRatePlayer = players.reduce(
+      (winner: any, challenger: any) => {
+        const winnerSR =
+          (winner.totalRuns / winner.totalBallsFaced) * 100;
 
-      const challengerSR = (challenger.totalRuns / challenger.totalBallsFaced) * 100;
+        const challengerSR =
+          (challenger.totalRuns / challenger.totalBallsFaced) * 100;
 
-      return challengerSR > winnerSR ? challenger : winner;
-    });
+        return challengerSR > winnerSR ? challenger : winner;
+      }
+    );
 
     this.bestStrikeRate =
-      (this.bestStrikeRatePlayer.totalRuns / this.bestStrikeRatePlayer.totalBallsFaced) * 100;
+      (this.bestStrikeRatePlayer.totalRuns /
+        this.bestStrikeRatePlayer.totalBallsFaced) *
+      100;
   }
 
   getEconomy() {
@@ -293,7 +301,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats);
+    let players = Object.values(this.careerStats).filter((player:any) => player.totalBallsDelivered >= 30);
 
     if (players.length === 0) {
       return;
@@ -322,7 +330,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats);
+    let players = Object.values(this.careerStats).filter((player:any) => player.totalBallsFaced >=30)
 
     if (players.length === 0) {
       return;
@@ -346,7 +354,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats);
+    let players = Object.values(this.careerStats).filter((player:any)=> player.totalBallsDelivered >= 30)
 
     if (players.length === 0) {
       return;
@@ -514,9 +522,31 @@ export class Home implements OnInit {
       return;
     }
 
-    this.mostFifersPlayer = players.reduce((winner: any, challenger: any) => {
-      return challenger.totalFifers > winner.totalFifers ? challenger : winner;
-    });
+    this.mostFifersPlayer = players.reduce(
+      (winner: any, challenger: any) => {
+
+        if (challenger.totalFifers > winner.totalFifers) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalFifers === winner.totalFifers &&
+          challenger.totalInnings < winner.totalInnings
+        ) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalFifers === winner.totalFifers &&
+          challenger.totalInnings === winner.totalInnings &&
+          challenger.totalWickets > winner.totalWickets
+        ) {
+          return challenger;
+        }
+
+        return winner;
+      }
+    );
 
     this.mostFifers = this.mostFifersPlayer.totalFifers;
   }
@@ -532,9 +562,31 @@ export class Home implements OnInit {
       return;
     }
 
-    this.mostHattricksPlayer = players.reduce((winner: any, challenger: any) => {
-      return challenger.totalHattricks > winner.totalHattricks ? challenger : winner;
-    });
+    this.mostHattricksPlayer = players.reduce(
+      (winner: any, challenger: any) => {
+
+        if (challenger.totalHattricks > winner.totalHattricks) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalHattricks === winner.totalHattricks &&
+          challenger.totalInnings < winner.totalInnings
+        ) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalHattricks === winner.totalHattricks &&
+          challenger.totalInnings === winner.totalInnings &&
+          challenger.totalWickets > winner.totalWickets
+        ) {
+          return challenger;
+        }
+
+        return winner;
+      }
+    );
 
     this.mosthattricks = this.mostHattricksPlayer.totalHattricks;
   }
@@ -550,8 +602,38 @@ export class Home implements OnInit {
       return;
     }
 
-    this.mostMotmPlayer = players.reduce((winner: any, challenger: any) =>
-      challenger.totalMotm > winner.totalMotm ? challenger : winner,
+    this.mostMotmPlayer = players.reduce(
+      (winner: any, challenger: any) => {
+        if (challenger.totalMotm > winner.totalMotm) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalMotm === winner.totalMotm &&
+          challenger.totalInnings < winner.totalInnings
+        ) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalMotm === winner.totalMotm &&
+          challenger.totalInnings === winner.totalInnings &&
+          challenger.totalRuns > winner.totalRuns
+        ) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalMotm === winner.totalMotm &&
+          challenger.totalInnings === winner.totalInnings &&
+          challenger.totalRuns === winner.totalRuns &&
+          challenger.totalWickets > winner.totalWickets
+        ) {
+          return challenger;
+        }
+
+        return winner;
+      }
     );
 
     this.mostMotm = this.mostMotmPlayer.totalMotm;

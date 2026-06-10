@@ -92,11 +92,12 @@ export class Scorecard implements OnInit {
     }
 
     if (player.dismissalType === 'caught') {
-      if (player.caughtBy === player.dismissedBy) {
+      if (player.caughtBy.displayName === player.dismissedBy) {
+        console.log(player.caughtBy)
         return `c & b ${player.dismissedBy}`;
       }
 
-      return `c ${player.caughtBy} b ${player.dismissedBy}`;
+      return `c ${player.caughtBy.displayName} b ${player.dismissedBy}`;
     }
 
     if (player.dismissalType === 'bowled') {

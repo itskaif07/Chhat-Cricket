@@ -1,3 +1,28 @@
+<!-- Loader -->
+@if (loading) {
+<div class="loader-wrapper">
+  <div class="loader">
+    <img src="https://cdn-icons-png.flaticon.com/128/1099/1099680.png" class="ball" alt="ball" />
+
+    <svg class="bat" viewBox="0 0 460.84737 460.84737">
+      <path d="m460.847656 31.75-25.070312 25.078125-31.761719-31.757813 25.082031-25.070312zm0 0" fill="#a85d5d" />
+      <path d="m378.945312 50.140625 25.070313-25.070313 31.761719 31.757813-25.070313 25.070313zm0 0" fill="#7f4545" />
+      <path d="m353.878906 75.210938 25.066406-25.070313 31.761719 31.757813-25.070312 25.070312zm0 0" fill="#a85d5d" />
+      <path d="m328.808594 100.28125 25.066406-25.070312 31.761719 31.757812-25.070313 25.070312zm0 0" fill="#7f4545" />
+      <path d="m360.566406 132.039062-25.078125 25.070313-31.75-31.75 25.070313-25.078125zm0 0" fill="#a85d5d" />
+      <path
+        d="m352.425781 190.320312-260.136719 260.140626c-13.847656 13.847656-36.296874 13.847656-50.140624 0l-31.761719-31.761719c-13.847657-13.84375-13.847657-36.296875 0-50.140625l260.140625-260.136719 25.070312 25.066406-.21875.222657-76.050781 107.808593 107.808594-76.050781.21875-.21875zm0 0"
+        fill="#ffd2a6" />
+      <path d="m327.355469 165.25-.21875.21875-107.808594 76.050781 76.050781-107.808593.21875-.222657zm0 0"
+        fill="#7f4545" />
+    </svg>
+  </div>
+
+  <p class="loader-text font-black">Loading Players...</p>
+</div>
+}
+
+
 <div class="w-full min-h-screen bg-[#050B18] text-white px-5 py-8 flex flex-col">
   <!-- HEADER -->
   <div class="w-full flex items-center justify-between mb-8">
@@ -8,96 +33,69 @@
     </div>
 
     <!-- ADD PLAYER -->
-    <div
-      routerLink="/add-player"
-      class="w-14 h-14 rounded-2xl bg-[#94F505] text-black flex items-center justify-center text-3xl font-bold shadow-[0_0_30px_rgba(148,245,5,0.35)] active:scale-95 transition-all"
-    >
+    <div routerLink="/add-player"
+      class="w-14 h-14 rounded-2xl bg-[#94F505] text-black flex items-center justify-center text-3xl font-bold shadow-[0_0_30px_rgba(148,245,5,0.35)] active:scale-95 transition-all">
       +
     </div>
   </div>
 
   <!-- SEARCH -->
-  <div
-    class="w-full h-14 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl px-5 flex items-center mb-8"
-  >
-    <input
-      [(ngModel)]="searchText"
-      (input)="searchPlayers()"
-      type="text"
-      placeholder="Search Players..."
-      class="w-full bg-transparent outline-none text-white placeholder:text-zinc-500"
-    />
+  <div class="w-full h-14 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl px-5 flex items-center mb-8">
+    <input [(ngModel)]="searchText" (input)="searchPlayers()" type="text" placeholder="Search Players..."
+      class="w-full bg-transparent outline-none text-white placeholder:text-zinc-500" />
   </div>
 
   <!-- PLAYERS GRID -->
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-5 pb-10">
     @for (player of filteredPlayers; track player.id) {
-      <!-- CARD -->
-      <div
-        [routerLink]="['/player-info', player.id]"
-        class="rounded-3xl overflow-hidden bg-white/5 border border-white/10 backdrop-blur-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.03)] cursor-pointer"
-      >
-        <!-- IMAGE -->
-        <div class="aspect-square overflow-hidden relative">
-          <img
-            [src]="
+    <!-- CARD -->
+    <div [routerLink]="['/player-info', player.id]"
+      class="rounded-3xl overflow-hidden bg-white/5 border border-white/10 backdrop-blur-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.03)] cursor-pointer">
+      <!-- IMAGE -->
+      <div class="aspect-square overflow-hidden relative">
+        <img [src]="
               player.photoURL || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
-            "
-            class="w-full h-full object-cover object-center"
-          />
-        </div>
+            " class="w-full h-full object-cover object-center" />
+      </div>
 
-        <!-- DETAILS -->
-        <div class="p-4 flex flex-col">
-          <!-- DISPLAY NAME -->
-          <h1 class="font-bold text-lg text-white truncate tracking-tight">
-            {{ player.displayName }}
-          </h1>
+      <!-- DETAILS -->
+      <div class="p-4 flex flex-col">
+        <!-- DISPLAY NAME -->
+        <h1 class="font-bold text-lg text-white truncate tracking-tight">
+          {{ player.displayName }}
+        </h1>
 
-          <!-- FULL NAME -->
-          <p class="text-zinc-400 text-sm truncate mt-1">
-            {{ player.fullName }}
-          </p>
+        <!-- FULL NAME -->
+        <p class="text-zinc-400 text-sm truncate mt-1">
+          {{ player.fullName }}
+        </p>
 
-          <!-- STYLE -->
-          <div class="mt-4 flex items-center justify-between">
-            <div class="px-3 py-1 rounded-full bg-[#94F505]/10 border border-[#94F505]/20">
-              <!-- BIG SCREEN -->
-              <h2 class="text-xs font-semibold text-[#94F505]">
-                {{ player.style === 'right' ? 'Right Handed' : 'Left Handed' }}
-              </h2>
-            </div>
+        <!-- STYLE -->
+        <div class="mt-4 flex items-center justify-between">
+          <div class="px-3 py-1 rounded-full bg-[#94F505]/10 border border-[#94F505]/20">
+            <!-- BIG SCREEN -->
+            <h2 class="text-xs font-semibold text-[#94F505]">
+              {{ player.style === 'right' ? 'Right Handed' : 'Left Handed' }}
+            </h2>
+          </div>
 
-            <!-- ARROW -->
-            <div
-              class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 min-[450px]:flex items-center justify-center hidden"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-4 h-4 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
+          <!-- ARROW -->
+          <div
+            class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 min-[450px]:flex items-center justify-center hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
           </div>
         </div>
       </div>
+    </div>
     }
 
     @if (filteredPlayers.length === 0) {
-      <div
-        class="text-zinc-500 text-center bg-[#050B18] w-full h-full flex items-center justify-center"
-      >
-        <h1>No players found</h1>
-      </div>
+    <div class="text-zinc-500 text-center bg-[#050B18] w-full h-full flex items-center justify-center">
+      <h1>No players found</h1>
+    </div>
     }
   </div>
 </div>
