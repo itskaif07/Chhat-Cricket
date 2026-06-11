@@ -205,6 +205,8 @@ export class Rankings implements OnInit {
         });
       });
 
+      
+
 
 
       const motmPlayerId =
@@ -295,14 +297,14 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            this.getStrikeRate(b) - this.getStrikeRate(a) || b.totalRuns - a.totalRuns,
+            this.getStrikeRate(b) - this.getStrikeRate(a) || b.totalBallsFaced - a.totalBallsFaced || b.totalInnings - a.totalInnings || b.totalRuns - a.totalRuns,
         );
 
         break;
 
       case 'economy':
         this.players = this.players.filter((player) => player.totalBallsBowled >= 30);
-        this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || a.totalRunsConceded - b.totalRunsConceded);
+        this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || b.totalBallsBowled - a.totalBallsBowled   || a.totalRunsConceded - b.totalRunsConceded);
         break;
 
       case 'batting-average':
@@ -310,7 +312,7 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            this.getBattingAverage(b) - this.getBattingAverage(a) || b.totalRuns - a.totalRuns,
+            this.getBattingAverage(b) - this.getBattingAverage(a) || b.totalBallsFaced - a.totalBallsFaced || b.totalInnings - a.totalInnings || b.totalRuns - a.totalRuns,
         );
 
         break;
@@ -324,7 +326,7 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            this.getBowlingAverage(a) - this.getBowlingAverage(b) ||
+            this.getBowlingAverage(a) - this.getBowlingAverage(b) || b.totalBallsBowled - a.totalBallsBowled ||
             a.totalRunsConceded - b.totalRunsConceded
         );
         break;

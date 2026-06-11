@@ -160,6 +160,8 @@ export class Home implements OnInit {
 
               totalRuns: 0,
 
+              totalInnings: 0,
+
               totalWickets: 0,
 
               totalBallsFaced: 0,
@@ -197,6 +199,8 @@ export class Home implements OnInit {
           this.careerStats[playerId].totalBallsFaced += stats.ballsFaced || 0;
 
           this.careerStats[playerId].totalMatches += stats.matches || 0;
+
+          this.careerStats[playerId].totalInnings += stats.innings || 0;
 
           this.careerStats[playerId].totalRunsConceded += stats.runsConceded || 0;
 
@@ -301,7 +305,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats).filter((player:any) => player.totalBallsDelivered >= 30);
+    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsDelivered >= 30);
 
     if (players.length === 0) {
       return;
@@ -330,7 +334,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats).filter((player:any) => player.totalBallsFaced >=30)
+    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsFaced >= 30)
 
     if (players.length === 0) {
       return;
@@ -354,7 +358,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats).filter((player:any)=> player.totalBallsDelivered >= 30)
+    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsDelivered >= 30)
 
     if (players.length === 0) {
       return;
@@ -373,7 +377,7 @@ export class Home implements OnInit {
     this.bestBowlingAverage =
       this.bestBowlingAveragePlayer.totalWickets > 0
         ? this.bestBowlingAveragePlayer.totalRunsConceded /
-          this.bestBowlingAveragePlayer.totalWickets
+        this.bestBowlingAveragePlayer.totalWickets
         : 0;
 
     console.log('Bowling Average', this.bestBowlingAveragePlayer, this.bestBowlingAverage);
@@ -476,6 +480,7 @@ export class Home implements OnInit {
   }
 
   getMostHundreds() {
+
     if (!this.careerStats) {
       return;
     }
@@ -486,11 +491,66 @@ export class Home implements OnInit {
       return;
     }
 
-    this.mostHundredsPlayer = players.reduce((winner: any, challenger: any) => {
-      return challenger.totalHundreds > winner.totalHundreds ? challenger : winner;
-    });
+    this.mostHundredsPlayer = players.reduce(
+      (winner: any, challenger: any) => {
 
-    this.mostHundreds = this.mostHundredsPlayer.totalHundreds;
+        if (
+          challenger.totalHundreds >
+          winner.totalHundreds
+        ) {
+          return challenger;
+        }
+
+        if (
+          challenger.totalHundreds ===
+          winner.totalHundreds
+        ) {
+
+          if (
+            challenger.totalInnings <
+            winner.totalInnings
+          ) {
+            return challenger;
+          }
+
+          if (
+            challenger.totalInnings ===
+            winner.totalInnings
+          ) {
+
+            if (
+              challenger.totalBallsFaced <
+              winner.totalBallsFaced
+            ) {
+              return challenger;
+            }
+
+            if (
+              challenger.totalBallsFaced ===
+              winner.totalBallsFaced
+            ) {
+
+              if (
+                challenger.totalRuns >
+                winner.totalRuns
+              ) {
+                return challenger;
+              }
+
+            }
+
+          }
+
+        }
+
+        return winner;
+
+      }
+    );
+
+    this.mostHundreds =
+      this.mostHundredsPlayer.totalHundreds;
+
   }
 
   getMostCatches() {
@@ -583,6 +643,18 @@ export class Home implements OnInit {
         ) {
           return challenger;
         }
+
+        console.log(
+          challenger.playerName,
+          challenger.totalHattricks,
+          challenger.totalInnings
+        );
+
+        console.log(
+          winner.playerName,
+          winner.totalHattricks,
+          winner.totalInnings
+        );
 
         return winner;
       }

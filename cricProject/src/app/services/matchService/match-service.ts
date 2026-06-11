@@ -10,11 +10,18 @@ import {
   query,
 } from '@angular/fire/firestore';
 
+import { GenerativeModel, getAI, getGenerativeModel } from "firebase/ai";
+
 @Injectable({
   providedIn: 'root',
 })
 export class MatchService {
-  constructor(private fireStore: Firestore) {}
+
+  ai = getAI()
+  model = new GenerativeModel(this.ai, { model: 'gemini-2.5-flash' })
+
+  constructor(private fireStore: Firestore) { }
+
 
   async saveMatch(matchData: any) {
     const matchRef = collection(this.fireStore, 'matches');
@@ -35,5 +42,11 @@ export class MatchService {
     const matchDoc = doc(this.fireStore, `matches/${id}`);
 
     return docData(matchDoc);
+  }
+
+  async generateMatchSummary(prompt: string){
+    const result =this.model.generateContent(prompt)
+
+    return (await result).response.text
   }
 }
