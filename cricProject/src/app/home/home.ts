@@ -380,7 +380,6 @@ export class Home implements OnInit {
         this.bestBowlingAveragePlayer.totalWickets
         : 0;
 
-    console.log('Bowling Average', this.bestBowlingAveragePlayer, this.bestBowlingAverage);
   }
 
   getHighestScore() {
@@ -644,17 +643,7 @@ export class Home implements OnInit {
           return challenger;
         }
 
-        console.log(
-          challenger.playerName,
-          challenger.totalHattricks,
-          challenger.totalInnings
-        );
 
-        console.log(
-          winner.playerName,
-          winner.totalHattricks,
-          winner.totalInnings
-        );
 
         return winner;
       }

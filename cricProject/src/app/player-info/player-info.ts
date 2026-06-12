@@ -1,16 +1,18 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 
 import { ActivatedRoute } from '@angular/router';
 
-import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
 import { RetrievePlayersService } from '../services/retrievePlayer/retrieve-players-service';
 import { MatchService } from '../services/matchService/match-service';
+import { Auth, onAuthStateChanged } from '@angular/fire/auth';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-player-info',
-  imports: [],
+  imports: [FormsModule, CommonModule, NgClass],
   templateUrl: './player-info.html',
   styleUrl: './player-info.css',
 })
@@ -19,16 +21,30 @@ export class PlayerInfo implements OnInit {
   stats: any = null;
   playerId = '';
   loading = false;
+  adminId: string = 'BYoCGh5dXHSeTq73hWKFyZC1Upe2'
+  isAdmin = false
+  editingDisplayName = false;
+  editedDisplayName = '';
+  editingFullName = false
+  editedFullName = ''
+  editingPhoto = false
+  editedPhoto = ''
 
   constructor(
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private retrievePlayerService: RetrievePlayersService,
     private matchService: MatchService,
-  ) {}
+    private auth: Auth,
+    private fireStore: Firestore
+  ) { }
 
   ngOnInit(): void {
     this.playerId = this.route.snapshot.paramMap.get('id') || '';
+
+    onAuthStateChanged(this.auth, (user) => {
+      this.isAdmin = user?.uid === this.adminId
+    })
 
     this.getPlayer();
     this.getStats();
@@ -37,10 +53,61 @@ export class PlayerInfo implements OnInit {
     this.loading = true;
     this.retrievePlayerService.getPlayer(this.playerId).subscribe((data: any) => {
       this.player = data;
+      this.editedDisplayName = this.player.displayName
+      this.editedFullName = this.player.fullName
+      this.editedPhoto = this.player.photoURL
       this.loading = false;
       this.cdr.detectChanges();
     });
   }
+
+  async UpdateDisplayName() {
+    try {
+      const playerRef = doc(this.fireStore, 'players', this.playerId)
+
+      await updateDoc(playerRef, { displayName: this.editedDisplayName })
+      this.player.displayName = this.editedDisplayName
+      this.editingDisplayName = false
+    }
+    catch (e) {
+      console.log(e)
+    }
+
+  }
+
+  async UpdateFullName() {
+    try {
+      const playerRef = doc(this.fireStore, 'players', this.playerId)
+      await updateDoc(playerRef, { fullName: this.editedFullName })
+      this.player.fullName = this.editedFullName
+      this.editingFullName = false
+    }
+    catch (e) {
+      console.log(e)
+    }
+  }
+
+  cancelDisplayNameEdit() {
+
+    this.editedDisplayName =
+      this.player.displayName;
+
+    this.editingDisplayName =
+      false;
+
+  }
+
+  cancelFullNameEdit() {
+
+    this.editedFullName =
+      this.player.fullName;
+
+    this.editingFullName =
+      false;
+
+  }
+
+  
 
   async getStats() {
     try {

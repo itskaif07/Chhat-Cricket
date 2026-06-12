@@ -1,31 +1,39 @@
 @if (loading) {
-  <div class="loader-overlay">
-    <div class="loader-content">
-      <div class="cricket-loader">
-        <div class="pitch"></div>
-        <div class="ball"></div>
-      </div>
+<div class="loader-wrapper">
+  <div class="loader">
+    <img src="https://cdn-icons-png.flaticon.com/128/1099/1099680.png" class="ball" alt="ball" />
 
-      <h2>CHHAT CRICKET</h2>
-      <p>Loading Player Data...</p>
-    </div>
+    <svg class="bat" viewBox="0 0 460.84737 460.84737">
+      <path d="m460.847656 31.75-25.070312 25.078125-31.761719-31.757813 25.082031-25.070312zm0 0" fill="#a85d5d" />
+      <path d="m378.945312 50.140625 25.070313-25.070313 31.761719 31.757813-25.070313 25.070313zm0 0" fill="#7f4545" />
+      <path d="m353.878906 75.210938 25.066406-25.070313 31.761719 31.757813-25.070312 25.070312zm0 0" fill="#a85d5d" />
+      <path d="m328.808594 100.28125 25.066406-25.070312 31.761719 31.757812-25.070313 25.070312zm0 0" fill="#7f4545" />
+      <path d="m360.566406 132.039062-25.078125 25.070313-31.75-31.75 25.070313-25.078125zm0 0" fill="#a85d5d" />
+      <path
+        d="m352.425781 190.320312-260.136719 260.140626c-13.847656 13.847656-36.296874 13.847656-50.140624 0l-31.761719-31.761719c-13.847657-13.84375-13.847657-36.296875 0-50.140625l260.140625-260.136719 25.070312 25.066406-.21875.222657-76.050781 107.808593 107.808594-76.050781.21875-.21875zm0 0"
+        fill="#ffd2a6" />
+      <path d="m327.355469 165.25-.21875.21875-107.808594 76.050781 76.050781-107.808593.21875-.222657zm0 0"
+        fill="#7f4545" />
+    </svg>
   </div>
+
+  <p class="loader-text">Loading Profile...</p>
+</div>
 }
 
 <main class="min-h-screen bg-[#050B18] text-white pb-12">
+
   <section class="player-hero px-4 pt-10 pb-8 lg:px-12 lg:pt-14">
     <div class="mx-auto flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="flex flex-col items-center gap-5 text-center lg:flex-row lg:text-left">
         <div class="relative">
           <div
-            class="h-36 w-36 overflow-hidden rounded-full border-2 border-[#94F505] bg-white/5 shadow-[0_0_42px_rgba(148,245,5,0.35)] lg:h-44 lg:w-44"
-          >
+            class="h-36 w-36 overflow-hidden rounded-full border-2 border-[#94F505] bg-white/5 shadow-[0_0_42px_rgba(148,245,5,0.35)] lg:h-44 lg:w-44">
             <img [src]="player?.photoURL || 'user.png'" class="h-full w-full object-cover" alt="" />
           </div>
 
           <div
-            class="absolute -bottom-2 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-[#94F505]/30 bg-[#071224] shadow-[0_0_22px_rgba(148,245,5,0.25)] lg:left-auto lg:right-2 lg:translate-x-0"
-          >
+            class="absolute -bottom-2 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-[#94F505]/30 bg-[#071224] shadow-[0_0_22px_rgba(148,245,5,0.25)] lg:left-auto lg:right-2 lg:translate-x-0">
             <img src="icons/bat.png" class="h-5 w-5" alt="" />
           </div>
         </div>
@@ -33,24 +41,124 @@
         <div class="max-w-2xl">
           <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#94F505]">Player Profile</p>
 
-          <h1 class="mt-3 text-4xl font-black uppercase tracking-tight text-white lg:text-6xl">
-            {{ player?.displayName || 'Player' }}
-          </h1>
+          <!-- Display Name -->
 
-          <p class="mt-2 text-sm text-zinc-400 lg:text-base">
-            {{ player?.fullName || 'Chhat Cricket Player' }}
-          </p>
+          <div class="relative inline-block">
 
-          <div class="mt-5 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+            @if(!editingDisplayName){
+
+            <h1 class="text-4xl font-black uppercase tracking-tight text-white lg:text-6xl">
+              {{ player?.displayName }}
+            </h1>
+
+            } @else {
+
+            <input [(ngModel)]="editedDisplayName" class="rounded-xl my-1 outline-0 text-center lg:text-left outline-none
+                   bg-zinc-900 px-3 py-1
+                   text-white text-2xl lg:text-4xl" />
+
+            }
+
+            @if(isAdmin && !editingDisplayName){
+
+            <button (click)="this.editingDisplayName = !this.editingDisplayName" class="absolute -right-16 top-1/2 -translate-y-1/2
+         rounded-xl bg-gray-500 px-3 py-1 text-sm">
+              Edit
+            </button>
+
+            }
+
+            @if(editingDisplayName){
+
+            <div class="absolute top-full mt-2
+                     left-1/2 -translate-x-1/2
+                     flex items-center justify-center gap-2
+                     lg:left-auto lg:-right-32
+                     lg:top-1/2 lg:mt-0
+                     lg:translate-x-0
+                     lg:-translate-y-1/2">
+
+              <button (click)="UpdateDisplayName()" class="rounded bg-green-600  px-6 lg:px-3 py-1 text-sm">
+                Save
+              </button>
+
+              <button (click)="cancelDisplayNameEdit()" class="rounded bg-red-600 px-6 lg:px-3 py-1 text-sm">
+                Cancel
+              </button>
+
+            </div>
+
+            }
+
+          </div>
+
+          <!-- Full Name -->
+
+          <div class="block" [ngClass]="{'lg:mt-4 mt-12': editingDisplayName, 'mt-2': !editingDisplayName}">
+
+            <div class="relative inline-block">
+
+              @if(!editingFullName){
+              <p class="text-sm text-zinc-400 lg:text-base">
+                {{ player?.fullName }}
+              </p>
+              }
+              @else{
+              <input [(ngModel)]="editedFullName" class="rounded-xl my-1 outline-0 text-center lg:text-left outline-none
+                                   bg-zinc-900 px-3 py-1
+                                   text-white text-sm lg:text-xl" />
+              }
+
+              @if(isAdmin && !editingFullName){
+
+              <button (click)="this.editingFullName = !this.editingFullName" class="absolute left-full ml-3 top-1/2
+                     -translate-y-1/2
+                     rounded-xl bg-gray-500
+                     px-3 py-0.5 text-sm">
+
+                Edit
+
+              </button>
+
+              }
+
+              @if(editingFullName){
+
+              <div class="absolute top-full mt-2
+                                     left-1/2 -translate-x-1/2
+                                     flex items-center justify-center gap-2
+                                     lg:left-auto lg:-right-32
+                                     lg:top-1/2 lg:mt-0
+                                     lg:translate-x-0
+                                     lg:-translate-y-1/2">
+
+                <button (click)="UpdateFullName()" class="rounded bg-green-600  px-6 lg:px-3 py-1 text-sm">
+                  Save
+                </button>
+
+                <button (click)="cancelFullNameEdit()" class="rounded bg-red-600 px-6 lg:px-3 py-1 text-sm">
+                  Cancel
+                </button>
+
+              </div>
+
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- Style -->
+
+          <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start" [ngClass]="{'lg:mt-4 mt-12': editingFullName, 'mt-2': !editingFullName}">
             <span
-              class="rounded-full border border-[#94F505]/25 bg-[#94F505]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#94F505]"
-            >
+              class="rounded-full border border-[#94F505]/25 bg-[#94F505]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#94F505]">
               {{ player?.style === 'right' ? 'Right Handed' : 'Left Handed' }}
             </span>
 
             <span
-              class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-zinc-300"
-            >
+              class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-zinc-300">
               {{ formatStat(stats?.totalMatches, 'No') }} Matches
             </span>
           </div>
@@ -76,9 +184,7 @@
     </div>
   </section>
 
-  <section
-    class="mx-auto grid w-11/12 lg:space-x-6 space-y-10 lg:space-y-0 px-4 lg:grid-cols-2 mt-10"
-  >
+  <section class="mx-auto grid w-11/12 lg:space-x-6 space-y-10 lg:space-y-0 px-4 lg:grid-cols-2 mt-10">
     <article class="stat-panel stat-panel-batting">
       <div class="section-title">
         <div>
@@ -193,7 +299,7 @@
         <h3>{{ formatStat(stats?.totalHundreds, '0') }}</h3>
         <span>{{
           stats?.totalHundreds > 0 ? 'Triple digits reached' : 'Waiting for the first ton'
-        }}</span>
+          }}</span>
       </article>
 
       <article class="achievement-card achievement-green">
@@ -204,7 +310,7 @@
         <h3>{{ formatStat(stats?.totalFifties, '0') }}</h3>
         <span>{{
           stats?.totalFifties > 0 ? 'Reliable scoring impact' : 'No half-century yet'
-        }}</span>
+          }}</span>
       </article>
 
       <article class="achievement-card achievement-blue">
@@ -215,7 +321,7 @@
         <h3>{{ formatStat(stats?.totalFifers, '0') }}</h3>
         <span>{{
           stats?.totalFifers > 0 ? 'Match-turning spells' : 'No five-wicket haul yet'
-        }}</span>
+          }}</span>
       </article>
 
       <article class="achievement-card achievement-purple">
