@@ -43,6 +43,8 @@
 
       <div routerLink="/players-list" id="glassBox1Right"
         class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer">
+        @if(playersCount >=1){
+
         <div class="flex flex-col">
           <h1 class="font-bold text-4xl tracking-tight">{{ playersCount }}</h1>
 
@@ -50,6 +52,12 @@
         </div>
 
         <p class="text-[#44d43b] text-sm mt-3">View all players →</p>
+        }
+        @else{
+        <div class="flex items-center justify-center">
+          <h1 class="lg:text-xl font-black">No Players Yet</h1>
+        </div>
+        }
       </div>
     </div>
 
@@ -67,6 +75,7 @@
       <!-- RIGHT -->
       <div [routerLink]="['/matches-history']" id="glassBox2Right"
         class="w-2/3 h-full flex flex-col justify-center items-start p-6 cursor-pointer">
+        @if(matchesCount >= 1){
         <div class="flex flex-col">
           <h1 class="font-bold text-4xl tracking-tight">
             {{ matchesCount }}
@@ -76,6 +85,12 @@
         </div>
 
         <p class="text-blue-400 text-sm mt-3">View matches history →</p>
+        }
+        @else{
+        <div class="flex items-center justify-center">
+          <h1 class="lg:text-xl font-black">No Matches Yet</h1>
+        </div>
+        }
       </div>
     </div>
 
@@ -93,6 +108,8 @@
       <!-- RIGHT -->
       <div routerLink="rankings/runs" id="glassBox3Right"
         class="w-2/3 h-full flex flex-col justify-center items-start p-6">
+        @if(totalRuns > 0){
+
         <div class="flex flex-col">
           <h1 class="font-bold text-4xl tracking-tight">
             {{ totalRuns }}
@@ -102,6 +119,12 @@
         </div>
 
         <p class="text-orange-400 text-sm mt-3">View top scorers →</p>
+        }
+        @else{
+        <div class="flex items-center justify-center">
+          <h1 class="lg:text-xl font-black">No Runs Yet</h1>
+        </div>
+        }
       </div>
     </div>
 
@@ -119,6 +142,8 @@
       <!-- RIGHT -->
       <div routerLink="rankings/wickets" id="glassBox4Right"
         class="w-2/3 h-full flex flex-col justify-center items-start p-6">
+        @if(totalWickets > 0){
+
         <div class="flex flex-col">
           <h1 class="font-bold text-4xl tracking-tight">
             {{ totalWickets }}
@@ -128,6 +153,12 @@
         </div>
 
         <p class="text-purple-400 text-sm mt-3">View top bowlers →</p>
+        }
+        @else{
+        <div class="flex items-center justify-center">
+          <h1 class="lg:text-xl font-black">No Wickets Yet</h1>
+        </div>
+        }
       </div>
     </div>
   </div>

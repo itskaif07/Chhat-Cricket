@@ -851,9 +851,12 @@ export class LiveMatch implements OnInit {
     };
   }
 
-  getMatchSummary(){
-    this.matchService.generateMatchSummary(`generate match summary of this match, Total runs: ${this.totalRuns}, Total Wickets: ${this.totalWickets}, Man of the match: ${this.Motm}`)
+  clearMatch(){
+    this.offlinePersistanceService.clearMatch()
+    this.router.navigate(['/'])
+    
   }
+
 
   async saveCompletedMatch() {
     try {

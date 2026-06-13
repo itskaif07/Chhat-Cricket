@@ -9,6 +9,7 @@ import { RetrievePlayersService } from '../services/retrievePlayer/retrieve-play
 import { MatchService } from '../services/matchService/match-service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
+import { getDownloadURL, ref, Storage, uploadBytes } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-player-info',
@@ -29,6 +30,8 @@ export class PlayerInfo implements OnInit {
   editedFullName = ''
   editingPhoto = false
   editedPhoto = ''
+  selectedFile: File | null = null
+  previewPhoto: string | null = null
 
   constructor(
     private route: ActivatedRoute,
@@ -36,7 +39,8 @@ export class PlayerInfo implements OnInit {
     private retrievePlayerService: RetrievePlayersService,
     private matchService: MatchService,
     private auth: Auth,
-    private fireStore: Firestore
+    private fireStore: Firestore,
+    private storage: Storage
   ) { }
 
   ngOnInit(): void {
@@ -107,7 +111,71 @@ export class PlayerInfo implements OnInit {
 
   }
 
-  
+
+  onPhotoSelected(event: any) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+
+      this.previewPhoto =
+        reader.result as string;
+
+    };
+
+    reader.readAsDataURL(file);
+  }
+  async savePhoto() {
+    try {
+
+      if (!this.selectedFile) return;
+
+      const filePath =
+        `players/${Date.now()}_${this.selectedFile.name}`;
+
+      const storageRef =
+        ref(this.storage, filePath);
+
+      await uploadBytes(
+        storageRef,
+        this.selectedFile
+      );
+
+      const imageURL =
+        await getDownloadURL(storageRef);
+
+      await updateDoc(
+        doc(this.fireStore, 'players', this.playerId),
+        {
+          photoURL: imageURL
+        }
+      );
+
+      this.player.photoURL = imageURL;
+
+      this.previewPhoto = null;
+      this.selectedFile = null;
+
+    } catch (e) {
+
+      console.log(e);
+
+    }
+  }
+
+  cancelPhotoEdit() {
+
+    this.previewPhoto = null;
+    this.selectedFile = null;
+
+  }
+
 
   async getStats() {
     try {

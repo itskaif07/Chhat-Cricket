@@ -17,8 +17,6 @@ import { GenerativeModel, getAI, getGenerativeModel } from "firebase/ai";
 })
 export class MatchService {
 
-  ai = getAI()
-  model = new GenerativeModel(this.ai, { model: 'gemini-2.5-flash' })
 
   constructor(private fireStore: Firestore) { }
 
@@ -44,9 +42,4 @@ export class MatchService {
     return docData(matchDoc);
   }
 
-  async generateMatchSummary(prompt: string){
-    const result =this.model.generateContent(prompt)
-
-    return (await result).response.text
-  }
 }

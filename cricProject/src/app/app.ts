@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
   User,
 } from '@angular/fire/auth';
+import { OfflinePersistanceService } from './services/offline-persistance/offline-persistance-service';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +21,12 @@ export class App implements OnDestroy {
 
   user: User | null = null;
   isSidebarOpen: boolean = false;
+  showMatchWarning = false;
 
   constructor(
     private auth: Auth,
     private router: Router,
+    private offlineService: OfflinePersistanceService,
     private cdr: ChangeDetectorRef,
   ) {
     onAuthStateChanged(this.auth, (user) => {
@@ -53,11 +56,21 @@ export class App implements OnDestroy {
   }
 
   navigateToHome() {
+
+    if (this.offlineService.hasSavedMatch()) {
+      this.showMatchWarning = true;
+      this.isSidebarOpen = false;
+      document.body.style.overflow = 'auto';
+      this.cdr.detectChanges()
+      return
+    }
+
     this.router.navigate(['/']);
     this.isSidebarOpen = false;
     document.body.style.overflow = 'auto';
+    this.cdr.detectChanges()
   }
-
+  
   navigateToAddPlayer() {
     this.router.navigate(['/add-player']);
     this.isSidebarOpen = false;
@@ -67,6 +80,17 @@ export class App implements OnDestroy {
     this.router.navigate(['/about']);
     this.isSidebarOpen = false;
     document.body.style.overflow = 'auto';
+  }
+  
+  home(){
+    if(this.offlineService.hasSavedMatch()){
+      this.showMatchWarning = true;
+      this.cdr.detectChanges()
+      return
+    }
+    
+    this.router.navigate(['/']);
+    this.cdr.detectChanges()
   }
 
   ngOnDestroy() {
