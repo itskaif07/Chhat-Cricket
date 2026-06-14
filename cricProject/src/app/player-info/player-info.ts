@@ -33,6 +33,15 @@ export class PlayerInfo implements OnInit {
   selectedFile: File | null = null
   previewPhoto: string | null = null
 
+
+  careerStats: any = {}
+  matches: any = 0;
+  matchesCount: number = 0;
+  isOrangeCapHolder: boolean = false
+  isPurpleCapHolder: boolean = false
+  mostRuns:any = {}
+  mostWickets:any = 0
+
   constructor(
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
@@ -50,6 +59,7 @@ export class PlayerInfo implements OnInit {
       this.isAdmin = user?.uid === this.adminId
     })
 
+    this.retrieveMatches()
     this.getPlayer();
     this.getStats();
   }
@@ -61,6 +71,16 @@ export class PlayerInfo implements OnInit {
       this.editedFullName = this.player.fullName
       this.editedPhoto = this.player.photoURL
       this.loading = false;
+      this.cdr.detectChanges();
+    });
+  }
+
+  retrieveMatches() {
+    this.matchService.retrieveMatches().subscribe((data) => {
+      this.matchesCount = data.length;
+      this.matches = data;
+      // console.log(data);
+      this.aggregateCareerStats();
       this.cdr.detectChanges();
     });
   }
@@ -259,8 +279,62 @@ export class PlayerInfo implements OnInit {
     }
   }
 
+
   formatStat(value: any, fallback = '--') {
     return value && value > 0 ? value : fallback;
+  }
+
+
+  aggregateCareerStats() {
+    this.careerStats = {};
+    console.log('aggregation started')
+
+    this.matches.forEach((match: any) => {
+      match.innings.forEach((innings: any) => {
+        Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
+          if (!this.careerStats[playerId]) {
+            this.careerStats[playerId] = {
+              playerId,
+
+              playerName: stats.playerName,
+
+              playerPhoto: stats.playerPhoto,
+
+              totalRuns: 0,
+
+              totalWickets: 0,
+
+            };
+          }
+
+          this.careerStats[playerId].totalRuns += stats.runs || 0;
+
+          this.careerStats[playerId].totalWickets += stats.wickets || 0;
+
+        });
+      });
+    });
+
+    this.getOrangeCap()
+    this.getPurpleCap()
+    this.cdr.detectChanges();
+  }
+
+  getOrangeCap() {
+
+    console.log('CAREER STATS', this.careerStats);
+
+    this.mostRuns = Object.values(this.careerStats).sort(
+      (a: any, b: any) => b.totalRuns - a.totalRuns,
+    )[0];
+
+    console.log('MOST RUNS', this.mostRuns);
+  }
+
+  getPurpleCap() {
+    this.mostWickets = Object.values(this.careerStats).sort(
+      (a: any, b: any) => b.totalWickets - a.totalWickets,
+    )[0];
   }
 
   get battingAverage() {

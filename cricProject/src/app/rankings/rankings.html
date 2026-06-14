@@ -29,18 +29,19 @@
 
 @if(players.length === 0){
 
-<div class=" border-white/10 bg-[#050B18] text-white text-center min-h-screen w-full flex flex-col items-center justify-center">
+<div
+    class=" border-white/10 bg-[#050B18] text-white text-center min-h-screen w-full flex flex-col items-center justify-center">
 
     <div class="text-5xl mb-3">
         🏏
     </div>
 
     <h2 class="text-xl font-bold">
-        No Data Available
+        Nothing Here Yet
     </h2>
 
     <p class="text-zinc-500 mt-2">
-        Play some matches to see rankings.
+        Be the first player to achieve this milestone.
     </p>
 
 </div>
@@ -73,9 +74,9 @@
 
     @if(players.length == 1){
     <!-- GOLD -->
-    <div class="rounded-3xl border border-yellow-400/30 bg-yellow-400/10
+    <div [routerLink]="['/player-info', players[0]?.playerId]" class="rounded-3xl cursor-pointer border border-yellow-400/30 bg-yellow-400/10
                 text-center flex flex-col items-center justify-center
-                p-5 mx-auto max-w-full mb-4">
+                p-5 mx-auto max-w-full mb-4 cursor-pointer">
 
         <div class="text-4xl">👑</div>
 
@@ -101,7 +102,7 @@
     <div class="block sm:hidden mb-10">
 
         <!-- GOLD -->
-        <div class="rounded-3xl border border-yellow-400/30 bg-yellow-400/10
+        <div [routerLink]="['/player-info', players[0]?.playerId]" class="rounded-3xl cursor-pointer border border-yellow-400/30 bg-yellow-400/10
             text-center flex flex-col items-center justify-center
             p-5 mx-auto max-w-full mb-4">
 
@@ -123,11 +124,11 @@
 
         </div>
 
-        <!-- SILVER + BRONZE -->
+        <!-- SILVER -->
         <div class="grid grid-cols-2 gap-3">
 
             <!-- SILVER -->
-            <div class="rounded-3xl border border-slate-300/30 bg-slate-300/10
+            <div [routerLink]="['/player-info', players[1]?.playerId]" class="rounded-3xl cursor-pointer border border-slate-300/30 bg-slate-300/10
                 text-center flex flex-col items-center justify-center
                 p-4 min-h-55">
 
@@ -158,7 +159,7 @@
     <div class="hidden sm:flex items-end justify-center gap-6 mb-10 max-w-4xl mx-auto">
 
         <!-- SILVER -->
-        <div class="w-72 rounded-3xl
+        <div [routerLink]="['/player-info', players[1]?.playerId]" class="w-72 cursor-pointer rounded-3xl
     border border-slate-300/30
     bg-slate-300/10
     h-60 flex items-center justify-center flex-col
@@ -186,7 +187,7 @@
         </div>
 
         <!-- GOLD -->
-        <div class="w-80 rounded-3xl
+        <div [routerLink]="['/player-info', players[0]?.playerId]" class="w-80 cursor-pointer rounded-3xl
     border border-yellow-400/30
     bg-yellow-400/10
     h-80 flex items-center justify-center flex-col
@@ -223,7 +224,7 @@
     <div class="block sm:hidden mb-10">
 
         <!-- GOLD -->
-        <div class="rounded-3xl border border-yellow-400/30 bg-yellow-400/10
+        <div [routerLink]="['/player-info', players[0]?.playerId]" class="rounded-3xl border cursor-pointer border-yellow-400/30 bg-yellow-400/10
     text-center flex flex-col items-center justify-center
     p-5 mx-auto max-w-full mb-4">
 
@@ -249,7 +250,7 @@
         <div class="grid grid-cols-2 gap-3">
 
             <!-- SILVER -->
-            <div class="rounded-3xl border border-slate-300/30 bg-slate-300/10
+            <div [routerLink]="['/player-info', players[1]?.playerId]" class="rounded-3xl cursor-pointer border border-slate-300/30 bg-slate-300/10
         text-center flex flex-col items-center justify-center
         p-4 min-h-55">
 
@@ -273,7 +274,7 @@
             </div>
 
             <!-- BRONZE -->
-            <div class="rounded-3xl border border-amber-700/30 bg-amber-700/10
+            <div [routerLink]="['/player-info', players[2]?.playerId]" class="rounded-3xl border cursor-pointer border-amber-700/30 bg-amber-700/10
         text-center flex flex-col items-center justify-center
         p-4 min-h-55">
 
@@ -304,7 +305,7 @@
     <div class="hidden sm:flex items-end gap-4 mb-10">
 
         <!-- SILVER -->
-        <div class="flex-1 rounded-3xl
+        <div [routerLink]="['/player-info', players[1]?.playerId]" class="flex-1 cursor-pointer rounded-3xl
         border border-slate-300/30
         bg-slate-300/10
         space-y-3 text-center
@@ -331,7 +332,7 @@
         </div>
 
         <!-- GOLD -->
-        <div class="flex-1 rounded-3xl
+        <div [routerLink]="['/player-info', players[0]?.playerId]" class="flex-1 cursor-pointer rounded-3xl
         border border-yellow-400/30
         bg-yellow-400/10
         space-y-3 text-center
@@ -358,7 +359,7 @@
         </div>
 
         <!-- BRONZE -->
-        <div class="flex-1 rounded-3xl
+        <div [routerLink]="['/player-info', players[2]?.playerId]" class="flex-1 cursor-pointer rounded-3xl
         border border-amber-700/30
         bg-amber-700/10
         space-y-3 text-center
@@ -387,7 +388,6 @@
     </div>
     }
 
-
     <!-- Remaining Rankings -->
 
     <div class="space-y-3">
@@ -398,7 +398,7 @@
         let i = $index
         ){
 
-        <div class="rounded-2xl border border-white/10
+        <div [routerLink]="['/player-info', player.playerId]" class="rounded-2xl cursor-pointer border border-white/10
             bg-white/5 p-4
             flex items-center justify-between">
 

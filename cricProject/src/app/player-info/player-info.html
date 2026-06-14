@@ -43,9 +43,9 @@
                    -translate-x-1/2 items-center justify-center
                    rounded-full border border-orange-500/30
                    bg-[#071224] shadow-[0_0_22px_rgba(249,115,22,0.35)]">
-          
+
             <img src="icons/bat.png" class="h-5 w-5" alt="" />
-          
+
           </div>
           }
           @else if(!isAdmin){
@@ -53,27 +53,27 @@
             class="absolute -bottom-2 left-1/2 flex h-10 w-10 -translate-x-1/2 items-center justify-center rounded-full border border-[#94F505]/30 bg-[#071224] shadow-[0_0_22px_rgba(148,245,5,0.25)] lg:left-auto lg:right-2 lg:translate-x-0">
             <img src="icons/bat.png" class="h-5 w-5" alt="" />
           </div>
-        }
+          }
 
-        @if(previewPhoto != null){
-        
-        <div class="mt-3 flex justify-center gap-3">
-        
-          <button (click)="savePhoto()" class="rounded-xl bg-green-600 px-4 py-2 font-bold">
-        
-            Save
-        
-          </button>
-        
-          <button (click)="cancelPhotoEdit()" class="rounded-xl bg-red-600 px-4 py-2 font-bold">
-        
-            Cancel
-        
-          </button>
-        
-        </div>
-        
-        }
+          @if(previewPhoto != null){
+
+          <div class="mt-3 flex justify-center gap-3">
+
+            <button (click)="savePhoto()" class="rounded-xl bg-green-600 px-4 py-2 font-bold">
+
+              Save
+
+            </button>
+
+            <button (click)="cancelPhotoEdit()" class="rounded-xl bg-red-600 px-4 py-2 font-bold">
+
+              Cancel
+
+            </button>
+
+          </div>
+
+          }
 
         </div>
 
@@ -190,7 +190,8 @@
 
           <!-- Style -->
 
-          <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start" [ngClass]="{'lg:mt-4 mt-12': editingFullName, 'mt-2': !editingFullName}">
+          <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+            [ngClass]="{'lg:mt-4 mt-12': editingFullName, 'mt-2': !editingFullName}">
             <span
               class="rounded-full border border-[#94F505]/25 bg-[#94F505]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#94F505]">
               {{ player?.style === 'right' ? 'Right Handed' : 'Left Handed' }}
@@ -223,7 +224,7 @@
     </div>
   </section>
 
-  <section class="mx-auto grid w-11/12 lg:space-x-6 space-y-10 lg:space-y-0 px-4 lg:grid-cols-2 mt-10">
+  <section class="mx-auto grid w-full lg:space-x-6 space-y-10 lg:space-y-0 px-2 lg:grid-cols-2 mt-10">
     <article class="stat-panel stat-panel-batting">
       <div class="section-title">
         <div>
@@ -231,7 +232,13 @@
           <h2>Run Making</h2>
         </div>
 
-        <img src="icons/bat.png" alt="" />
+        <div class="flex items-center justify-center space-x-3">
+
+          <img src="icons/bat.png" alt="" />
+          @if(player?.id === mostRuns?.playerId){
+          <img src="icons/orange.png" alt="">
+          }
+        </div>
       </div>
 
       <div class="featured-metric">
@@ -283,7 +290,13 @@
           <h2>Wicket Taking</h2>
         </div>
 
-        <img src="icons/ball.png" alt="" />
+        <div class="flex items-center justify-center space-x-3">
+          
+          @if(player?.id === mostWickets?.playerId){
+          <img src="icons/purple.png" alt="" class="scale-110">
+          }
+          <img src="icons/ball.png" alt="" />
+          </div>
       </div>
 
       <div class="featured-metric">
@@ -316,7 +329,7 @@
     </article>
   </section>
 
-  <section class="mx-auto w-11/12 px-4 py-8">
+  <section class="mx-auto w-full px-2 py-8">
     <div class="mb-5 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
       <div>
         <p class="text-xs font-bold uppercase tracking-[0.3em] text-amber-300">Milestone Cabinet</p>

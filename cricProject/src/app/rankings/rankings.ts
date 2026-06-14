@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatchService } from '../services/matchService/match-service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-rankings',
-  imports: [],
+  imports: [RouterLink, JsonPipe],
   templateUrl: './rankings.html',
   styleUrl: './rankings.css',
 })
@@ -36,7 +37,9 @@ export class Rankings implements OnInit {
       console.log(matches)
     });
   }
-
+  test() {
+    console.log('clicked');
+  }
   setTitle() {
     switch (this.rankingType) {
       case 'runs':
