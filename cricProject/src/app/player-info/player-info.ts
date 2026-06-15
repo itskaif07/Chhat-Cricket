@@ -67,6 +67,7 @@ export class PlayerInfo implements OnInit {
     this.loading = true;
     this.retrievePlayerService.getPlayer(this.playerId).subscribe((data: any) => {
       this.player = data;
+      // console.log(data)
       this.editedDisplayName = this.player.displayName
       this.editedFullName = this.player.fullName
       this.editedPhoto = this.player.photoURL
@@ -79,7 +80,7 @@ export class PlayerInfo implements OnInit {
     this.matchService.retrieveMatches().subscribe((data) => {
       this.matchesCount = data.length;
       this.matches = data;
-      // console.log(data);
+      console.log(this.matches[0].innings[0].playerStats)
       this.aggregateCareerStats();
       this.cdr.detectChanges();
     });
@@ -287,7 +288,6 @@ export class PlayerInfo implements OnInit {
 
   aggregateCareerStats() {
     this.careerStats = {};
-    console.log('aggregation started')
 
     this.matches.forEach((match: any) => {
       match.innings.forEach((innings: any) => {
@@ -322,13 +322,11 @@ export class PlayerInfo implements OnInit {
 
   getOrangeCap() {
 
-    console.log('CAREER STATS', this.careerStats);
 
     this.mostRuns = Object.values(this.careerStats).sort(
       (a: any, b: any) => b.totalRuns - a.totalRuns,
     )[0];
 
-    console.log('MOST RUNS', this.mostRuns);
   }
 
   getPurpleCap() {

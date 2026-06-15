@@ -34,12 +34,11 @@ export class Rankings implements OnInit {
     this.matchService.retrieveMatches().subscribe((matches: any[]) => {
       this.aggregateCareerStats(matches);
       this.loading = false
-      console.log(matches)
+      // console.log(matches)
     });
   }
-  test() {
-    console.log('clicked');
-  }
+
+
   setTitle() {
     switch (this.rankingType) {
       case 'runs':
@@ -167,13 +166,15 @@ export class Rankings implements OnInit {
             };
           }
 
+
+
           this.careerStats[playerId].totalRuns += stats.runs || 0;
 
           this.careerStats[playerId].totalWickets += stats.wickets || 0;
 
           this.careerStats[playerId].totalInnings += stats.innings || 0;
 
-          this.careerStats[playerId].totalCatches += stats.caughtBy ? 1 : 0 || 0;
+
 
           this.careerStats[playerId].totalRunsConceded += stats.runsConceded || 0;
 
@@ -193,11 +194,21 @@ export class Rankings implements OnInit {
 
           this.careerStats[playerId].totalHattricks += stats.hatTricks || 0;
 
+
+          if (stats.caughtBy?.id) {
+            const catcherId = stats.caughtBy.id;
+
+            if (this.careerStats[catcherId]) {
+              this.careerStats[catcherId].totalCatches++;
+            }
+          }
+
           this.careerStats[playerId].highestScore =
             Math.max(
               this.careerStats[playerId].highestScore,
               stats.runs || 0
             );
+
 
           this.getBestFigures(stats, playerId)
 
@@ -206,9 +217,10 @@ export class Rankings implements OnInit {
 
 
         });
+
       });
 
-      
+
 
 
 
@@ -307,7 +319,7 @@ export class Rankings implements OnInit {
 
       case 'economy':
         this.players = this.players.filter((player) => player.totalBallsBowled >= 30);
-        this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || b.totalBallsBowled - a.totalBallsBowled   || a.totalRunsConceded - b.totalRunsConceded);
+        this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || b.totalBallsBowled - a.totalBallsBowled || a.totalRunsConceded - b.totalRunsConceded);
         break;
 
       case 'batting-average':

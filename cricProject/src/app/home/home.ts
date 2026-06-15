@@ -229,6 +229,7 @@ export class Home implements OnInit {
           }
         });
       });
+      
       if (match.motm?.playerId) {
         const motmId = match.motm.playerId;
 
