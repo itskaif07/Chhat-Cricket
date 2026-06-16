@@ -39,8 +39,8 @@ export class PlayerInfo implements OnInit {
   matchesCount: number = 0;
   isOrangeCapHolder: boolean = false
   isPurpleCapHolder: boolean = false
-  mostRuns:any = {}
-  mostWickets:any = 0
+  mostRuns: any = {}
+  mostWickets: any = 0
 
   constructor(
     private route: ActivatedRoute,
@@ -291,6 +291,11 @@ export class PlayerInfo implements OnInit {
     return value && value > 0 ? value : fallback;
   }
 
+  totalExtras(stats: any) {
+    const wides = Number(stats?.totalWides || 0);
+    const noBalls = Number(stats?.totalNoBalls || 0);
+    return wides + noBalls;
+  }
 
   aggregateCareerStats() {
     this.careerStats = {};

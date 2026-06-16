@@ -428,8 +428,7 @@
       <button (click)="isShowingScoreCard = true" class="score-btn w-1/2 h-20">Stats</button>
 
       <!-- UNDO -->
-      <button (click)="undo()" [disabled]="!canUndo" class="score-btn-undo w-1/2 h-20"
-        [ngClass]="{ 'opacity-50': lastAction === '' || !canUndo }">
+      <button (click)="undo()" class="score-btn-undo w-1/2 h-20">
         Undo
       </button>
     </div>
@@ -535,53 +534,84 @@
       class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
       <!-- HEADER -->
       <div class="p-6 border-b border-white/10">
+      
         <!-- TOP ROW -->
         <div class="flex items-center justify-between">
-          <!-- LABEL -->
           <p class="text-sm uppercase tracking-[0.25em] font-bold" [ngClass]="{
-                'text-[#FBBF24]': !isOverComplete,
-                'text-green-500': isOverComplete,
-              }">
+              'text-[#FBBF24]': !isOverComplete,
+              'text-green-500': isOverComplete
+            }">
+      
             {{ isOverComplete ? 'NEXT OVER' : 'OPENING BOWLER' }}
+      
           </p>
-
-          <!-- TEAM -->
+      
           <h1 class="font-black text-lg" [ngClass]="{
-                'text-[#94F505]': battingFirst === 'B',
-                'text-purple-400': battingFirst === 'A',
-              }">
+              'text-[#94F505]': battingFirst === 'B',
+              'text-purple-400': battingFirst === 'A'
+            }">
+      
             Team {{ battingFirst === 'A' ? 'B' : 'A' }}
+      
           </h1>
         </div>
-
+      
         <!-- TITLE -->
         <h1 class="text-2xl font-black mt-2 text-white">
           {{ isOverComplete ? 'Select Next Bowler' : 'Select Opening Bowler' }}
         </h1>
+      
+        <p class="text-zinc-400 mt-2">
+          {{
+          isOverComplete
+          ? 'Choose who comes to bowl next.'
+          : 'Choose who will bowl the opening over.'
+          }}
+        </p>
+      
+      </div>
 
-        <div class="flex flex-col sm:flex-row sm:space-y-0 space-y-4 items-start justify-between">
-          <!-- DESCRIPTION -->
-          <p class="text-zinc-400 mt-2">
-            {{
-            isOverComplete
-            ? 'Choose who comes to bowl next.'
-            : 'Choose who will bowl the opening over.'
-            }}
-          </p>
-
-          @if (selectedBowler) {
-          <button (click)="confirmBowler()"
-            class="relative overflow-hidden px-8 py-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/20 backdrop-blur-xl text-[#FBBF24] font-black tracking-wide shadow-[0_0_30px_rgba(251,191,36,0.12)] hover:bg-[#FBBF24]/20 hover:shadow-[0_0_40px_rgba(251,191,36,0.25)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
-            <!-- GLOW -->
-            <div
-              class="absolute inset-0 opacity-0 hover:opacity-100 bg-linear-to-r from-[#FBBF24]/0 via-[#FBBF24]/10 to-[#F59E0B]/0 transition-all duration-500">
-            </div>
-
-            <!-- TEXT -->
-            <span class="cursor-pointer relative z-10"> Continue → </span>
-          </button>
-          }
-        </div>
+      <div class="p-5 border-t border-white/10 flex gap-3">
+      
+        <!-- UNDO -->
+        <button (click)="undo()" class="flex-1 rounded-2xl border border-cyan-500/20
+                 bg-cyan-500/10 hover:bg-cyan-500/15
+                 px-4 py-4 flex items-center justify-center gap-2
+                 transition-all duration-300 cursor-pointer">
+      
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+      
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 110 8h-1" />
+      
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l4-4m-4 4l4 4" />
+      
+          </svg>
+      
+          <span class="font-black text-cyan-300">
+            Undo
+          </span>
+      
+        </button>
+      
+        <!-- CONTINUE -->
+        @if (selectedBowler) {
+      
+        <button (click)="confirmBowler()" class="flex-1 rounded-2xl
+                 bg-[#FBBF24]/15
+                 border border-[#FBBF24]/20
+                 text-[#FBBF24]
+                 font-black
+                 py-4
+                 hover:bg-[#FBBF24]/20
+                 transition-all duration-300">
+      
+          Continue →
+      
+        </button>
+      
+        }
+      
       </div>
 
       <!-- PLAYERS -->
@@ -860,7 +890,7 @@
                 b {{ playerStats[player.id!].dismissedBy }}
 
                 } @else if (playerStats[player.id!].dismissalType === 'caught') {
-                c {{ playerStats[player.id!].caughtBy }} b
+                c {{ playerStats[player.id!].caughtBy?.displayName }} b
                 {{ playerStats[player.id!].dismissedBy }}
 
                 } @else if (playerStats[player.id!].dismissalType === 'offside') {

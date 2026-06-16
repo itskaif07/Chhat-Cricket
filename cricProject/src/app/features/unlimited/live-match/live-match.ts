@@ -49,6 +49,7 @@ export class LiveMatch implements OnInit {
   isShowingCatchingDialog: boolean = false;
   isShowingNoBallDialog: boolean = false
   showHatTrickAnimation = false;
+  wicketSnapshot: any = {}
 
   captainA: Player | null = null;
   captainB: Player | null = null;
@@ -62,6 +63,8 @@ export class LiveMatch implements OnInit {
 
   selectedBatsman: Player | null = null;
   selectedBowler: Player | null = null;
+
+  matchHistory: any[] = [];
 
   //scores
 
@@ -77,6 +80,8 @@ export class LiveMatch implements OnInit {
   currentBowlerWickets: number = 0;
   currentBowlerBalls: number = 0;
   currentBowlerRunsConceded: number = 0;
+
+
 
   Math = Math;
 
@@ -357,6 +362,8 @@ export class LiveMatch implements OnInit {
   //confirm selection
 
   confirmBatsman() {
+    this.saveSnapshot()
+
     this.currentBatsman = this.selectedBatsman;
     this.showBatsmenDialog = false;
 
@@ -371,6 +378,8 @@ export class LiveMatch implements OnInit {
   }
 
   confirmBowler() {
+    this.saveSnapshot()
+
     this.currentBowler = this.selectedBowler;
     this.showBowlerDialog = false;
     this.isOverComplete = false;
@@ -379,7 +388,76 @@ export class LiveMatch implements OnInit {
 
   // Score
 
+  saveSnapshot() {
+    this.matchHistory.push(
+      structuredClone({
+
+        // SCORE
+        totalRuns: this.totalRuns,
+        totalWickets: this.totalWickets,
+        totalDeliveries: this.totalDeliveries,
+
+        // PLAYER STATS
+        playerStats: this.playerStats,
+
+        // CURRENT PLAYERS
+        currentBatsman: this.currentBatsman,
+        currentBowler: this.currentBowler,
+
+        selectedBatsman: this.selectedBatsman,
+        selectedBowler: this.selectedBowler,
+
+        // OUT PLAYERS
+        outPlayersIds: this.outPlayersIds,
+
+        // CURRENT BATSMAN STATS
+        currentBatsmanRuns: this.currentBatsmanRuns,
+        currentBatsmanBalls: this.currentBatsmanBalls,
+
+        // CURRENT BOWLER STATS
+        currentBowlerRunsConceded: this.currentBowlerRunsConceded,
+        currentBowlerBalls: this.currentBowlerBalls,
+        currentBowlerWickets: this.currentBowlerWickets,
+
+        // DELIVERY HISTORY
+        recentDeliveries: this.recentDeliveries,
+        lastAction: this.lastAction,
+
+        // MATCH FLOW
+        currentInnings: this.currentInnings,
+
+        isWicketFallen: this.isWicketFallen,
+        isOverComplete: this.isOverComplete,
+        isInningsOver: this.isInningsOver,
+
+        canUndo: this.canUndo,
+
+        // DIALOGS
+        showBatsmenDialog: this.showBatsmenDialog,
+        showBowlerDialog: this.showBowlerDialog,
+
+        isDismissalDialogOpen: this.isDismissalDialogOpen,
+        isShowingCatchingDialog: this.isShowingCatchingDialog,
+        isShowingNoBallDialog: this.isShowingNoBallDialog,
+
+        // DISMISSAL
+        dismissalType: this.dismissalType,
+        selectedNoBallRuns: this.selectedNoBallRuns,
+
+        // 1ST INNINGS DATA
+        firstInningRuns: this.firstInningRuns,
+        firstInningsBalls: this.firstInningsBalls,
+        firstInningsWickets: this.firstInningsWickets,
+        firstInningsPlayerStats: this.firstInningsPlayerStats,
+
+        // RESULT
+        matchResult: this.matchResult
+      })
+    );
+  }
+
   addDot() {
+    this.saveSnapshot()
     this.totalDeliveries += 1;
     this.currentBatsmanBalls += 1;
     this.currentBowlerBalls += 1;
@@ -396,6 +474,7 @@ export class LiveMatch implements OnInit {
   }
 
   addFour() {
+    this.saveSnapshot()
     this.totalRuns += 4;
     this.totalDeliveries += 1;
     this.currentBatsmanRuns += 4;
@@ -422,6 +501,7 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBallFour() {
+    this.saveSnapshot()
     this.totalRuns += 4;
 
     this.currentBatsmanRuns += 4;
@@ -452,6 +532,8 @@ export class LiveMatch implements OnInit {
   }
 
   addSix() {
+    this.saveSnapshot()
+
     this.totalRuns += 6;
     this.totalDeliveries += 1;
     this.currentBatsmanRuns += 6;
@@ -478,6 +560,8 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBallSix() {
+    this.saveSnapshot()
+
     this.totalRuns += 6;
 
     this.currentBatsmanRuns += 6;
@@ -509,6 +593,9 @@ export class LiveMatch implements OnInit {
   }
 
   addWicket() {
+    this.saveSnapshot()
+
+
     this.totalWickets += 1;
     this.totalDeliveries += 1;
 
@@ -555,10 +642,12 @@ export class LiveMatch implements OnInit {
 
     this.dismissalType = null;
   }
-  
+
 
 
   selectNoBallRuns(runs: 0 | 4 | 6 | null) {
+    this.saveSnapshot()
+
     this.selectedNoBallRuns = runs
 
     if (this.selectedNoBallRuns === 0) {
@@ -582,11 +671,13 @@ export class LiveMatch implements OnInit {
       this.addNoBallFour()
     }
     else if (this.selectedNoBallRuns === 6) {
-     this.addNoBallSix()
+      this.addNoBallSix()
     }
   }
 
   selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
+    this.saveSnapshot()
+
     this.dismissalType = type;
 
     if (type === 'caught') {
@@ -604,6 +695,8 @@ export class LiveMatch implements OnInit {
   }
 
   selectCaughtBy(player: Player) {
+    this.saveSnapshot()
+
     if (this.currentBatsman?.id && this.currentBowler) {
       // SAVE DISMISSAL TYPE
 
@@ -654,9 +747,11 @@ export class LiveMatch implements OnInit {
   }
 
   addWide() {
+    this.saveSnapshot()
+
     this.recentDeliveries.unshift({ value: 'WD', type: 'wide' });
     this.lastAction = 'WD';
-    if(this.currentBowler?.id){
+    if (this.currentBowler?.id) {
       this.playerStats[this.currentBowler?.id].wides += 1
     }
   }
@@ -704,52 +799,22 @@ export class LiveMatch implements OnInit {
   }
 
   undo() {
-    if (this.lastAction === '4') {
-      this.totalDeliveries -= 1;
-      this.totalRuns -= 4;
-      this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1;
-      this.playerStats[this.currentBatsman?.id!].runs -= 4;
-      this.playerStats[this.currentBowler?.id!].runsConceded -= 4;
-      this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1;
-      this.recentDeliveries.shift();
-      this.saveMatchState();
-    } else if (this.lastAction === '6') {
-      this.totalDeliveries -= 1;
-      this.totalRuns -= 6;
-      this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1;
-      this.playerStats[this.currentBatsman?.id!].runs -= 6;
-      this.playerStats[this.currentBowler?.id!].runsConceded -= 6;
-      this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1;
-      this.recentDeliveries.shift();
-      this.saveMatchState();
-    } else if (this.lastAction === 'W') {
-      this.totalDeliveries -= 1;
-      this.totalWickets -= 1;
-      this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1;
-      this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1;
-      this.playerStats[this.currentBowler?.id!].wickets -= 1;
 
-      this.recentDeliveries.shift();
-      this.saveMatchState();
-    } else if (this.lastAction === '0') {
-      this.totalDeliveries -= 1;
-      this.totalRuns -= 0;
-      this.playerStats[this.currentBatsman?.id!].ballsFaced -= 1;
-      this.playerStats[this.currentBowler?.id!].ballsDelivered -= 1;
-      this.recentDeliveries.shift();
-      this.saveMatchState();
-    } else if (this.lastAction === 'WD') {
-      this.recentDeliveries.shift();
-      this.playerStats[this.currentBowler?.id!].wides -= 1
-      this.saveMatchState();
-    } else if (this.lastAction === 'NB') {
-      this.recentDeliveries.shift();
-      this.playerStats[this.currentBowler?.id!].noBalls -= 1
-      this.saveMatchState();
+    const previousSnapshot =
+      this.matchHistory.pop();
+
+    if (!previousSnapshot) {
+      return;
     }
 
-    this.lastAction = '';
+    Object.assign(this, previousSnapshot);
+
     this.saveMatchState();
+
+    console.log(
+      'Undo successful',
+      this.matchHistory.length
+    );
   }
 
   manageOversChange() {
@@ -853,6 +918,8 @@ export class LiveMatch implements OnInit {
   }
 
   startSecondInnings() {
+    this.saveSnapshot()
+
     this.firstInningRuns = this.totalRuns;
 
     this.firstInningsBalls = this.totalDeliveries;
