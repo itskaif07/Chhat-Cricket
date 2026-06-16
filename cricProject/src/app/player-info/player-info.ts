@@ -67,7 +67,7 @@ export class PlayerInfo implements OnInit {
     this.loading = true;
     this.retrievePlayerService.getPlayer(this.playerId).subscribe((data: any) => {
       this.player = data;
-      // console.log(data)
+      console.log(data)
       this.editedDisplayName = this.player.displayName
       this.editedFullName = this.player.fullName
       this.editedPhoto = this.player.photoURL
@@ -228,6 +228,8 @@ export class PlayerInfo implements OnInit {
                   totalMaidens: 0,
                   totalHattricks: 0,
                   totalFifers: 0,
+                  totalWides: 0,
+                  totalNoBalls: 0
                 };
               }
 
@@ -236,6 +238,10 @@ export class PlayerInfo implements OnInit {
               careerStats[playerId].totalFours += stats.fours || 0;
 
               careerStats[playerId].totalSixes += stats.sixes || 0;
+
+              careerStats[playerId].totalWides += stats.wides || 0;
+
+              careerStats[playerId].totalNoBalls += stats.noBalls || 0;
 
               careerStats[playerId].totalInnings += stats.innings || 0;
 

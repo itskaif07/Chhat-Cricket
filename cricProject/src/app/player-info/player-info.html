@@ -306,24 +306,34 @@
       </div>
 
       <div class="stats-grid">
-        <div class="metric-card2">
+        <div class="metric-card">
           <span>Economy</span>
           <strong>{{ economy }}</strong>
         </div>
 
-        <div class="metric-card2">
+        <div class="metric-card">
           <span>Average</span>
           <strong>{{ bowlingAverage }}</strong>
         </div>
 
-        <div class="metric-card2">
+        <div class="metric-card">
           <span>Balls Bowled</span>
           <strong>{{ formatStat(stats?.totalBallsDelivered) }}</strong>
         </div>
 
-        <div class="metric-card2">
+        <div class="metric-card">
           <span>Runs Given</span>
           <strong>{{ formatStat(stats?.totalRunsConceded, '0') }}</strong>
+        </div>
+
+        <div class="metric-card">
+          <span>Wides Given</span>
+          <strong>{{ formatStat(stats?.totalWides) }}</strong>
+        </div>
+
+        <div class="metric-card">
+          <span>No Balls Given</span>
+          <strong>{{ formatStat(stats?.totalNoBalls, '--') }}</strong>
         </div>
       </div>
     </article>

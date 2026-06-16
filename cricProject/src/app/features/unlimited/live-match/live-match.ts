@@ -20,7 +20,7 @@ export class LiveMatch implements OnInit {
     private matchService: MatchService,
     private router: Router,
     private offlinePersistanceService: OfflinePersistanceService,
-  ) {}
+  ) { }
 
   allSelectedPlayers: Player[] = [];
   teamA: Player[] = [];
@@ -47,12 +47,14 @@ export class LiveMatch implements OnInit {
   isShowingScoreCard: boolean = false;
   isDismissalDialogOpen: boolean = false;
   isShowingCatchingDialog: boolean = false;
+  isShowingNoBallDialog: boolean = false
   showHatTrickAnimation = false;
 
   captainA: Player | null = null;
   captainB: Player | null = null;
 
   dismissalType: 'caught' | 'bowled' | 'offside' | null = null;
+  selectedNoBallRuns: 0 | 4 | 6 | null = null
   matchResult: 'won' | 'lost' | 'tie' | null = null;
 
   currentBatsman: Player | null = null;
@@ -127,6 +129,8 @@ export class LiveMatch implements OnInit {
           fifty: 0,
           hasScoredHundred: false,
           hundred: 0,
+          wides: 0,
+          noBalls: 0
         };
       }
     });
@@ -417,6 +421,36 @@ export class LiveMatch implements OnInit {
     this.checkMatchResult();
   }
 
+  addNoBallFour() {
+    this.totalRuns += 4;
+
+    this.currentBatsmanRuns += 4;
+    this.currentBowlerRunsConceded += 4;
+
+    this.lastAction = 'NB+4';
+
+    this.recentDeliveries.unshift({
+      value: 'NB+4',
+      type: 'noball'
+    });
+
+    if (this.currentBatsman?.id && this.currentBowler?.id) {
+
+      this.playerStats[this.currentBatsman.id].runs += 4;
+      this.playerStats[this.currentBatsman.id].fours += 1;
+
+      this.playerStats[this.currentBowler.id].runsConceded += 4;
+
+      this.playerStats[this.currentBowler.id].noBalls += 1;
+    }
+
+    this.isShowingNoBallDialog = false;
+
+    this.saveMatchState();
+    this.manageBattingMilestone();
+    this.checkMatchResult();
+  }
+
   addSix() {
     this.totalRuns += 6;
     this.totalDeliveries += 1;
@@ -440,6 +474,37 @@ export class LiveMatch implements OnInit {
     this.saveMatchState();
     this.manageBattingMilestone();
     this.manageOversChange();
+    this.checkMatchResult();
+  }
+
+  addNoBallSix() {
+    this.totalRuns += 6;
+
+    this.currentBatsmanRuns += 6;
+    this.currentBowlerRunsConceded += 6;
+
+    this.lastAction = 'NB+6';
+
+    this.recentDeliveries.unshift({
+      value: 'NB+6',
+      type: 'noball'
+    });
+
+    if (this.currentBatsman?.id && this.currentBowler?.id) {
+
+      this.playerStats[this.currentBatsman.id].runs += 6;
+      this.playerStats[this.currentBatsman.id].sixes += 1;
+
+      this.playerStats[this.currentBowler.id].runsConceded += 6;
+
+      // future-proof
+      this.playerStats[this.currentBowler.id].noBalls += 1;
+    }
+
+    this.isShowingNoBallDialog = false;
+
+    this.saveMatchState();
+    this.manageBattingMilestone();
     this.checkMatchResult();
   }
 
@@ -489,6 +554,36 @@ export class LiveMatch implements OnInit {
     }
 
     this.dismissalType = null;
+  }
+  
+
+
+  selectNoBallRuns(runs: 0 | 4 | 6 | null) {
+    this.selectedNoBallRuns = runs
+
+    if (this.selectedNoBallRuns === 0) {
+
+      if (this.currentBowler?.id) {
+        this.playerStats[this.currentBowler.id].noBalls += 1;
+      }
+
+      this.recentDeliveries.unshift({
+        value: 'NB',
+        type: 'noball'
+      });
+
+      this.lastAction = 'NB';
+      this.isShowingNoBallDialog = false;
+
+      this.saveMatchState();
+    }
+    else if (this.selectedNoBallRuns === 4) {
+
+      this.addNoBallFour()
+    }
+    else if (this.selectedNoBallRuns === 6) {
+     this.addNoBallSix()
+    }
   }
 
   selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
@@ -561,17 +656,13 @@ export class LiveMatch implements OnInit {
   addWide() {
     this.recentDeliveries.unshift({ value: 'WD', type: 'wide' });
     this.lastAction = 'WD';
-    if (this.recentDeliveries.length > 12) {
-      this.recentDeliveries.pop();
+    if(this.currentBowler?.id){
+      this.playerStats[this.currentBowler?.id].wides += 1
     }
   }
 
   addNoBall() {
-    this.recentDeliveries.unshift({ value: 'NB', type: 'noball' });
-    this.lastAction = 'NB';
-    if (this.recentDeliveries.length > 12) {
-      this.recentDeliveries.pop();
-    }
+    this.isShowingNoBallDialog = true
   }
 
   manageBattingMilestone() {
@@ -649,9 +740,11 @@ export class LiveMatch implements OnInit {
       this.saveMatchState();
     } else if (this.lastAction === 'WD') {
       this.recentDeliveries.shift();
+      this.playerStats[this.currentBowler?.id!].wides -= 1
       this.saveMatchState();
     } else if (this.lastAction === 'NB') {
       this.recentDeliveries.shift();
+      this.playerStats[this.currentBowler?.id!].noBalls -= 1
       this.saveMatchState();
     }
 
@@ -684,6 +777,7 @@ export class LiveMatch implements OnInit {
       this.canUndo = true;
     }
   }
+
 
   saveMatchState() {
     this.offlinePersistanceService.saveMatch({
@@ -851,10 +945,10 @@ export class LiveMatch implements OnInit {
     };
   }
 
-  clearMatch(){
+  clearMatch() {
     this.offlinePersistanceService.clearMatch()
     this.router.navigate(['/'])
-    
+
   }
 
 

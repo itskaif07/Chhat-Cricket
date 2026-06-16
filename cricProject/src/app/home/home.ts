@@ -20,6 +20,7 @@ import { Player } from '../shared/models/player.model';
 })
 export class Home implements OnInit {
   user: User | null = null;
+  loading: boolean = false
   playersCount: number = 0;
   matchesCount: number = 0;
   matches: any = 0;
@@ -56,6 +57,11 @@ export class Home implements OnInit {
   mostCatchesPlayer: any = null;
   mostMotmPlayer: any = null;
   mostMotm: number = 0;
+  mostWides: number = 0;
+  mostWidesPlayer: any = null;
+  mostNoBallsPlayer: any = null
+  mostNoBalls: number = 0;
+
 
   constructor(
     private auth: Auth,
@@ -77,6 +83,7 @@ export class Home implements OnInit {
   }
 
   async retrievePlayers() {
+    this.loading = true
     try {
       const playersRef = collection(this.firestore, 'players');
       const snapshot = await getDocs(playersRef);
@@ -86,15 +93,18 @@ export class Home implements OnInit {
       }));
 
       this.playersCount = players.length;
+      this.loading = false
       this.cdr.detectChanges();
     } catch (error) {
       console.log(error);
+      this.loading = false
     }
   }
 
   //Platform Stats
 
   retrieveMatches() {
+    this.loading = true
     this.matchService.retrieveMatches().subscribe((data) => {
       this.matchesCount = data.length;
       this.matches = data;
@@ -102,6 +112,7 @@ export class Home implements OnInit {
       this.aggregateTotalRuns();
       this.aggregateTotalWickets();
       this.aggregateCareerStats();
+      this.loading = false
       this.cdr.detectChanges();
     });
   }
@@ -189,6 +200,10 @@ export class Home implements OnInit {
               totalCatches: 0,
 
               totalMotm: 0,
+
+              totalWides: 0,
+
+              totalNoBalls: 0
             };
           }
 
@@ -218,6 +233,10 @@ export class Home implements OnInit {
 
           this.careerStats[playerId].totalFifers += stats.fifer || 0;
 
+          this.careerStats[playerId].totalWides += stats.wides || 0;
+
+          this.careerStats[playerId].totalNoBalls += stats.noBalls || 0;
+
           this.careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0;
 
           if (stats.caughtBy?.id) {
@@ -229,7 +248,7 @@ export class Home implements OnInit {
           }
         });
       });
-      
+
       if (match.motm?.playerId) {
         const motmId = match.motm.playerId;
 
@@ -255,6 +274,8 @@ export class Home implements OnInit {
     this.getMostFifers();
     this.getMostCatches();
     this.getMostMotm();
+    this.getMostWides()
+    this.getMostNoBalls()
     this.cdr.detectChanges();
   }
 
@@ -423,6 +444,42 @@ export class Home implements OnInit {
         });
       });
     });
+  }
+
+  getMostWides() {
+    if (!this.careerStats) {
+      return
+    }
+
+    const players = Object.values(this.careerStats)
+
+    if (players.length === 0) {
+      return
+    }
+
+    this.mostWidesPlayer = players.reduce((winner: any, challenger: any) => {
+      return challenger.totalWides > winner.totalWides ? challenger : winner
+    })
+
+    this.mostWides = this.mostWidesPlayer.totalWides
+  }
+
+  getMostNoBalls() {
+    if (!this.careerStats) {
+      return
+    }
+
+    const players = Object.values(this.careerStats)
+
+    if (players.length === 0) {
+      return
+    }
+
+    this.mostNoBallsPlayer = players.reduce((winner: any, challenger: any) => {
+      return challenger.totalNoBalls > winner.totalNoBalls ? challenger : winner
+    })
+
+    this.mostNoBalls = this.mostNoBallsPlayer.totalNoBalls
   }
 
   getMostFours() {

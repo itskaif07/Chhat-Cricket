@@ -44,4 +44,8 @@ export interface PlayerStats {
   hasScoredFifty: boolean;
 
   hasScoredHundred: boolean;
+
+  wides: number;
+
+  noBalls: number
 }

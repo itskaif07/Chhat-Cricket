@@ -5,7 +5,7 @@ import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-rankings',
-  imports: [RouterLink, JsonPipe],
+  imports: [RouterLink],
   templateUrl: './rankings.html',
   styleUrl: './rankings.css',
 })
@@ -107,6 +107,14 @@ export class Rankings implements OnInit {
         this.title = 'Hat-tricks'
         break
 
+      case 'wides':
+        this.title = 'Most Wides Given'
+        break
+
+      case 'no-balls':
+        this.title = 'Most No Balls Given'
+        break
+
       default:
         this.title = 'Rankings';
     }
@@ -162,7 +170,11 @@ export class Rankings implements OnInit {
 
               totalFiveFers: 0,
 
-              totalHattricks: 0
+              totalHattricks: 0,
+
+              totalWides: 0,
+
+              totalNoBalls: 0
             };
           }
 
@@ -173,8 +185,10 @@ export class Rankings implements OnInit {
           this.careerStats[playerId].totalWickets += stats.wickets || 0;
 
           this.careerStats[playerId].totalInnings += stats.innings || 0;
-
-
+          
+          this.careerStats[playerId].totalWides += stats.wides || 0;
+          
+          this.careerStats[playerId].totalNoBalls += stats.noBalls || 0;
 
           this.careerStats[playerId].totalRunsConceded += stats.runsConceded || 0;
 
@@ -253,28 +267,42 @@ export class Rankings implements OnInit {
     switch (this.rankingType) {
       case 'runs':
         this.players.sort(
-          (a: any, b: any) => b.totalRuns - a.totalRuns || a.totalInnings - b.totalInnings,
+          (a: any, b: any) => b.totalRuns - a.totalRuns || a.totalInnings - b.totalInnings || b.bestStrikeRate - a.bestStrikeRate,
         );
 
         break;
 
       case 'wickets':
         this.players.sort(
-          (a: any, b: any) => b.totalWickets - a.totalWickets || a.totalInnings - b.totalInnings,
+          (a: any, b: any) => b.totalWickets - a.totalWickets || a.bestEconomy - b.bestEconomy || a.totalInnings - b.totalInnings ,
         );
 
         break;
 
       case 'fours':
         this.players.sort(
-          (a: any, b: any) => b.totalFours - a.totalFours || a.totalInnings - b.totalInnings,
+          (a: any, b: any) => b.totalFours - a.totalFours || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns,
         );
 
         break;
 
       case 'sixes':
         this.players.sort(
-          (a: any, b: any) => b.totalSixes - a.totalSixes || a.totalInnings - b.totalInnings,
+          (a: any, b: any) => b.totalSixes - a.totalSixes || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns,
+        );
+
+        break;
+
+      case 'wides':
+        this.players.sort(
+          (a: any, b: any) => b.totalWides - a.totalWides || a.totalInnings - b.totalInnings || b.totalRunsConceded - a.totalRunsConceded,
+        );
+
+        break;
+
+      case 'no-balls':
+        this.players.sort(
+          (a: any, b: any) => b.totalNoBalls - a.totalNoBalls || a.totalInnings - b.totalInnings || b.totalRunsConceded - a.totalRunsConceded,
         );
 
         break;
@@ -471,6 +499,12 @@ export class Rankings implements OnInit {
 
       case 'catches':
         return player.totalCatches;
+
+      case 'wides':
+        return player.totalWides;
+
+      case 'no-balls':
+        return player.totalNoBalls;
 
       case 'strike-rate':
         return this.getStrikeRate(player)
