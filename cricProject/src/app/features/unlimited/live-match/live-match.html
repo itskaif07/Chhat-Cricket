@@ -534,33 +534,33 @@
       class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">
       <!-- HEADER -->
       <div class="p-6 border-b border-white/10">
-      
+
         <!-- TOP ROW -->
         <div class="flex items-center justify-between">
           <p class="text-sm uppercase tracking-[0.25em] font-bold" [ngClass]="{
               'text-[#FBBF24]': !isOverComplete,
               'text-green-500': isOverComplete
             }">
-      
+
             {{ isOverComplete ? 'NEXT OVER' : 'OPENING BOWLER' }}
-      
+
           </p>
-      
+
           <h1 class="font-black text-lg" [ngClass]="{
               'text-[#94F505]': battingFirst === 'B',
               'text-purple-400': battingFirst === 'A'
             }">
-      
+
             Team {{ battingFirst === 'A' ? 'B' : 'A' }}
-      
+
           </h1>
         </div>
-      
+
         <!-- TITLE -->
         <h1 class="text-2xl font-black mt-2 text-white">
           {{ isOverComplete ? 'Select Next Bowler' : 'Select Opening Bowler' }}
         </h1>
-      
+
         <p class="text-zinc-400 mt-2">
           {{
           isOverComplete
@@ -568,35 +568,35 @@
           : 'Choose who will bowl the opening over.'
           }}
         </p>
-      
+
       </div>
 
       <div class="p-5 border-t border-white/10 flex gap-3">
-      
+
         <!-- UNDO -->
         <button (click)="undo()" class="flex-1 rounded-2xl border border-cyan-500/20
                  bg-cyan-500/10 hover:bg-cyan-500/15
                  px-4 py-4 flex items-center justify-center gap-2
                  transition-all duration-300 cursor-pointer">
-      
+
           <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24"
             stroke="currentColor">
-      
+
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 110 8h-1" />
-      
+
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l4-4m-4 4l4 4" />
-      
+
           </svg>
-      
+
           <span class="font-black text-cyan-300">
             Undo
           </span>
-      
+
         </button>
-      
+
         <!-- CONTINUE -->
         @if (selectedBowler) {
-      
+
         <button (click)="confirmBowler()" class="flex-1 rounded-2xl
                  bg-[#FBBF24]/15
                  border border-[#FBBF24]/20
@@ -605,13 +605,13 @@
                  py-4
                  hover:bg-[#FBBF24]/20
                  transition-all duration-300">
-      
+
           Continue →
-      
+
         </button>
-      
+
         }
-      
+
       </div>
 
       <!-- PLAYERS -->
@@ -651,68 +651,130 @@
 <!-- Innings break overlay -->
 
 @if (totalWickets >= maxWickets) {
-<div class="fixed inset-0 z-40 bg-[#050B18]/95 backdrop-blur-2xl flex items-center justify-center p-6">
+<div class="fixed inset-0 z-40 bg-[#050B18]/95 backdrop-blur-2xl flex items-center justify-center py-2 px-4 h-full">
+
   <!-- CARD -->
   <div
-    class="w-full max-w-xl rounded-[2.5rem] border border-white/10 bg-linear-to-b from-[#0B1220] to-[#07101C] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden">
-    <!-- TOP GLOW -->
-    <div class="h-2 w-full bg-linear-to-r from-amber-400 via-orange-500 to-amber-400"></div>
+    class="w-full max-w-xl rounded-[2.5rem] border border-white/10 bg-linear-to-b from-[#0B1220] to-[#07101C] shadow-[0_0_80px_rgba(0,0,0,0.7)] overflow-hidden h-full">
 
-    <!-- CONTENT -->
-    <div class="p-8 sm:p-10 text-center">
-      <!-- LABEL -->
-      <p class="uppercase tracking-[0.4em] text-xs font-black text-amber-400">Innings Break</p>
+    <div class="p-4 sm:p-10">
 
-      <!-- TITLE -->
-      <h1 class="mt-4 text-5xl sm:text-6xl font-black text-white">Chase Begins</h1>
+      <!-- HEADER -->
+      <div class="flex items-center justify-between">
 
-      <!-- SCORE -->
-      <div class="mt-8 rounded-4xl border border-white/10 bg-white/5 p-6">
-        <p class="text-zinc-400 text-lg font-semibold">
-          Team
-          {{ currentBattingTeamName }}
+        <div>
+          <p class="uppercase tracking-[0.4em] text-xs font-black text-amber-400">
+            Innings Break
+          </p>
 
-          scored:
+          <h1 class="mt-3 text-4xl sm:text-5xl font-black text-white">
+            Innings Complete
+          </h1>
+        </div>
+
+        <!-- UNDO -->
+        <button (click)="undo()" class="cursor-pointer rounded-2xl border border-cyan-500/20
+                 bg-cyan-500/10 hover:bg-cyan-500/15
+                 px-4 py-3 flex items-center gap-2
+                 transition-all duration-300">
+
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 110 8h-1" />
+
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l4-4m-4 4l4 4" />
+          </svg>
+
+          <span class="font-black text-cyan-300">
+            Undo
+          </span>
+        </button>
+
+      </div>
+
+      <!-- SUBTITLE -->
+      <p class="text-zinc-500 mt-3">
+        Team {{ currentBattingTeamName }}
+        has finished their innings.
+      </p>
+
+      <!-- SCORECARD -->
+      <div class="mt-5 rounded-4xl border border-white/10 bg-white/5 p-5 text-center">
+
+        <p class="uppercase tracking-[0.3em] text-[11px] font-black text-zinc-500">
+          First Innings
         </p>
 
-        <h1 class="mt-3 text-7xl font-black text-amber-400">
-          {{ totalRuns }}
+        <h1 class="mt-4 text-7xl font-black text-amber-400">
+          {{ totalRuns }}/{{ totalWickets }}
         </h1>
 
-        <p class="mt-2 text-zinc-500">Runs</p>
+        <p class="mt-3 text-zinc-400">
+          {{ (totalDeliveries / 6).toFixed(1) }} Overs
+        </p>
+
       </div>
 
       <!-- TARGET -->
-      <div class="mt-6 flex items-center justify-center gap-3">
-        <p class="text-zinc-400 text-xl">Target:</p>
+      <div class="mt-8 text-center">
 
-        <h1 class="text-4xl font-black text-green-400">
+        <p class="uppercase tracking-[0.35em] text-xs font-black text-green-400">
+
+          Target
+
+        </p>
+
+        <h1 class="mt-3 text-8xl font-black text-green-400">
           {{ totalRuns + 1 }}
         </h1>
+
+        <p class="mt-2 text-zinc-500">
+          Runs Required To Win
+        </p>
+
       </div>
 
-      <!-- BUTTON -->
-      <button (click)="startSecondInnings()"
-        class="mt-10 relative overflow-hidden cursor-pointer px-10 py-4 rounded-3xl bg-amber-400/15 border border-amber-400/20 text-amber-400 font-black text-lg tracking-wide hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_30px_rgba(251,191,36,0.18)]">
-        <!-- GLOW -->
-        <div class="absolute inset-0 bg-linear-to-r from-transparent via-amber-400/10 to-transparent"></div>
 
-        <span class="relative z-10"> Start Second Innings → </span>
+      <!-- START BUTTON -->
+      <button (click)="startSecondInnings()" class="mt-10 w-full relative overflow-hidden cursor-pointer
+               py-5 rounded-3xl
+               bg-amber-400/15 border border-amber-400/20
+               text-amber-400 font-black text-lg tracking-wide
+               hover:scale-[1.02]
+               active:scale-[0.98]
+               transition-all duration-300
+               shadow-[0_0_30px_rgba(251,191,36,0.18)]">
+
+        <div class="absolute inset-0 bg-linear-to-r from-transparent via-amber-400/10 to-transparent">
+        </div>
+
+        <span class="relative z-10">
+          Start Second Innings →
+        </span>
+
       </button>
+
     </div>
+
   </div>
+
 </div>
 }
 
 <!-- Match results overlay -->
 
 @if (matchResult) {
-<!-- MATCH RESULT OVERLAY -->
 <div
   class="fixed inset-0 z-50 bg-[#050B18]/95 backdrop-blur-2xl flex items-center justify-center w-full h-full min-[400px]:p-6">
+
+
+
   <!-- CARD -->
   <div
-    class="relative w-full h-full overflow-auto max-w-2xl rounded-[2.8rem] border border-white/10 bg-linear-to-b from-[#0B1220] to-[#07101C] shadow-[0_0_100px_rgba(0,0,0,0.7)]">
+    class="relative w-full h-full overflow-auto max-w-3xl rounded-[2.8rem] border border-white/10 bg-linear-to-b from-[#0B1220] to-[#07101C] shadow-[0_0_100px_rgba(0,0,0,0.7)]">
+
+
     <!-- TOP STRIP -->
     <div class="h-2 w-full" [ngClass]="{
           'text-green-400': matchResult === 'won',
@@ -799,16 +861,40 @@
       </div>
 
       <!-- BUTTONS -->
-      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-between w-full space-y-4 sm:space-y-0">
+
+        <!-- UNDO -->
+        <button (click)="undo()" class=" w-full sm:w-[32%] rounded-xl border border-cyan-500/20
+                 bg-cyan-500/10 hover:bg-cyan-500/15
+                 py-4 px-4
+                 flex items-center justify-center 
+                 transition-all duration-300 cursor-pointer">
+
+          <div class="text-left">
+            <p class="text-cyan-300 font-black">
+              Undo Last Ball
+            </p>
+          </div>
+
+        </button>
+
         <!-- SCORECARD -->
         <button (click)="isShowingScoreCard = true"
-          class="px-8 py-4 rounded-3xl bg-white/8 border border-white/10 text-white font-black tracking-wide hover:bg-white/12 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
-          View Scorecard
+          class="px-8 py-4 rounded-xl w-full sm:w-[32%] cursor-pointer bg-white/8  border border-white/10 text-white font-black tracking-wide hover:bg-white/12 hover:scale-[1.03] active:scale-[0.98] transition-all duration-300">
+          Scorecard
         </button>
 
         <!-- HOME -->
-        <button (click)="saveCompletedMatch()"
-          class="px-8 py-4 rounded-3xl font-black tracking-wide transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] text-white cursor-pointer">
+        <button (click)="saveCompletedMatch()" class="px-8 py-4 rounded-xl w-full sm:w-[32%]
+       bg-emerald-600
+       border border-emerald-400/20
+       text-white font-black tracking-wide
+       hover:bg-emerald-500
+       hover:scale-[1.03]
+       active:scale-[0.98]
+       transition-all duration-300
+       shadow-[0_0_25px_rgba(16,185,129,0.25)]
+       cursor-pointer">
           Finish Match
         </button>
       </div>

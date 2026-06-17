@@ -676,7 +676,6 @@ export class LiveMatch implements OnInit {
   }
 
   selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
-    this.saveSnapshot()
 
     this.dismissalType = type;
 
@@ -695,7 +694,6 @@ export class LiveMatch implements OnInit {
   }
 
   selectCaughtBy(player: Player) {
-    this.saveSnapshot()
 
     if (this.currentBatsman?.id && this.currentBowler) {
       // SAVE DISMISSAL TYPE
@@ -810,11 +808,6 @@ export class LiveMatch implements OnInit {
     Object.assign(this, previousSnapshot);
 
     this.saveMatchState();
-
-    console.log(
-      'Undo successful',
-      this.matchHistory.length
-    );
   }
 
   manageOversChange() {
