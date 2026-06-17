@@ -108,6 +108,14 @@ export class Scorecard implements OnInit {
       return `b ${player.dismissedBy}`;
     }
 
+    if (player.dismissalType === 'retired-hurt') {
+      return 'Retired Hurt';
+    }
+
+    if (player.dismissalType === 'retired-out') {
+      return 'Retired Out';
+    }
+
     return player.dismissalType;
   }
 }

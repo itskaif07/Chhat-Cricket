@@ -449,10 +449,13 @@
 
     <div class="w-full flex items-center justify-between gap-3 mt-3">
       <!-- STATS -->
-      <button (click)="isShowingScoreCard = true" class="score-btn w-1/2 h-20">Stats</button>
+      <button (click)="isShowingScoreCard = true" class="score-btn w-[32%] h-20">Stats</button>
+
+      <!-- RH -->
+      <button (click)="retireHurt()" class="score-btn-four w-[32%] h-20">RH</button>
 
       <!-- UNDO -->
-      <button (click)="undo()" class="score-btn-undo w-1/2 h-20">
+      <button (click)="undo()" class="score-btn-undo w-[32%] h-20">
         Undo
       </button>
     </div>
@@ -696,24 +699,28 @@
           </h1>
         </div>
 
-        <!-- UNDO -->
-        <button (click)="undo()" class="cursor-pointer rounded-2xl border border-cyan-500/20
+        <div class="flex flex-col items-center justify-end space-y-3">
+          <!-- UNDO -->
+          <button (click)="undo()" class="cursor-pointer rounded-2xl border border-cyan-500/20
                  bg-cyan-500/10 hover:bg-cyan-500/15
                  px-4 py-3 flex items-center gap-2
                  transition-all duration-300">
 
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
 
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 110 8h-1" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 110 8h-1" />
 
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l4-4m-4 4l4 4" />
-          </svg>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l4-4m-4 4l4 4" />
+            </svg>
 
-          <span class="font-black text-cyan-300">
-            Undo
-          </span>
-        </button>
+            <span class="font-black text-cyan-300">
+              Undo
+            </span>
+          </button>
+
+          <button (click)="isShowingScoreCard = true" class="score-btn w-full  h-20">Stats</button>
+        </div>
 
       </div>
 
@@ -1008,6 +1015,9 @@
 
                 } @else if (playerStats[player.id!].dismissalType === 'retired-out') {
                 Retired Out
+
+                } @else if (playerStats[player.id!].dismissalType === 'retired-hurt') {
+                Retired Hurt
 
                 } @else {
                 not out

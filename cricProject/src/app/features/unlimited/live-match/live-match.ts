@@ -26,6 +26,7 @@ export class LiveMatch implements OnInit {
   teamA: Player[] = [];
   teamB: Player[] = [];
   outPlayersIds: string[] = [];
+  retiredHurtPlayers: Player[] = [];
   playerStats: { [playerId: string]: PlayerStats } = {};
 
   tossWinner: 'A' | 'B' | '' = '';
@@ -733,6 +734,33 @@ export class LiveMatch implements OnInit {
     this.continueAfterDismissal();
   }
 
+  retireHurt() {
+
+    this.saveSnapshot();
+
+    if (!this.currentBatsman?.id) return;
+
+    
+    this.playerStats[this.currentBatsman.id].dismissalType =
+      'retired-hurt';
+
+    this.playerStats[this.currentBatsman.id].dismissedBy = '';
+
+    this.retiredHurtPlayers.push(
+      structuredClone(this.currentBatsman)
+    );
+
+    this.isWicketFallen = true;
+
+    this.selectedBatsman = null;
+
+    this.continueAfterDismissal();
+
+    this.lastAction = 'RH';
+
+    this.saveMatchState();
+  }
+
   continueAfterDismissal() {
     this.isDismissalDialogOpen = false;
 
@@ -745,6 +773,7 @@ export class LiveMatch implements OnInit {
 
       return;
     }
+    
 
     // OTHERWISE
 

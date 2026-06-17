@@ -25,7 +25,7 @@ export interface PlayerStats {
 
   runsConceded: number;
 
-  dismissalType: 'caught' | 'bowled' | 'offside' | 'retired-out' | null;
+  dismissalType: 'caught' | 'bowled' | 'offside' | 'retired-out' | 'retired-hurt' | null;
 
   dismissedBy: string;
 
