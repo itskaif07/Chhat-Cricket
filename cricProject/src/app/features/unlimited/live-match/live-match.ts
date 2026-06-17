@@ -54,7 +54,7 @@ export class LiveMatch implements OnInit {
   captainA: Player | null = null;
   captainB: Player | null = null;
 
-  dismissalType: 'caught' | 'bowled' | 'offside' | null = null;
+  dismissalType: 'caught' | 'bowled' | 'offside' | 'retired-out' | null = null;
   selectedNoBallRuns: 0 | 4 | 6 | null = null
   matchResult: 'won' | 'lost' | 'tie' | null = null;
 
@@ -592,6 +592,36 @@ export class LiveMatch implements OnInit {
     this.checkMatchResult();
   }
 
+  selectNoBallRuns(runs: 0 | 4 | 6 | null) {
+    this.saveSnapshot()
+
+    this.selectedNoBallRuns = runs
+
+    if (this.selectedNoBallRuns === 0) {
+
+      if (this.currentBowler?.id) {
+        this.playerStats[this.currentBowler.id].noBalls += 1;
+      }
+
+      this.recentDeliveries.unshift({
+        value: 'NB',
+        type: 'noball'
+      });
+
+      this.lastAction = 'NB';
+      this.isShowingNoBallDialog = false;
+
+      this.saveMatchState();
+    }
+    else if (this.selectedNoBallRuns === 4) {
+
+      this.addNoBallFour()
+    }
+    else if (this.selectedNoBallRuns === 6) {
+      this.addNoBallSix()
+    }
+  }
+
   addWicket() {
     this.saveSnapshot()
 
@@ -625,14 +655,7 @@ export class LiveMatch implements OnInit {
     this.manageOversChange();
 
     this.isDismissalDialogOpen = true;
-
-    if (this.currentBatsman?.id && this.currentBowler?.id) {
-      this.playerStats[this.currentBowler.id].wickets += 1;
-
-      this.playerStats[this.currentBowler.id].ballsDelivered += 1;
-
-      this.playerStats[this.currentBatsman.id].ballsFaced += 1;
-    }
+    
 
     this.addFiveFers();
 
@@ -644,38 +667,7 @@ export class LiveMatch implements OnInit {
   }
 
 
-
-  selectNoBallRuns(runs: 0 | 4 | 6 | null) {
-    this.saveSnapshot()
-
-    this.selectedNoBallRuns = runs
-
-    if (this.selectedNoBallRuns === 0) {
-
-      if (this.currentBowler?.id) {
-        this.playerStats[this.currentBowler.id].noBalls += 1;
-      }
-
-      this.recentDeliveries.unshift({
-        value: 'NB',
-        type: 'noball'
-      });
-
-      this.lastAction = 'NB';
-      this.isShowingNoBallDialog = false;
-
-      this.saveMatchState();
-    }
-    else if (this.selectedNoBallRuns === 4) {
-
-      this.addNoBallFour()
-    }
-    else if (this.selectedNoBallRuns === 6) {
-      this.addNoBallSix()
-    }
-  }
-
-  selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
+  selectDismissalType(type: 'caught' | 'bowled' | 'offside' | 'retired-out' | null) {
 
     this.dismissalType = type;
 
@@ -684,10 +676,33 @@ export class LiveMatch implements OnInit {
       return;
     }
 
-    if (this.currentBatsman?.id && this.currentBowler) {
+
+    if (type === 'retired-out') {
+
+      if (this.currentBatsman?.id) {
+
+        this.playerStats[this.currentBatsman.id].dismissalType =
+          'retired-out';
+        this.playerStats[this.currentBatsman.id].dismissedBy = '';
+
+      }
+
+      this.continueAfterDismissal();
+
+      return;
+    }
+    if (this.currentBatsman?.id && this.currentBowler?.id) {
+
       this.playerStats[this.currentBatsman.id].dismissalType = type;
 
-      this.playerStats[this.currentBatsman?.id].dismissedBy = this.currentBowler?.displayName || '';
+      this.playerStats[this.currentBatsman.id].dismissedBy =
+        this.currentBowler.displayName || '';
+
+      this.playerStats[this.currentBowler.id].wickets += 1;
+
+      this.playerStats[this.currentBowler.id].ballsDelivered += 1;
+
+      this.playerStats[this.currentBatsman.id].ballsFaced += 1;
     }
 
     this.continueAfterDismissal();

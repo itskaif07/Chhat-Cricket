@@ -232,16 +232,40 @@
             </div>
           </button>
 
-          <!-- CONTINUE -->
-          <button (click)="continueAfterDismissal()" [disabled]="!dismissalType"
-            class="w-full rounded-3xl mt-6 py-4 cursor-pointer font-black text-lg transition-all duration-300"
+          <!-- RETIRED OUT -->
+          <button (click)="selectDismissalType('retired-out')"
+            class="w-full rounded-3xl cursor-pointer px-5 py-5 flex items-center justify-between transition-all duration-300 border"
             [ngClass]="{
-                'bg-white text-black hover:scale-[1.02]': dismissalType,
+                  'border-red-400 bg-red-400/20 scale-[1.02]':
+                      dismissalType === 'retired-out',
 
-                'bg-white/10 text-zinc-500 cursor-not-allowed': !dismissalType,
-              }">
-            Continue
+                  'border-red-400/15 bg-red-400/10':
+                      dismissalType !== 'retired-out'
+  }">
+
+            <div class="text-left">
+              <p class="text-red-400 font-black text-xl">
+                Retired Out
+              </p>
+
+              <p class="text-zinc-400 text-sm mt-1">
+                Batter leaves, wicket counts
+              </p>
+            </div>
+
+            <div class="flex items-center gap-3">
+
+              @if (dismissalType === 'retired-out') {
+              <div class="w-8 h-8 rounded-full bg-red-400 text-black flex items-center justify-center font-black">
+                ✓
+              </div>
+              }
+
+              <h1 class="text-3xl">🚶</h1>
+
+            </div>
           </button>
+
 
           <!-- CATCHING DIALOG -->
           @if (isShowingCatchingDialog) {
@@ -981,6 +1005,9 @@
 
                 } @else if (playerStats[player.id!].dismissalType === 'offside') {
                 offside b {{ playerStats[player.id!].dismissedBy }}
+
+                } @else if (playerStats[player.id!].dismissalType === 'retired-out') {
+                Retired Out
 
                 } @else {
                 not out
