@@ -70,6 +70,7 @@ export class Scorecard implements OnInit {
 
     return `${overs}.${deliveries}`;
   }
+  
 
   getBatters(playerStats: any) {
     return Object.values(playerStats || {}).filter(

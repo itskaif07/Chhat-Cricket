@@ -72,7 +72,7 @@ export class LiveMatch implements OnInit {
   totalRuns: number = 0;
   totalWickets: number = 0;
   totalDeliveries: number = 0;
-  recentDeliveries: { value: string; type: string }[] = [];
+  recentDeliveries: { value: string; type: string, bowlerId:string }[] = [];
   lastAction: string = '';
 
   currentBatsmanRuns: number = 0;
@@ -463,7 +463,7 @@ export class LiveMatch implements OnInit {
     this.currentBatsmanBalls += 1;
     this.currentBowlerBalls += 1;
     this.lastAction = '0';
-    this.recentDeliveries.unshift({ value: '0', type: 'dot' });
+    this.recentDeliveries.unshift({ value: '0', type: 'dot', bowlerId: this.currentBowler?.id! });
 
     if (this.currentBatsman?.id && this.currentBowler?.id) {
       this.playerStats[this.currentBatsman?.id].ballsFaced += 1;
@@ -483,7 +483,7 @@ export class LiveMatch implements OnInit {
     this.currentBowlerBalls += 1;
     this.currentBowlerRunsConceded += 4;
     this.lastAction = '4';
-    this.recentDeliveries.unshift({ value: '4', type: 'four' });
+    this.recentDeliveries.unshift({ value: '4', type: 'four', bowlerId: this.currentBowler?.id! });
 
     if (this.currentBatsman?.id && this.currentBowler?.id) {
       this.playerStats[this.currentBatsman?.id].runs += 4;
@@ -512,7 +512,8 @@ export class LiveMatch implements OnInit {
 
     this.recentDeliveries.unshift({
       value: 'NB+4',
-      type: 'noball'
+      type: 'noball',
+      bowlerId: this.currentBowler?.id!
     });
 
     if (this.currentBatsman?.id && this.currentBowler?.id) {
@@ -542,7 +543,7 @@ export class LiveMatch implements OnInit {
     this.currentBowlerBalls += 1;
     this.currentBowlerRunsConceded += 6;
     this.lastAction = '6';
-    this.recentDeliveries.unshift({ value: '6', type: 'six' });
+    this.recentDeliveries.unshift({ value: '6', type: 'six', bowlerId: this.currentBowler?.id! });
 
     if (this.currentBatsman?.id && this.currentBowler?.id) {
       this.playerStats[this.currentBatsman?.id].runs += 6;
@@ -572,7 +573,8 @@ export class LiveMatch implements OnInit {
 
     this.recentDeliveries.unshift({
       value: 'NB+6',
-      type: 'noball'
+      type: 'noball',
+      bowlerId: this.currentBowler?.id!
     });
 
     if (this.currentBatsman?.id && this.currentBowler?.id) {
@@ -606,7 +608,8 @@ export class LiveMatch implements OnInit {
 
       this.recentDeliveries.unshift({
         value: 'NB',
-        type: 'noball'
+        type: 'noball',
+        bowlerId: this.currentBowler?.id!
       });
 
       this.lastAction = 'NB';
@@ -644,6 +647,7 @@ export class LiveMatch implements OnInit {
     this.recentDeliveries.unshift({
       value: 'W',
       type: 'wicket',
+      bowlerId: this.currentBowler?.id!
     });
 
     const isHatTrick = this.isHatTrick();
@@ -668,30 +672,15 @@ export class LiveMatch implements OnInit {
   }
 
 
-  selectDismissalType(type: 'caught' | 'bowled' | 'offside' | 'retired-out' | null) {
+  selectDismissalType(type: 'caught' | 'bowled' | 'offside'  | null) {
 
     this.dismissalType = type;
 
     if (type === 'caught') {
       this.isShowingCatchingDialog = true;
-      return;
     }
 
 
-    if (type === 'retired-out') {
-
-      if (this.currentBatsman?.id) {
-
-        this.playerStats[this.currentBatsman.id].dismissalType =
-          'retired-out';
-        this.playerStats[this.currentBatsman.id].dismissedBy = '';
-
-      }
-
-      this.continueAfterDismissal();
-
-      return;
-    }
     if (this.currentBatsman?.id && this.currentBowler?.id) {
 
       this.playerStats[this.currentBatsman.id].dismissalType = type;
@@ -732,6 +721,32 @@ export class LiveMatch implements OnInit {
     // CONTINUE
 
     this.continueAfterDismissal();
+  }
+
+  retireOut() {
+
+    this.saveSnapshot();
+
+    if (!this.currentBatsman?.id) return;
+
+
+    this.playerStats[this.currentBatsman.id].dismissalType =
+      'retired-out';
+
+    this.playerStats[this.currentBatsman.id].dismissedBy = '';
+
+    this.totalWickets++
+
+
+    this.isWicketFallen = true;
+
+    this.selectedBatsman = null;
+
+    this.continueAfterDismissal();
+
+    this.lastAction = 'RO';
+
+    this.saveMatchState();
   }
 
   retireHurt() {
@@ -791,7 +806,7 @@ export class LiveMatch implements OnInit {
   addWide() {
     this.saveSnapshot()
 
-    this.recentDeliveries.unshift({ value: 'WD', type: 'wide' });
+    this.recentDeliveries.unshift({ value: 'WD', type: 'wide', bowlerId: this.currentBowler?.id! });
     this.lastAction = 'WD';
     if (this.currentBowler?.id) {
       this.playerStats[this.currentBowler?.id].wides += 1
@@ -819,21 +834,31 @@ export class LiveMatch implements OnInit {
   }
 
   isHatTrick(): boolean {
+
+    if (!this.currentBowler?.id) {
+      return false;
+    }
+
     if (this.recentDeliveries.length < 3) {
       return false;
     }
 
     const lastThree = this.recentDeliveries.slice(0, 3);
 
-    const isHatTrick = lastThree.every((delivery) => delivery.type === 'wicket');
+    const isHatTrick = lastThree.every(delivery =>
+      delivery.type === 'wicket' &&
+      delivery.bowlerId === this.currentBowler?.id
+    );
 
     if (!isHatTrick) {
       return false;
     }
 
-    // 4th consecutive wicket ko hat-trick mat banao
-
-    if (this.recentDeliveries.length >= 4 && this.recentDeliveries[3].type === 'wicket') {
+    if (
+      this.recentDeliveries.length >= 4 &&
+      this.recentDeliveries[3].type === 'wicket' &&
+      this.recentDeliveries[3].bowlerId === this.currentBowler?.id
+    ) {
       return false;
     }
 

@@ -80,7 +80,6 @@ export class PlayerInfo implements OnInit {
     this.matchService.retrieveMatches().subscribe((data) => {
       this.matchesCount = data.length;
       this.matches = data;
-      console.log(this.matches[0].innings[0].playerStats)
       this.aggregateCareerStats();
       this.cdr.detectChanges();
     });
@@ -352,7 +351,7 @@ export class PlayerInfo implements OnInit {
     }
 
     if (!this.stats?.dismissed) {
-      return 'NO';
+      return this.stats?.totalRuns;
     }
 
     return (this.stats.totalRuns / this.stats.dismissed).toFixed(2);

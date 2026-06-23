@@ -232,40 +232,6 @@
             </div>
           </button>
 
-          <!-- RETIRED OUT -->
-          <button (click)="selectDismissalType('retired-out')"
-            class="w-full rounded-3xl cursor-pointer px-5 py-5 flex items-center justify-between transition-all duration-300 border"
-            [ngClass]="{
-                  'border-red-400 bg-red-400/20 scale-[1.02]':
-                      dismissalType === 'retired-out',
-
-                  'border-red-400/15 bg-red-400/10':
-                      dismissalType !== 'retired-out'
-  }">
-
-            <div class="text-left">
-              <p class="text-red-400 font-black text-xl">
-                Retired Out
-              </p>
-
-              <p class="text-zinc-400 text-sm mt-1">
-                Batter leaves, wicket counts
-              </p>
-            </div>
-
-            <div class="flex items-center gap-3">
-
-              @if (dismissalType === 'retired-out') {
-              <div class="w-8 h-8 rounded-full bg-red-400 text-black flex items-center justify-center font-black">
-                ✓
-              </div>
-              }
-
-              <h1 class="text-3xl">🚶</h1>
-
-            </div>
-          </button>
-
 
           <!-- CATCHING DIALOG -->
           @if (isShowingCatchingDialog) {
@@ -427,7 +393,7 @@
     <!-- ACTION BUTTONS -->
     <!-- ========================= -->
 
-    <div class="w-full h-[32vh] grid grid-cols-3 gap-1">
+    <div class="w-full h-[32vh] grid grid-cols-3 gap-4">
       <!-- 0 -->
       <button (click)="addDot()" class="score-btn">0</button>
 
@@ -448,26 +414,29 @@
     </div>
 
     <div class="w-full flex items-center justify-between gap-3 mt-3">
-      <!-- STATS -->
-      <button (click)="isShowingScoreCard = true" class="score-btn w-[32%] h-20">Stats</button>
 
       <!-- RH -->
-      <button (click)="retireHurt()" class="score-btn-four w-[32%] h-20">RH</button>
+      <button (click)="retireHurt()" class="score-btn-four w-[32%] h-28">RH</button>
 
       <!-- UNDO -->
-      <button (click)="undo()" class="score-btn-undo w-[32%] h-20">
+      <button (click)="undo()" class="score-btn-undo w-[32%] h-28">
         Undo
       </button>
+
+      <button (click)="retireOut()" class="score-btn-wicket w-[32%] h-28">RO</button>
     </div>
 
-    <button class="w-full h-24 score-btn-clear" (click)="clearMatch()">
+      <!-- STATS -->
+      <button (click)="isShowingScoreCard = true" class="score-btn w-full h-32">Stats</button>
+
+    <button class="w-full h-32 score-btn-clear" (click)="clearMatch()">
       Cancel Match
     </button>
   </section>
 
   <!-- STRIKER DIALOG -->
   @if (showBatsmenDialog) {
-  <div class="fixed inset-0 z-40 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
     <!-- MODAL -->
     <div
       class="w-full max-w-2xl rounded-4xl bg-[#09111F]/90 border border-white/10 shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden">

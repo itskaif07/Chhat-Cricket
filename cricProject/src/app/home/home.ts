@@ -159,8 +159,15 @@ export class Home implements OnInit {
     this.careerStats = {};
 
     this.matches.forEach((match: any) => {
-      match.innings.forEach((innings: any) => {
+      match.innings.forEach((innings: any, i: number) => {
         Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
+
+          if (stats.hatTricks > 0) {
+            console.log(match.id);
+            console.log('innings', i + 1);
+            console.log(stats);
+          }
+
           if (!this.careerStats[playerId]) {
             this.careerStats[playerId] = {
               playerId,
@@ -256,6 +263,9 @@ export class Home implements OnInit {
           this.careerStats[motmId].totalMotm = (this.careerStats[motmId].totalMotm || 0) + 1;
         }
       }
+
+
+
     });
 
     this.getOrangeCap();
