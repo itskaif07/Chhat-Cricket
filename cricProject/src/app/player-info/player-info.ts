@@ -380,7 +380,7 @@ export class PlayerInfo implements OnInit {
       return '--';
     }
 
-    return (this.stats.totalRunsConceded / (this.stats.totalBallsDelivered / 6)).toFixed(1);
+    return (this.stats.totalRunsConceded / (this.stats.totalBallsDelivered / 6)).toFixed(2);
   }
 
   get bowlingAverage() {

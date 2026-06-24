@@ -426,8 +426,8 @@
       <button (click)="retireOut()" class="score-btn-wicket w-[32%] h-28">RO</button>
     </div>
 
-      <!-- STATS -->
-      <button (click)="isShowingScoreCard = true" class="score-btn w-full h-32">Stats</button>
+    <!-- STATS -->
+    <button (click)="isShowingScoreCard = true" class="score-btn w-full h-32">Stats</button>
 
     <button class="w-full h-32 score-btn-clear" (click)="clearMatch()">
       Cancel Match
@@ -948,6 +948,11 @@
         <!-- CARD -->
         <div class="rounded-4xl border border-white/10 overflow-hidden bg-white/2">
           @for (player of currentBattingTeam; track player.id) {
+          @if(playerStats[player.id!] &&
+          (
+          playerStats[player.id!].runs > 0 ||
+          playerStats[player.id!].ballsFaced > 0
+          )){
           <!-- PLAYER -->
           <div class="px-5 py-5 border-t border-white/5 first:border-t-0 flex items-center justify-between gap-4">
             <!-- LEFT -->
@@ -1018,7 +1023,55 @@
             </div>
           </div>
           }
+          }
         </div>
+
+        <!-- Yet To Bat -->
+
+        @if(getYetToBatPlayers().length > 0){
+
+        <div class="mt-8 flex flex-col items-end justify-center">
+
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
+              ⏳
+            </div>
+
+            <div>
+              <h1 class="text-white font-black text-lg">
+                Yet To Bat
+              </h1>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+
+            @for(player of getYetToBatPlayers(); track player.id){
+
+            <div class="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-zinc-300 font-semibold text-sm">
+
+              {{ player.displayName }}
+
+            </div>
+
+            }
+
+          </div>
+
+        </div>
+
+        }
+        @else{
+
+        <div class="w-full flex items-center justify-end mt-6">
+
+          <h1 class="text-emerald-400 font-black">
+            ✓ No One Left To Bat
+          </h1>
+
+        </div>
+
+        }
       </div>
 
       <!-- ========================= -->
@@ -1033,11 +1086,23 @@
 
         <!-- CARD -->
         <div class="rounded-4xl border border-white/10 overflow-hidden bg-white/2">
+
           @for (player of currentBowlingTeam; track player.id) {
+
+          @if(
+          playerStats[player.id!] &&
+          (
+          playerStats[player.id!].runsConceded > 0 ||
+          playerStats[player.id!].ballsDelivered > 0
+          )
+          ){
+
           <!-- PLAYER -->
           <div class="px-5 py-5 border-t border-white/5 first:border-t-0 flex items-center justify-between gap-4">
+
             <!-- LEFT -->
             <div class="min-w-0 flex-1">
+
               <!-- NAME -->
               <h1 class="text-white font-black text-xl sm:text-lg">
                 {{ player.displayName }}
@@ -1045,52 +1110,111 @@
 
               <!-- DETAILS -->
               <div class="flex items-center gap-3 flex-wrap mt-2">
+
                 <p class="text-zinc-400 text-sm">
                   Ov
-
                   {{ Math.floor(playerStats[player.id!].ballsDelivered / 6) }}.
-
                   {{ playerStats[player.id!].ballsDelivered % 6 }}
                 </p>
 
                 <p class="text-zinc-400 text-sm">
-                  M
-
-                  {{ playerStats[player.id!].maiden }}
+                  M {{ playerStats[player.id!].maiden }}
                 </p>
 
-                <p class="text-red-400 text-sm font-bold">
-                  W
-
-                  {{ playerStats[player.id!].wickets }}
+                <p class="text-blue-400 text-sm font-bold">
+                  Eco
+                  {{
+                  playerStats[player.id!].ballsDelivered
+                  ? (
+                  playerStats[player.id!].runsConceded /
+                  (playerStats[player.id!].ballsDelivered / 6)
+                  ).toFixed(2)
+                  : '0.00'
+                  }}
                 </p>
+
               </div>
+
             </div>
 
             <!-- RIGHT -->
             <div class="text-right shrink-0">
-              <!-- RUNS -->
-              <h1 class="text-white font-black text-2xl">
-                {{ playerStats[player.id!].runsConceded }}
+
+              <!-- BOWLING FIGURE -->
+              <div class="font-black text-2xl leading-none flex items-center justify-center gap-1">
+
+                <span [class.text-green-500]="playerStats[player.id!].wickets > 0"
+                  [class.text-zinc-500]="playerStats[player.id!].wickets === 0">
+                  {{ playerStats[player.id!].wickets }}
+                </span>
+
+                <span class="text-zinc-500">
+                  /
+                </span>
+
+                <span class="text-white">
+                  {{ playerStats[player.id!].runsConceded }}
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          }
+
+          }
+
+        </div>
+
+        <!-- Yet To Bowl -->
+
+        @if(getYetToBowlPlayers().length > 0){
+
+        <div class="mt-8 flex flex-col items-end justify-center">
+
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
+              ⏳
+            </div>
+
+            <div>
+              <h1 class="text-white font-black text-lg">
+                Yet To Bowl
               </h1>
-
-              <!-- ECO -->
-              <p class="text-blue-400 text-sm mt-1 font-bold">
-                Eco
-
-                {{
-                playerStats[player.id!].ballsDelivered
-                ? (
-                playerStats[player.id!].runsConceded /
-                (playerStats[player.id!].ballsDelivered / 6)
-                ).toFixed(2)
-                : '0.00'
-                }}
-              </p>
             </div>
           </div>
-          }
+
+          <div class="flex flex-wrap gap-2">
+
+            @for(player of getYetToBowlPlayers(); track player.id){
+
+            <div class="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-zinc-300 font-semibold text-sm">
+
+              {{ player.displayName }}
+
+            </div>
+
+            }
+
+          </div>
+
         </div>
+
+        }
+        @else{
+
+        <div class="w-full flex items-center justify-end mt-6">
+
+          <h1 class="text-emerald-400 font-black">
+            ✓ No One Left To Bowl
+          </h1>
+
+        </div>
+
+        }
+
       </div>
     </div>
   </div>

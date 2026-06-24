@@ -43,7 +43,6 @@ export class MainPage implements OnInit {
     return new Date(timestamp).toLocaleTimeString('en-IN', {
       hour: 'numeric',
       minute: '2-digit',
-
       hour12: true,
     });
   }

@@ -15,7 +15,6 @@ export class Scorecard implements OnInit {
     private route: ActivatedRoute,
     private matchService: MatchService,
     private cdr: ChangeDetectorRef,
-    private matchSetupService: MatchSetupService,
   ) {}
 
   matchData: any = [];
@@ -39,7 +38,7 @@ export class Scorecard implements OnInit {
         this.matchService.getMatchById(id).subscribe((data) => {
           this.matchData = data;
 
-          console.log(data);
+          // console.log(data);
           this.selectedInnings = this.matchData.innings[0];
 
           this.getCaptains();
@@ -94,7 +93,6 @@ export class Scorecard implements OnInit {
 
     if (player.dismissalType === 'caught') {
       if (player.caughtBy.displayName === player.dismissedBy) {
-        console.log(player.caughtBy)
         return `c & b ${player.dismissedBy}`;
       }
 

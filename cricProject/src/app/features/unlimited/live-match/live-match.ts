@@ -640,6 +640,7 @@ export class LiveMatch implements OnInit {
 
     this.lastAction = 'W';
 
+    
     this.isWicketFallen = true;
 
     this.selectedBatsman = null;
@@ -650,19 +651,12 @@ export class LiveMatch implements OnInit {
       bowlerId: this.currentBowler?.id!
     });
 
-    const isHatTrick = this.isHatTrick();
-
-    if (this.currentBowler?.id && isHatTrick) {
-      this.playerStats[this.currentBowler.id].hatTricks++;
-    }
 
     this.saveMatchState();
     this.manageOversChange();
 
     this.isDismissalDialogOpen = true;
     
-
-    this.addFiveFers();
 
     if (this.currentBatsman) {
       this.outPlayersIds.push(this.currentBatsman.id!);
@@ -678,6 +672,7 @@ export class LiveMatch implements OnInit {
 
     if (type === 'caught') {
       this.isShowingCatchingDialog = true;
+      return
     }
 
 
@@ -690,6 +685,16 @@ export class LiveMatch implements OnInit {
 
       this.playerStats[this.currentBowler.id].wickets += 1;
 
+
+      const isHatTrick = this.isHatTrick();
+
+      if (this.currentBowler?.id && isHatTrick) {
+        this.playerStats[this.currentBowler.id].hatTricks++;
+      }
+
+      this.addFiveFers();
+
+
       this.playerStats[this.currentBowler.id].ballsDelivered += 1;
 
       this.playerStats[this.currentBatsman.id].ballsFaced += 1;
@@ -700,16 +705,25 @@ export class LiveMatch implements OnInit {
 
   selectCaughtBy(player: Player) {
 
-    if (this.currentBatsman?.id && this.currentBowler) {
-      // SAVE DISMISSAL TYPE
+    if (this.currentBatsman?.id && this.currentBowler?.id) {
+
+      this.playerStats[this.currentBowler.id].wickets += 1;
+
+      this.playerStats[this.currentBowler.id].ballsDelivered += 1;
+
+      this.playerStats[this.currentBatsman.id].ballsFaced += 1;
+
+      this.addFiveFers();
+
+      const isHatTrick = this.isHatTrick();
+
+      if (this.currentBowler?.id && isHatTrick) {
+        this.playerStats[this.currentBowler.id].hatTricks++;
+      }
 
       this.playerStats[this.currentBatsman.id].dismissalType = 'caught';
 
-      // SAVE BOWLER
-
       this.playerStats[this.currentBatsman.id].dismissedBy = this.currentBowler.displayName || '';
-
-      // SAVE FIELDER
 
       this.playerStats[this.currentBatsman.id].caughtBy = player;
     }
@@ -831,6 +845,22 @@ export class LiveMatch implements OnInit {
         currentBatter.hundred += 1;
       }
     }
+  }
+
+  getYetToBatPlayers() {
+    return this.currentBattingTeam.filter(player =>
+      this.playerStats[player.id!] &&
+      this.playerStats[player.id!].runs === 0 &&
+      this.playerStats[player.id!].ballsFaced === 0
+    );
+  }
+
+  getYetToBowlPlayers() {
+    return this.currentBowlingTeam.filter(player =>
+      this.playerStats[player.id!] &&
+      this.playerStats[player.id!].runsConceded === 0 &&
+      this.playerStats[player.id!].ballsDelivered === 0
+    );
   }
 
   isHatTrick(): boolean {

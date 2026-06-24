@@ -22,10 +22,16 @@ export class Rankings implements OnInit {
   players: any[] = [];
   careerStats: any = {};
   loading: boolean = false
+  isBattingRanking = false
+  isBowlingRanking = false
+  isEconomyRanking = false
+  isExtraRanking = false
+  isOtherRanking = false
 
   ngOnInit() {
     this.rankingType = this.route.snapshot.paramMap.get('type') || '';
     this.setTitle();
+    this.CheckRankingCategory()
     this.getRankings();
   }
 
@@ -38,6 +44,56 @@ export class Rankings implements OnInit {
     });
   }
 
+  CheckRankingCategory() {
+
+    this.isBattingRanking = false;
+    this.isBowlingRanking = false;
+    this.isOtherRanking = false;
+
+    if (
+      [
+        'runs',
+        'fours',
+        'sixes',
+        'fifties',
+        'hundreds',
+        'strike-rate',
+        'batting-average',
+        'highest-score'
+      ].includes(this.rankingType)
+    ) {
+
+      this.isBattingRanking = true;
+
+    }
+    else if (
+      [
+        'wickets',
+        'bowling-average',
+        'best-figures',
+        'five-fers',
+        'hat-tricks',
+      ].includes(this.rankingType)
+    ) {
+
+      this.isBowlingRanking = true;
+
+    }
+    else if (['economy'].includes(this.rankingType)) {
+      this.isEconomyRanking = true
+    }
+    else if (
+      [
+        'wides',
+        'no-balls',
+      ].includes(this.rankingType)
+    ) {
+      this.isExtraRanking = true
+    }
+    else {
+      this.isOtherRanking = true;
+    }
+  }
 
   setTitle() {
     switch (this.rankingType) {
@@ -123,11 +179,16 @@ export class Rankings implements OnInit {
   aggregateCareerStats(matches: any[]) {
     this.loading = true
     this.careerStats = {};
-    const highestScores: any = {};
 
     matches.forEach((match: any) => {
+
+      const matchPlayers = new Set<string>();
+
       match.innings.forEach((innings: any) => {
         Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
+
+          matchPlayers.add(playerId);
+
           if (!this.careerStats[playerId]) {
             this.careerStats[playerId] = {
               playerId,
@@ -135,6 +196,8 @@ export class Rankings implements OnInit {
               playerName: stats.playerName,
 
               playerPhoto: stats.playerPhoto,
+
+              totalMatches: 0,
 
               totalRuns: 0,
 
@@ -179,15 +242,15 @@ export class Rankings implements OnInit {
           }
 
 
-
           this.careerStats[playerId].totalRuns += stats.runs || 0;
 
           this.careerStats[playerId].totalWickets += stats.wickets || 0;
 
+
           this.careerStats[playerId].totalInnings += stats.innings || 0;
-          
+
           this.careerStats[playerId].totalWides += stats.wides || 0;
-          
+
           this.careerStats[playerId].totalNoBalls += stats.noBalls || 0;
 
           this.careerStats[playerId].totalRunsConceded += stats.runsConceded || 0;
@@ -208,6 +271,8 @@ export class Rankings implements OnInit {
 
           this.careerStats[playerId].totalHattricks += stats.hatTricks || 0;
 
+          this.careerStats[playerId].totalFiveFers += stats.fifer || 0;
+
 
           if (stats.caughtBy?.id) {
             const catcherId = stats.caughtBy.id;
@@ -226,13 +291,12 @@ export class Rankings implements OnInit {
 
           this.getBestFigures(stats, playerId)
 
-          this.careerStats[playerId].totalFiveFers += stats.fifer || 0;
-
 
 
         });
 
-      });
+      }
+      );
 
 
 
@@ -252,6 +316,10 @@ export class Rankings implements OnInit {
 
       }
 
+      matchPlayers.forEach((playerId: any) => {
+        this.careerStats[playerId].totalMatches++;
+      });
+
     });
 
 
@@ -263,74 +331,99 @@ export class Rankings implements OnInit {
     this.cdr.detectChanges();
   }
 
+  convertToOvers(totalDeliveries: number) {
+
+    const overs = Math.floor(totalDeliveries / 6);
+    const balls = totalDeliveries % 6;
+
+    return `${overs}.${balls}`;
+  }
+
   sortPlayers() {
     switch (this.rankingType) {
       case 'runs':
         this.players.sort(
-          (a: any, b: any) => b.totalRuns - a.totalRuns || a.totalInnings - b.totalInnings || b.bestStrikeRate - a.bestStrikeRate,
+          (a: any, b: any) => b.totalRuns - a.totalRuns || a.totalInnings - b.totalInnings || this.getStrikeRate(b) - this.getStrikeRate(a),
         );
 
         break;
 
       case 'wickets':
         this.players.sort(
-          (a: any, b: any) => b.totalWickets - a.totalWickets || a.bestEconomy - b.bestEconomy || a.totalInnings - b.totalInnings ,
+          (a: any, b: any) => b.totalWickets - a.totalWickets || this.getEconomy(a) - this.getEconomy(b)
         );
 
         break;
 
       case 'fours':
         this.players.sort(
-          (a: any, b: any) => b.totalFours - a.totalFours || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns,
+          (a: any, b: any) => b.totalFours - a.totalFours || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns || this.getStrikeRate(b) - this.getStrikeRate(a),
         );
 
         break;
 
       case 'sixes':
         this.players.sort(
-          (a: any, b: any) => b.totalSixes - a.totalSixes || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns,
+          (a: any, b: any) => b.totalSixes - a.totalSixes || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns || this.getStrikeRate(b) - this.getStrikeRate(a),
         );
 
         break;
 
       case 'wides':
         this.players.sort(
-          (a: any, b: any) => b.totalWides - a.totalWides || a.totalInnings - b.totalInnings || b.totalRunsConceded - a.totalRunsConceded,
+          (a: any, b: any) => b.totalWides - a.totalWides || a.totalMatches - b.totalMatches || b.totalRunsConceded - a.totalRunsConceded,
         );
 
         break;
 
       case 'no-balls':
         this.players.sort(
-          (a: any, b: any) => b.totalNoBalls - a.totalNoBalls || a.totalInnings - b.totalInnings || b.totalRunsConceded - a.totalRunsConceded,
+          (a: any, b: any) => b.totalNoBalls - a.totalNoBalls || a.totalMatches - b.totalMatches || b.totalRunsConceded - a.totalRunsConceded,
         );
 
         break;
 
       case 'fifties':
+
+        this.players = this.players.filter(
+          (player) => player.totalFifties > 0
+        );
+
         this.players.sort(
-          (a: any, b: any) => b.totalFifties - a.totalFifties || a.totalInnings - b.totalInnings,
+          (a: any, b: any) =>
+            b.totalFifties - a.totalFifties ||
+            a.totalInnings - b.totalInnings ||
+            this.getBattingAverage(b) - this.getBattingAverage(a),
         );
 
         break;
 
+
       case 'hundreds':
-        this.players.sort(
-          (a: any, b: any) => b.totalHundreds - a.totalHundreds || a.totalInnings - b.totalInnings,
+
+        this.players = this.players.filter(
+          (player) => player.totalHundreds > 0
         );
 
-        break
+        this.players.sort(
+          (a: any, b: any) =>
+            b.totalHundreds - a.totalHundreds ||
+            a.totalInnings - b.totalInnings ||
+            this.getBattingAverage(b) - this.getBattingAverage(a),
+        );
+
+        break;
 
       case 'mvp':
         this.players.sort(
-          (a: any, b: any) => b.totalMotm - a.totalMotm || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns || b.totalWickets - a.totalWickets,
+          (a: any, b: any) => b.totalMotm - a.totalMotm || a.totalMatches - b.totalMatches || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns || b.totalWickets - a.totalWickets,
         );
 
         break;
 
       case 'catches':
         this.players.sort(
-          (a: any, b: any) => b.totalCatches - a.totalCatches || a.totalInnings - b.totalInnings,
+          (a: any, b: any) => b.totalCatches - a.totalCatches || a.totalMatches - b.totalMatches || this.getBowlingAverage(a) - this.getBowlingAverage(b) || this.getEconomy(a) - this.getEconomy(b),
         );
 
         break;
@@ -340,14 +433,14 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            this.getStrikeRate(b) - this.getStrikeRate(a) || b.totalBallsFaced - a.totalBallsFaced || b.totalInnings - a.totalInnings || b.totalRuns - a.totalRuns,
+            this.getStrikeRate(b) - this.getStrikeRate(a) || b.totalInnings - a.totalInnings || b.totalBallsFaced - a.totalBallsFaced || b.totalRuns - a.totalRuns,
         );
 
         break;
 
       case 'economy':
         this.players = this.players.filter((player) => player.totalBallsBowled >= 30);
-        this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || b.totalBallsBowled - a.totalBallsBowled || a.totalRunsConceded - b.totalRunsConceded);
+        this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || this.getBowlingAverage(a) - this.getBowlingAverage(b) || b.totalBallsBowled - a.totalBallsBowled || a.totalRunsConceded - b.totalRunsConceded);
         break;
 
       case 'batting-average':
@@ -355,7 +448,7 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            this.getBattingAverage(b) - this.getBattingAverage(a) || b.totalBallsFaced - a.totalBallsFaced || b.totalInnings - a.totalInnings || b.totalRuns - a.totalRuns,
+            this.getBattingAverage(b) - this.getBattingAverage(a) || b.totalInnings - a.totalInnings || b.totalBallsFaced - a.totalBallsFaced || b.totalRuns - a.totalRuns,
         );
 
         break;
@@ -369,17 +462,22 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            this.getBowlingAverage(a) - this.getBowlingAverage(b) || b.totalBallsBowled - a.totalBallsBowled ||
+            this.getBowlingAverage(a) - this.getBowlingAverage(b) || this.getEconomy(a) - this.getEconomy(b) || b.totalBallsBowled - a.totalBallsBowled ||
             a.totalRunsConceded - b.totalRunsConceded
         );
         break;
 
       case 'highest-score':
+        this.players = this.players.filter(
+          (player) => player.highestScore > 0
+        );
+        
         this.players.sort(
           (a: any, b: any) =>
             b.highestScore - a.highestScore ||
+            a.totalInnings - b.totalInnings ||
             b.totalRuns - a.totalRuns ||
-            a.totalInnings - b.totalInnings
+            this.getBattingAverage(b) - this.getBattingAverage(a)
         );
         break;
 
@@ -391,7 +489,9 @@ export class Rankings implements OnInit {
         this.players.sort(
           (a: any, b: any) =>
             b.bestFiguresWickets - a.bestFiguresWickets ||
-            a.bestFiguresRuns - b.bestFiguresRuns
+            a.bestFiguresRuns - b.bestFiguresRuns ||
+            this.getEconomy(a) - this.getEconomy(b) ||
+            this.getBowlingAverage(a) - this.getBowlingAverage(b)
         );
 
         break;
@@ -403,8 +503,7 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            b.totalFiveFers - a.totalFiveFers || a.totalInnings - b.totalInnings ||
-            b.totalWickets - a.totalWickets
+            b.totalFiveFers - a.totalFiveFers || b.totalWickets - a.totalWickets || this.getEconomy(a) - this.getEconomy(b)
         );
 
         break;
@@ -416,11 +515,13 @@ export class Rankings implements OnInit {
 
         this.players.sort(
           (a: any, b: any) =>
-            b.totalHattricks - a.totalHattricks || a.totalInnings - b.totalInnings ||
-            b.totalWickets - a.totalWickets
+            b.totalHattricks - a.totalHattricks ||
+            b.totalWickets - a.totalWickets || this.getEconomy(a) - this.getEconomy(b)
         );
 
         break;
+
+
     }
   }
 
