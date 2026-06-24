@@ -22,6 +22,7 @@ export class SelectPlayers implements OnInit {
   players: Player[] = [];
 
   selectedPlayers: string[] = [];
+  displayPlayers:string[] = []
 
   teamA: Player[] = [];
   teamB: Player[] = [];
@@ -49,50 +50,69 @@ export class SelectPlayers implements OnInit {
 
     if (!playerId) return;
 
-    // =====================
-    // UNDO TEAM A
-    // =====================
+    // REMOVE FROM TEAM A
+    if (this.teamA.some(p => p.id === playerId)) {
 
-    if (this.teamA.some((p) => p.id === playerId)) {
-      this.teamA = this.teamA.filter((p) => p.id !== playerId);
+      this.teamA = this.teamA.filter(
+        p => p.id !== playerId
+      );
 
-      this.selectedPlayers = this.selectedPlayers.filter((id) => id !== playerId);
-
-      this.currentTurn = 'A';
-
-      return;
-    }
-
-    // =====================
-    // UNDO TEAM B
-    // =====================
-
-    if (this.teamB.some((p) => p.id === playerId)) {
-      this.teamB = this.teamB.filter((p) => p.id !== playerId);
-
-      this.selectedPlayers = this.selectedPlayers.filter((id) => id !== playerId);
-
-      this.currentTurn = 'B';
+      this.selectedPlayers =
+        this.selectedPlayers.filter(
+          id => id !== playerId
+        );
 
       return;
     }
 
-    // =====================
-    // NEW SELECTION
-    // =====================
+    // REMOVE FROM TEAM B
+    if (this.teamB.some(p => p.id === playerId)) {
+
+      this.teamB = this.teamB.filter(
+        p => p.id !== playerId
+      );
+
+      this.selectedPlayers =
+        this.selectedPlayers.filter(
+          id => id !== playerId
+        );
+
+      return;
+    }
+
+    // ADD TO CURRENT TEAM
 
     if (this.currentTurn === 'A') {
+
       this.teamA.push(player);
 
-      this.currentTurn = 'B';
     } else {
+
       this.teamB.push(player);
 
-      this.currentTurn = 'A';
     }
 
     this.selectedPlayers.push(playerId);
   }
+
+  getAvailablePlayers() {
+    if (this.currentTurn === 'A') {
+      return this.players;
+    }
+
+    return this.players.filter(
+      player =>
+        !this.teamA.some(
+          p => p.id === player.id
+        )
+    );
+  }
+
+  goToTeamB(){
+    this.currentTurn = 'B'
+  }
+
+
 
   getSelectionOrder(player: Player) {
     if (!player.id) return 0;

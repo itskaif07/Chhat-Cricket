@@ -7,24 +7,18 @@
         <!-- ACTIVE TEAM -->
         <div class="flex items-center gap-3">
           <!-- PULSE -->
-          <div
-            class="w-3 h-3 rounded-full animate-pulse"
-            [ngClass]="{
+          <div class="w-3 h-3 rounded-full animate-pulse" [ngClass]="{
               'bg-[#94F505] shadow-[0_0_20px_rgba(148,245,5,0.8)]': currentTurn === 'A',
 
               'bg-purple-400 shadow-[0_0_20px_rgba(192,132,252,0.8)]': currentTurn === 'B',
-            }"
-          ></div>
+            }"></div>
 
           <!-- TITLE -->
-          <h1
-            class="text-2xl font-black tracking-tight"
-            [ngClass]="{
+          <h1 class="text-2xl font-black tracking-tight" [ngClass]="{
               'text-[#94F505]': currentTurn === 'A',
 
               'text-purple-400': currentTurn === 'B',
-            }"
-          >
+            }">
             Team {{ currentTurn }} Selecting
           </h1>
         </div>
@@ -32,30 +26,36 @@
         <!-- SUBTEXT -->
         <p class="text-zinc-500 text-sm mt-2 cursor-pointer">Pick your next player carefully.</p>
 
+        <!-- Captains -->
+
         @if (teamA[0] || teamB[0]) {
-          <div class="flex flex-col sm:flex-row gap-2 mt-4">
-            @if (teamA[0]) {
-              <div class="px-3 py-2 rounded-2xl bg-[#94F505]/10 border border-[#94F505]/20">
-                <p class="text-xs text-zinc-500 font-semibold">Team A Captain</p>
+        <div class="flex gap-2 mt-4">
+          @if (teamA[0]) {
+          <div class="px-3 py-2 rounded-2xl bg-[#94F505]/10 border border-[#94F505]/20">
+            <p class="text-xs text-zinc-500 font-semibold">Team A Captain</p>
 
-                <h2 class="text-[#94F505] text-sm font-black">
-                  {{ teamA[0].displayName }}
-                </h2>
-              </div>
-            }
-
-            @if (teamB[0]) {
-              <div class="px-3 py-2 rounded-2xl bg-purple-400/10 border border-purple-400/20">
-                <p class="text-xs text-zinc-500 font-semibold">Team B Captain</p>
-
-                <h2 class="text-purple-400 text-sm font-black">
-                  {{ teamB[0].displayName }}
-                </h2>
-              </div>
-            }
+            <h2 class="text-[#94F505] text-sm font-black">
+              {{ teamA[0].displayName }}
+            </h2>
           </div>
+          }
+
+          @if (teamB[0]) {
+          <div class="px-3 py-2 rounded-2xl bg-purple-400/10 border border-purple-400/20">
+            <p class="text-xs text-zinc-500 font-semibold">Team B Captain</p>
+
+            <h2 class="text-purple-400 text-sm font-black">
+              {{ teamB[0].displayName }}
+            </h2>
+          </div>
+          }
+        </div>
         }
+
+
+
       </div>
+
 
       <div class="flex flex-col items-end justify-center space-y-3">
         <!-- TURN COUNT -->
@@ -68,120 +68,147 @@
 
         <!-- Reset -->
 
-        <div
-          (click)="reset()"
-          class="flex items-center gap-2 px-5 py-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 font-bold text-sm cursor-pointer hover:bg-red-500/15 transition-all"
-        >
+        <div (click)="reset()"
+          class="flex items-center gap-2 px-5 py-3 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 font-bold text-sm cursor-pointer hover:bg-red-500/15 transition-all">
           🗑️
 
           <span> Reset </span>
         </div>
-      </div>
-    </div>
 
-    <div class="flex items-center justify-center md:px-4 w-full">
-      @if (selectedPlayers.length > 3) {
-        <button
-          (click)="goToNextPage()"
-          class="group cursor-pointer w-11/12 md:w-1/2 lg:w-[28%] h-15 px-6 rounded-[1.7rem] bg-[#38BDF8]/10 border border-[#38BDF8]/20 backdrop-blur-2xl flex items-center justify-center gap-4 shadow-[0_0_40px_rgba(56,189,248,0.12)] hover:bg-[#38BDF8]/15 hover:scale-[1.02] active:scale-[0.97] transition-all duration-300"
-        >
-          <!-- ICON -->
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6 text-[#7DD3FC] transition-all duration-300 group-hover:rotate-12"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.868v4.264a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-            />
+        <!-- Back to Team A -->
+        @if(currentTurn === 'B'){
+        <div (click)="currentTurn = 'A'"
+          class="flex items-center gap-2 px-5 py-3 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 font-bold text-sm cursor-pointer hover:bg-blue-500/15 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-cyan-300" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
 
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"
-            />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h11a4 4 0 110 8h-1" />
+
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10l4-4m-4 4l4 4" />
+
           </svg>
 
-          <!-- TEXT -->
-          <h1 class="text-white text-lg font-black tracking-wide uppercase">Next</h1>
-        </button>
+          <span> Back to Team A </span>
+        </div>
+        }
+      </div>
+
+    </div>
+
+
+    <div class="flex gap-2 my-4 px-4 overflow-x-auto pb-2">
+      @if (teamA) {
+
+      @for (player of teamA.slice(1); track $index) {
+      <div
+        class="px-3 py-2 rounded-2xl bg-[#94F505]/10 border border-[#94F505]/20 w-20 h-10 flex items-center justify-center">
+        <h2 class="text-[#94F505] text-sm font-black">
+          {{ player.displayName }}
+        </h2>
+      </div>
+      }
+      }
+    </div>
+
+
+    <div class="flex gap-2 my-4 px-4 overflow-x-auto pb-2">
+      @if (teamB) {
+
+      @for (player of teamB.slice(1); track $index) {
+      <div
+        class="px-3 py-2 rounded-2xl bg-purple-400/10 border border-purple-400/20 w-20 h-10 flex items-center justify-center">
+        <h2 class="text-purple-400 text-sm font-black">
+          {{ player.displayName }}
+        </h2>
+      </div>
+      }
+      }
+    </div>
+
+
+    @if(currentTurn === 'A' && teamA.length > 2){
+    <div (click)="goToTeamB()"
+      class="px-3 py-4 rounded-2xl bg-purple-400/10 border mt-4 border-purple-400/20 w-11/12 md:w-1/2 lg:w-[28%] mx-auto flex items-center justify-center cursor-pointer">
+
+      <h2 class="text-purple-400 text-sm font-black">
+        Continue to Team B →
+      </h2>
+    </div>
+    }
+
+    <div class="flex items-center justify-center md:px-4 w-full">
+      @if (currentTurn === 'B' && teamA.length > 2 && teamB.length > 2) {
+      <button (click)="goToNextPage()"
+        class="group cursor-pointer w-11/12 md:w-1/2 lg:w-[28%] h-15 px-6 rounded-[1.7rem] bg-[#38BDF8]/10 border border-[#38BDF8]/20 backdrop-blur-2xl flex items-center justify-center gap-4 shadow-[0_0_40px_rgba(56,189,248,0.12)] hover:bg-[#38BDF8]/15 hover:scale-[1.02] active:scale-[0.97] transition-all duration-300">
+        <!-- ICON -->
+        <svg xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6 text-[#7DD3FC] transition-all duration-300 group-hover:rotate-12" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.868v4.264a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+        </svg>
+
+        <!-- TEXT -->
+        <h1 class="text-white text-lg font-black tracking-wide uppercase">Next</h1>
+      </button>
       }
     </div>
   </div>
 
   <!-- List -->
 
-  <div
-    class="w-full h-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 py-10 px-6 row-auto"
-  >
-    @for (player of players; track $index) {
-      <!-- CARD -->
-      <div
-        (click)="selectPlayer(player)"
-        class="relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer group hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.4)]"
-        [ngClass]="{
+  <div class="w-full h-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 py-10 px-6 row-auto">
+    @for (player of getAvailablePlayers(); track $index) {
+    <!-- CARD -->
+    <div (click)="selectPlayer(player)"
+      class="relative rounded-3xl overflow-hidden aspect-3/4 cursor-pointer group hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_40px_rgba(0,0,0,0.4)]"
+      [ngClass]="{
           'border-[#94F505] bg-[#94F505]/10 border-4': teamA.includes(player),
 
           'border-purple-400 bg-purple-400/10 border-4': teamB.includes(player),
 
           'opacity-40': selectedPlayers.includes(player.id!),
-        }"
-      >
-        @if (teamA[0]?.id === player.id || teamB[0]?.id === player.id) {
-          <div
-            class="absolute top-3 left-3 z-10 px-3 py-1 rounded-full bg-black/55 border border-white/15 backdrop-blur-xl"
-          >
-            <p
-              class="text-[10px] font-black tracking-widest"
-              [ngClass]="{
+        }">
+      @if (teamA[0]?.id === player.id || teamB[0]?.id === player.id) {
+      <div
+        class="absolute top-3 left-3 z-10 px-3 py-1 rounded-full bg-black/55 border border-white/15 backdrop-blur-xl">
+        <p class="text-[10px] font-black tracking-widest" [ngClass]="{
                 'text-[#94F505]': teamA[0]?.id === player.id,
                 'text-purple-300': teamB[0]?.id === player.id,
-              }"
-            >
-              CAPTAIN
-            </p>
-          </div>
-        }
-
-        <!-- IMAGE -->
-        <img
-          [src]="
-            player.photoURL || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
-          "
-          class="absolute inset-0 w-full h-full object-cover object-center"
-        />
-
-        <!-- DARK OVERLAY -->
-        <div
-          class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent"
-        ></div>
-
-        @if (selectedPlayers.includes(player.id!)) {
-          <div
-            class="absolute top-2 right-2 w-6 h-6 rounded-full bg-white text-black text-xs font-black flex items-center justify-center"
-          >
-            {{ getSelectionOrder(player) }}
-          </div>
-        }
-
-        <!-- GLOW -->
-        <div
-          class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-[#94F505]/10"
-        ></div>
-
-        <!-- NAME -->
-        <div class="absolute bottom-0 left-0 w-full p-4">
-          <h1 class="text-white font-black text-lg tracking-tight truncate">
-            {{ player.displayName }}
-          </h1>
-        </div>
+              }">
+          CAPTAIN
+        </p>
       </div>
+      }
+
+      <!-- IMAGE -->
+      <img [src]="
+            player.photoURL || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg'
+          " class="absolute inset-0 w-full h-full object-cover object-center" />
+
+      <!-- DARK OVERLAY -->
+      <div class="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent"></div>
+
+      @if (selectedPlayers.includes(player.id!)) {
+      <div
+        class="absolute top-2 right-2 w-6 h-6 rounded-full bg-white text-black text-xs font-black flex items-center justify-center">
+        {{ getSelectionOrder(player) }}
+      </div>
+      }
+
+      <!-- GLOW -->
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-[#94F505]/10"></div>
+
+      <!-- NAME -->
+      <div class="absolute bottom-0 left-0 w-full p-4">
+        <h1 class="text-white font-black text-lg tracking-tight truncate">
+          {{ player.displayName }}
+        </h1>
+      </div>
+    </div>
     }
   </div>
 </div>
