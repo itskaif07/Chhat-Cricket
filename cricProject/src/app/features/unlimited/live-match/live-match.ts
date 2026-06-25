@@ -658,8 +658,8 @@ export class LiveMatch implements OnInit {
     this.isDismissalDialogOpen = true;
     
 
-    if (this.currentBatsman) {
-      this.outPlayersIds.push(this.currentBatsman.id!);
+    if (this.currentBatsman?.id) {
+      this.outPlayersIds.push(this.currentBatsman.id);
     }
 
     this.dismissalType = null;
@@ -751,6 +751,7 @@ export class LiveMatch implements OnInit {
 
     this.totalWickets++
 
+    this.outPlayersIds.push(this.currentBatsman?.id)
 
     this.isWicketFallen = true;
 
@@ -851,7 +852,8 @@ export class LiveMatch implements OnInit {
     return this.currentBattingTeam.filter(player =>
       this.playerStats[player.id!] &&
       this.playerStats[player.id!].runs === 0 &&
-      this.playerStats[player.id!].ballsFaced === 0
+      this.playerStats[player.id!].ballsFaced === 0 &&
+      !this.outPlayersIds.includes(player.id!)
     );
   }
 
