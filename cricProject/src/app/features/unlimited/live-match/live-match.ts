@@ -474,6 +474,31 @@ export class LiveMatch implements OnInit {
     this.manageOversChange();
   }
 
+  addNoBallDot() {
+    this.saveSnapshot()
+
+
+    this.lastAction = 'NB+0';
+
+    this.recentDeliveries.unshift({
+      value: 'NB+0',
+      type: 'noball',
+      bowlerId: this.currentBowler?.id!
+    });
+
+    if (this.currentBatsman?.id && this.currentBowler?.id) {
+
+      this.playerStats[this.currentBowler.id].noBalls += 1;
+    }
+
+    this.isShowingNoBallDialog = false;
+
+    this.saveMatchState();
+    this.manageBattingMilestone();
+    this.checkMatchResult();
+  }
+
+
   addFour() {
     this.saveSnapshot()
     this.totalRuns += 4;
@@ -602,20 +627,7 @@ export class LiveMatch implements OnInit {
 
     if (this.selectedNoBallRuns === 0) {
 
-      if (this.currentBowler?.id) {
-        this.playerStats[this.currentBowler.id].noBalls += 1;
-      }
-
-      this.recentDeliveries.unshift({
-        value: 'NB',
-        type: 'noball',
-        bowlerId: this.currentBowler?.id!
-      });
-
-      this.lastAction = 'NB';
-      this.isShowingNoBallDialog = false;
-
-      this.saveMatchState();
+      this.addNoBallDot()
     }
     else if (this.selectedNoBallRuns === 4) {
 
@@ -624,6 +636,21 @@ export class LiveMatch implements OnInit {
     else if (this.selectedNoBallRuns === 6) {
       this.addNoBallSix()
     }
+  }
+
+
+  addWide() {
+    this.saveSnapshot()
+
+    this.recentDeliveries.unshift({ value: 'WD', type: 'wide', bowlerId: this.currentBowler?.id! });
+    this.lastAction = 'WD';
+    if (this.currentBowler?.id) {
+      this.playerStats[this.currentBowler?.id].wides += 1
+    }
+  }
+
+  addNoBall() {
+    this.isShowingNoBallDialog = true
   }
 
   addWicket() {
@@ -644,6 +671,12 @@ export class LiveMatch implements OnInit {
     this.isWicketFallen = true;
 
     this.selectedBatsman = null;
+
+
+    if (this.currentBowler?.id && this.currentBatsman?.id) {
+      this.playerStats[this.currentBowler.id].ballsDelivered += 1;
+      this.playerStats[this.currentBatsman.id].ballsFaced += 1;
+    }
 
     this.recentDeliveries.unshift({
       value: 'W',
@@ -695,9 +728,6 @@ export class LiveMatch implements OnInit {
       this.addFiveFers();
 
 
-      this.playerStats[this.currentBowler.id].ballsDelivered += 1;
-
-      this.playerStats[this.currentBatsman.id].ballsFaced += 1;
     }
 
     this.continueAfterDismissal();
@@ -709,9 +739,6 @@ export class LiveMatch implements OnInit {
 
       this.playerStats[this.currentBowler.id].wickets += 1;
 
-      this.playerStats[this.currentBowler.id].ballsDelivered += 1;
-
-      this.playerStats[this.currentBatsman.id].ballsFaced += 1;
 
       this.addFiveFers();
 
@@ -818,19 +845,6 @@ export class LiveMatch implements OnInit {
     }
   }
 
-  addWide() {
-    this.saveSnapshot()
-
-    this.recentDeliveries.unshift({ value: 'WD', type: 'wide', bowlerId: this.currentBowler?.id! });
-    this.lastAction = 'WD';
-    if (this.currentBowler?.id) {
-      this.playerStats[this.currentBowler?.id].wides += 1
-    }
-  }
-
-  addNoBall() {
-    this.isShowingNoBallDialog = true
-  }
 
   manageBattingMilestone() {
     if (this.currentBatsman?.id) {
@@ -919,7 +933,6 @@ export class LiveMatch implements OnInit {
 
       this.selectedBowler = null;
 
-      this.canUndo = false;
 
       // MAIDEN OVER
 
@@ -932,9 +945,6 @@ export class LiveMatch implements OnInit {
       this.currentBowlerRunsConceded = 0;
     }
 
-    if (this.totalDeliveries % 6 === 1) {
-      this.canUndo = true;
-    }
   }
 
 

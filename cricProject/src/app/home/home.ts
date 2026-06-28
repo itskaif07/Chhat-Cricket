@@ -305,7 +305,7 @@ export class Home implements OnInit {
     const MIN_BALLS = 30;
 
     const players = Object.values(this.careerStats).filter(
-      (player: any) => player.totalBallsFaced >= MIN_BALLS,
+      (player: any) => player.totalBallsFaced >= MIN_BALLS
     );
 
     if (players.length === 0) {
@@ -314,51 +314,100 @@ export class Home implements OnInit {
       return;
     }
 
-    this.bestStrikeRatePlayer = players.reduce(
-      (winner: any, challenger: any) => {
-        const winnerSR =
-          (winner.totalRuns / winner.totalBallsFaced) * 100;
+    this.bestStrikeRatePlayer = players.reduce((winner: any, challenger: any) => {
 
-        const challengerSR =
-          (challenger.totalRuns / challenger.totalBallsFaced) * 100;
+      const winnerSR =
+        (winner.totalRuns / winner.totalBallsFaced) * 100;
 
-        return challengerSR > winnerSR ? challenger : winner;
-      }
-    );
+      const challengerSR =
+        (challenger.totalRuns / challenger.totalBallsFaced) * 100;
+
+      // Higher Strike Rate
+      if (challengerSR > winnerSR) return challenger;
+      if (challengerSR < winnerSR) return winner;
+
+      // More innings
+      if (challenger.totalInnings > winner.totalInnings) return challenger;
+      if (challenger.totalInnings < winner.totalInnings) return winner;
+
+      // More balls faced
+      if (challenger.totalBallsFaced > winner.totalBallsFaced) return challenger;
+      if (challenger.totalBallsFaced < winner.totalBallsFaced) return winner;
+
+      // More runs
+      if (challenger.totalRuns > winner.totalRuns) return challenger;
+      if (challenger.totalRuns < winner.totalRuns) return winner;
+
+      return winner;
+    });
 
     this.bestStrikeRate =
       (this.bestStrikeRatePlayer.totalRuns /
-        this.bestStrikeRatePlayer.totalBallsFaced) *
-      100;
+        this.bestStrikeRatePlayer.totalBallsFaced) * 100;
   }
 
   getEconomy() {
+
     if (!this.careerStats) {
       return;
     }
 
-    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsDelivered >= 30);
+    const MIN_BALLS = 30;
+
+    const players = Object.values(this.careerStats).filter(
+      (player: any) => player.totalBallsDelivered >= MIN_BALLS
+    );
 
     if (players.length === 0) {
+      this.bestEconomy = 0;
+      this.bestEconomyPlayer = null;
       return;
     }
 
     this.bestEconomyPlayer = players.reduce((winner: any, challenger: any) => {
+
       const winnerEconomy =
-        winner.totalBallsDelivered > 0
-          ? winner.totalRunsConceded / (winner.totalBallsDelivered / 6)
-          : Infinity;
+        winner.totalRunsConceded / (winner.totalBallsDelivered / 6);
 
       const challengerEconomy =
-        challenger.totalBallsDelivered > 0
-          ? challenger.totalRunsConceded / (challenger.totalBallsDelivered / 6)
+        challenger.totalRunsConceded / (challenger.totalBallsDelivered / 6);
+
+      // Better Economy (Lower)
+      if (challengerEconomy < winnerEconomy) return challenger;
+      if (challengerEconomy > winnerEconomy) return winner;
+
+      const winnerAverage =
+        winner.totalWickets > 0
+          ? winner.totalRunsConceded / winner.totalWickets
           : Infinity;
 
-      return challengerEconomy < winnerEconomy ? challenger : winner;
+      const challengerAverage =
+        challenger.totalWickets > 0
+          ? challenger.totalRunsConceded / challenger.totalWickets
+          : Infinity;
+
+      // Better Bowling Average (Lower)
+      if (challengerAverage < winnerAverage) return challenger;
+      if (challengerAverage > winnerAverage) return winner;
+
+      // More Balls Bowled
+      if (challenger.totalBallsDelivered > winner.totalBallsDelivered)
+        return challenger;
+      if (challenger.totalBallsDelivered < winner.totalBallsDelivered)
+        return winner;
+
+      // Fewer Runs Conceded
+      if (challenger.totalRunsConceded < winner.totalRunsConceded)
+        return challenger;
+      if (challenger.totalRunsConceded > winner.totalRunsConceded)
+        return winner;
+
+      return winner;
     });
 
     this.bestEconomy =
-      this.bestEconomyPlayer.totalRunsConceded / (this.bestEconomyPlayer.totalBallsDelivered / 6);
+      this.bestEconomyPlayer.totalRunsConceded /
+      (this.bestEconomyPlayer.totalBallsDelivered / 6);
   }
 
   getBattingAverage() {
