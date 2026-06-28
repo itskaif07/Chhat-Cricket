@@ -8,9 +8,10 @@ import {
   User,
 } from '@angular/fire/auth';
 import { collection, Firestore, getDoc, getDocs } from '@angular/fire/firestore';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatchService } from '../services/matchService/match-service';
 import { Player } from '../shared/models/player.model';
+import { OfflinePersistanceService } from '../services/offline-persistance/offline-persistance-service';
 
 @Component({
   selector: 'app-home',
@@ -68,6 +69,8 @@ export class Home implements OnInit {
     private firestore: Firestore,
     private cdr: ChangeDetectorRef,
     private matchService: MatchService,
+    private offlinePersistence: OfflinePersistanceService,
+    private router: Router
   ) {
     onAuthStateChanged(this.auth, (user) => {
       this.user = user;
@@ -99,6 +102,17 @@ export class Home implements OnInit {
       console.log(error);
       this.loading = false
     }
+  }
+
+  startUnlimitedMatch() {
+
+    if (this.offlinePersistence.hasSavedMatch()) {
+      this.router.navigate(['/unlimited/live-match']);
+      console.log('offline storage')
+      return;
+    }
+    console.log('no offline storage')
+    this.router.navigate(['/unlimited/welcome']);
   }
 
   //Platform Stats

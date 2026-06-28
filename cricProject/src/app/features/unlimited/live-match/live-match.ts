@@ -40,7 +40,7 @@ export class LiveMatch implements OnInit {
   firstInningsPlayerStats: Record<string, PlayerStats> = {};
 
   isInningsOver: boolean = false;
-  showBatsmenDialog: boolean = true;
+  showBatsmenDialog: boolean = false;
   showBowlerDialog: boolean = false;
   isWicketFallen = false;
   isOverComplete = false;
@@ -87,6 +87,7 @@ export class LiveMatch implements OnInit {
   Math = Math;
 
   ngOnInit() {
+    this.startMatch()
     const restored = this.restoreMatchState();
 
     if (restored) {
@@ -96,6 +97,20 @@ export class LiveMatch implements OnInit {
     this.getAllSelectedPlayers();
     this.initializePlayerStats();
     this.getCaptains();
+  }
+
+  startMatch(){
+    const savedMatch = this.offlinePersistanceService.loadMatch();
+
+    if (savedMatch) {
+      // Resume
+      this.showBatsmenDialog = false;
+      this.showBowlerDialog = false;
+    } else {
+      // New Match
+      this.showBatsmenDialog = true;
+      this.showBowlerDialog = false;
+    }
   }
 
   getAllSelectedPlayers() {
