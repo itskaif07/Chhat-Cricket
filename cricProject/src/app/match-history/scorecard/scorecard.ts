@@ -52,6 +52,12 @@ export class Scorecard implements OnInit {
     }
   }
 
+  totalExtras(wide: any, noBall: any) {
+    const wides = Number(wide || 0);
+    const noBalls = Number(noBall || 0);
+    return wides + noBalls;
+  }
+
   getPlayers(playerStats: any): any[] {
     return Object.entries(playerStats || {}).map(([id, player]: any) => ({
       id,

@@ -393,7 +393,7 @@
     <!-- ACTION BUTTONS -->
     <!-- ========================= -->
 
-    <div class="w-full h-[32vh] grid grid-cols-3 gap-4">
+    <div class="w-full h-[32vh] grid grid-cols-3 gap-2">
       <!-- 0 -->
       <button (click)="addDot()" class="score-btn">0</button>
 
@@ -413,7 +413,7 @@
       <button (click)="addNoBall()" class="score-btn-noball">NB</button>
     </div>
 
-    <div class="w-full flex items-center justify-between gap-3 mt-3">
+    <div class="w-full flex items-center justify-between gap-3 mt-2">
 
       <!-- RH -->
       <button (click)="retireHurt()" class="score-btn-four w-[32%] h-28">RH</button>
@@ -1109,7 +1109,7 @@
               </h1>
 
               <!-- DETAILS -->
-              <div class="flex items-center gap-3 flex-wrap mt-2">
+              <div class="flex items-center gap-2 md:gap-3 flex-wrap mt-2">
 
                 <p class="text-zinc-400 text-sm">
                   Ov
@@ -1121,6 +1121,7 @@
                   M {{ playerStats[player.id!].maiden }}
                 </p>
 
+
                 <p class="text-blue-400 text-sm font-bold">
                   Eco
                   {{
@@ -1131,6 +1132,10 @@
                   ).toFixed(2)
                   : '0.00'
                   }}
+                </p>
+
+                <p class="text-orange-400 text-sm">
+                  Ex {{ totalExtras(playerStats[player.id!].wides, playerStats[player.id!].noBalls)  }}
                 </p>
 
               </div>
