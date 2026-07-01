@@ -37,6 +37,8 @@ export class LiveMatch implements OnInit {
   firstInningRuns: number = 0;
   firstInningsBalls: number = 0;
   firstInningsWickets: number = 0;
+  firstInningsBattingTeam: Player[] | null = null
+  firstInningsBowlingTeam: Player[] | null = null
   firstInningsPlayerStats: Record<string, PlayerStats> = {};
 
   isInningsOver: boolean = false;
@@ -50,6 +52,7 @@ export class LiveMatch implements OnInit {
   isShowingCatchingDialog: boolean = false;
   isShowingNoBallDialog: boolean = false
   showHatTrickAnimation = false;
+  changeInningsDisplay: boolean = false
   wicketSnapshot: any = {}
 
   captainA: Player | null = null;
@@ -72,7 +75,7 @@ export class LiveMatch implements OnInit {
   totalRuns: number = 0;
   totalWickets: number = 0;
   totalDeliveries: number = 0;
-  recentDeliveries: { value: string; type: string, bowlerId:string }[] = [];
+  recentDeliveries: { value: string; type: string, bowlerId: string }[] = [];
   lastAction: string = '';
 
   currentBatsmanRuns: number = 0;
@@ -99,7 +102,7 @@ export class LiveMatch implements OnInit {
     this.getCaptains();
   }
 
-  startMatch(){
+  startMatch() {
     const savedMatch = this.offlinePersistanceService.loadMatch();
 
     if (savedMatch) {
@@ -164,6 +167,7 @@ export class LiveMatch implements OnInit {
 
     return this.battingFirst === 'A' ? this.teamB : this.teamA;
   }
+
 
   get currentBowlingTeam(): Player[] {
     if (this.currentInnings === 1) {
@@ -664,7 +668,7 @@ export class LiveMatch implements OnInit {
     }
   }
 
-  totalExtras(wide:any, noBall:any) {
+  totalExtras(wide: any, noBall: any) {
     const wides = Number(wide || 0);
     const noBalls = Number(noBall || 0);
     return wides + noBalls;
@@ -688,7 +692,7 @@ export class LiveMatch implements OnInit {
 
     this.lastAction = 'W';
 
-    
+
     this.isWicketFallen = true;
 
     this.selectedBatsman = null;
@@ -710,7 +714,7 @@ export class LiveMatch implements OnInit {
     this.manageOversChange();
 
     this.isDismissalDialogOpen = true;
-    
+
 
     if (this.currentBatsman?.id) {
       this.outPlayersIds.push(this.currentBatsman.id);
@@ -720,7 +724,7 @@ export class LiveMatch implements OnInit {
   }
 
 
-  selectDismissalType(type: 'caught' | 'bowled' | 'offside'  | null) {
+  selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
 
     this.dismissalType = type;
 
@@ -818,7 +822,7 @@ export class LiveMatch implements OnInit {
 
     if (!this.currentBatsman?.id) return;
 
-    
+
     this.playerStats[this.currentBatsman.id].dismissalType =
       'retired-hurt';
 
@@ -851,7 +855,7 @@ export class LiveMatch implements OnInit {
 
       return;
     }
-    
+
 
     // OTHERWISE
 
@@ -892,11 +896,28 @@ export class LiveMatch implements OnInit {
     );
   }
 
+  getYetToBatFirstInningsPlayers() {
+    return (this.firstInningsBattingTeam ?? []).filter(player =>
+      this.firstInningsPlayerStats[player.id!] &&
+      this.firstInningsPlayerStats[player.id!].runs === 0 &&
+      this.firstInningsPlayerStats[player.id!].ballsFaced === 0 &&
+      !this.outPlayersIds.includes(player.id!)
+    );
+  }
+
   getYetToBowlPlayers() {
     return this.currentBowlingTeam.filter(player =>
       this.playerStats[player.id!] &&
       this.playerStats[player.id!].runsConceded === 0 &&
       this.playerStats[player.id!].ballsDelivered === 0
+    );
+  }
+
+  getYetToBowlfirstInningsPlayers() {
+    return (this.firstInningsBowlingTeam ?? []).filter(player =>
+      this.firstInningsPlayerStats[player.id!] &&
+      this.firstInningsPlayerStats[player.id!].runsConceded === 0 &&
+      this.firstInningsPlayerStats[player.id!].ballsDelivered === 0
     );
   }
 
@@ -984,6 +1005,8 @@ export class LiveMatch implements OnInit {
       firstInningsBalls: this.firstInningsBalls,
       firstInningsWickets: this.firstInningsWickets,
       firstInningsPlayerStats: this.firstInningsPlayerStats,
+      firstInningsBattingTeam: this.firstInningsBattingTeam,
+      firstInningsBowlingTeam: this.firstInningsBowlingTeam,
 
       playerStats: this.playerStats,
 
@@ -1051,6 +1074,8 @@ export class LiveMatch implements OnInit {
     this.firstInningsWickets = this.totalWickets;
 
     this.firstInningsPlayerStats = structuredClone(this.playerStats);
+    this.firstInningsBattingTeam = structuredClone(this.currentBattingTeam);
+    this.firstInningsBowlingTeam = structuredClone(this.currentBowlingTeam)
 
     this.playerStats = {};
     this.initializePlayerStats();
