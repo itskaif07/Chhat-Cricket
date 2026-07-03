@@ -53,6 +53,7 @@ export class LiveMatch implements OnInit {
   isShowingNoBallDialog: boolean = false
   showHatTrickAnimation = false;
   changeInningsDisplay: boolean = false
+  isShowingMatchInfo:boolean = false
   wicketSnapshot: any = {}
 
   captainA: Player | null = null;
@@ -642,7 +643,6 @@ export class LiveMatch implements OnInit {
   }
 
   selectNoBallRuns(runs: 0 | 4 | 6 | null) {
-    this.saveSnapshot()
 
     this.selectedNoBallRuns = runs
 
@@ -1009,6 +1009,8 @@ export class LiveMatch implements OnInit {
       firstInningsPlayerStats: this.firstInningsPlayerStats,
       firstInningsBattingTeam: this.firstInningsBattingTeam,
       firstInningsBowlingTeam: this.firstInningsBowlingTeam,
+      captainA: this.captainA,
+      captainB: this.captainB,
 
       playerStats: this.playerStats,
 
