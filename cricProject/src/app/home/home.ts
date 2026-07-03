@@ -62,6 +62,8 @@ export class Home implements OnInit {
   mostWidesPlayer: any = null;
   mostNoBallsPlayer: any = null
   mostNoBalls: number = 0;
+  mostMaidens:number = 0
+  mostMaidensPlayer: any = null
 
 
   constructor(
@@ -224,7 +226,9 @@ export class Home implements OnInit {
 
               totalWides: 0,
 
-              totalNoBalls: 0
+              totalNoBalls: 0,
+
+              totalMaidens: 0
             };
           }
 
@@ -245,6 +249,8 @@ export class Home implements OnInit {
           this.careerStats[playerId].totalFours += stats.fours || 0;
 
           this.careerStats[playerId].totalSixes += stats.sixes || 0;
+
+          this.careerStats[playerId].totalMaidens += stats.maiden || 0;
 
           this.careerStats[playerId].totalFifties += stats.fifty || 0;
 
@@ -300,6 +306,7 @@ export class Home implements OnInit {
     this.getMostMotm();
     this.getMostWides()
     this.getMostNoBalls()
+    this.getMostMaidens()
     this.cdr.detectChanges();
   }
 
@@ -589,6 +596,24 @@ export class Home implements OnInit {
     });
 
     this.mostSixes = this.mostSixesPlayer.totalSixes;
+  }
+
+  getMostMaidens() {
+    if (!this.careerStats) {
+      return;
+    }
+
+    const players = Object.values(this.careerStats);
+
+    if (players.length === 0) {
+      return;
+    }
+
+    this.mostMaidensPlayer = players.reduce((winner: any, challenger: any) => {
+      return challenger.totalMaidens > winner.totalMaidens ? challenger : winner;
+    });
+
+    this.mostMaidens = this.mostMaidensPlayer.totalMaidens;
   }
 
   getMostFifties() {

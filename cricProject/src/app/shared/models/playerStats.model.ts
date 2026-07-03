@@ -47,5 +47,17 @@ export interface PlayerStats {
 
   wides: number;
 
-  noBalls: number
+  noBalls: number;
+
+  recentRuns: {
+    runs: number;
+    balls: number;
+    notOut: boolean;
+  }[];
+
+  recentWickets: {
+    wickets: number;
+    balls: number;
+    runsConceded: number;
+  }[];
 }

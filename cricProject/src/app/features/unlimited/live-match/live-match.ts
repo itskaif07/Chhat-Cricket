@@ -154,7 +154,9 @@ export class LiveMatch implements OnInit {
           hasScoredHundred: false,
           hundred: 0,
           wides: 0,
-          noBalls: 0
+          noBalls: 0,
+          recentRuns: [],
+          recentWickets: []
         };
       }
     });
@@ -678,6 +680,7 @@ export class LiveMatch implements OnInit {
     this.isShowingNoBallDialog = true
   }
 
+
   addWicket() {
     this.saveSnapshot()
 
@@ -742,7 +745,6 @@ export class LiveMatch implements OnInit {
         this.currentBowler.displayName || '';
 
       this.playerStats[this.currentBowler.id].wickets += 1;
-
 
       const isHatTrick = this.isHatTrick();
 
@@ -1038,9 +1040,11 @@ export class LiveMatch implements OnInit {
   }
 
   checkMatchResult() {
+    
     if (this.currentInnings !== 2) {
       return;
     }
+
 
     // WIN
 
@@ -1077,6 +1081,7 @@ export class LiveMatch implements OnInit {
     this.firstInningsBattingTeam = structuredClone(this.currentBattingTeam);
     this.firstInningsBowlingTeam = structuredClone(this.currentBowlingTeam)
 
+
     this.playerStats = {};
     this.initializePlayerStats();
 
@@ -1092,6 +1097,7 @@ export class LiveMatch implements OnInit {
 
     this.selectedBatsman = null;
     this.selectedBowler = null;
+    
 
     this.outPlayersIds = [];
 
@@ -1172,6 +1178,7 @@ export class LiveMatch implements OnInit {
   async saveCompletedMatch() {
     try {
       const matchData = this.buildMatchObject();
+
 
       await this.matchService.saveMatch(matchData);
 

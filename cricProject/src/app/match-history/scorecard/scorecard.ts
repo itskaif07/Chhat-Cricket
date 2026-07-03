@@ -110,7 +110,7 @@ export class Scorecard implements OnInit {
     }
 
     if (player.dismissalType === 'offside') {
-      return `b ${player.dismissedBy}`;
+      return `offside b ${player.dismissedBy}`;
     }
 
     if (player.dismissalType === 'retired-hurt') {

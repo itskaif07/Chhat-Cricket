@@ -291,18 +291,19 @@
         </div>
 
         <div class="flex items-center justify-center space-x-3">
-          
+
           @if(player?.id === mostWickets?.playerId){
           <img src="icons/purple.png" alt="" class="scale-110">
           }
           <img src="icons/ball.png" alt="" />
-          </div>
+        </div>
       </div>
 
       <div class="featured-metric">
         <span>Total Wickets</span>
         <strong>{{ formatStat(stats?.totalWickets) }}</strong>
-              <p>{{ oversBowled }} overs | {{ formatStat(stats?.totalMaidens, '0') }} maidens | {{ totalExtras(stats) }} Extras
+        <p>{{ oversBowled }} overs | {{ formatStat(stats?.totalMaidens, '0') }} maidens | {{ totalExtras(stats) }}
+          Extras
       </div>
 
       <div class="stats-grid">
@@ -396,4 +397,6 @@
       </article>
     </div>
   </section>
+
+
 </main>

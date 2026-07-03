@@ -86,6 +86,7 @@ export class Rankings implements OnInit {
       [
         'wides',
         'no-balls',
+        'maidens',
       ].includes(this.rankingType)
     ) {
       this.isExtraRanking = true
@@ -171,6 +172,10 @@ export class Rankings implements OnInit {
         this.title = 'Most No Balls Given'
         break
 
+      case 'maidens':
+        this.title = 'Most Maidens'
+        break
+
       default:
         this.title = 'Rankings';
     }
@@ -237,7 +242,9 @@ export class Rankings implements OnInit {
 
               totalWides: 0,
 
-              totalNoBalls: 0
+              totalNoBalls: 0,
+
+              totalMaidens: 0
             };
           }
 
@@ -264,6 +271,8 @@ export class Rankings implements OnInit {
           this.careerStats[playerId].totalFours += stats.fours || 0;
 
           this.careerStats[playerId].totalSixes += stats.sixes || 0;
+
+          this.careerStats[playerId].totalMaidens += stats.maiden || 0;
 
           this.careerStats[playerId].totalFifties += stats.fifty || 0;
 
@@ -365,6 +374,13 @@ export class Rankings implements OnInit {
       case 'sixes':
         this.players.sort(
           (a: any, b: any) => b.totalSixes - a.totalSixes || a.totalInnings - b.totalInnings || b.totalRuns - a.totalRuns || this.getStrikeRate(b) - this.getStrikeRate(a),
+        );
+
+        break;
+
+      case 'maidens':
+        this.players.sort(
+          (a: any, b: any) => b.totalMaidens - a.totalMaidens || a.totalBallsBowled - b.totalBallsBowled || this.getEconomy(a) - this.getEconomy(b) || this.getBowlingAverage(a) - this.getBowlingAverage(b),
         );
 
         break;
@@ -588,6 +604,9 @@ export class Rankings implements OnInit {
 
       case 'sixes':
         return player.totalSixes
+
+      case 'maidens':
+        return player.totalMaidens
 
       case 'fifties':
         return player.totalFifties

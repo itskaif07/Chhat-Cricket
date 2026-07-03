@@ -4,7 +4,7 @@ import { CommonModule, NgClass } from '@angular/common';
 
 import { ActivatedRoute } from '@angular/router';
 
-import { Firestore, doc, getDoc, updateDoc } from '@angular/fire/firestore';
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { RetrievePlayersService } from '../services/retrievePlayer/retrieve-players-service';
 import { MatchService } from '../services/matchService/match-service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
@@ -76,13 +76,24 @@ export class PlayerInfo implements OnInit {
     });
   }
 
+  // retrieveMatches() {
+  //   this.matchService.retrieveMatches().subscribe((data) => {
+  //     this.matchesCount = data.length;
+  //     this.matches = data;
+
+  //     this.stats = this.careerStats[this.playerId] || {};
+  //     this.getRecentForm(data);
+  //     this.aggregateCareerStats();
+  //     this.cdr.detectChanges();
+  //   });
+  // }
+
   retrieveMatches() {
     this.matchService.retrieveMatches().subscribe((data) => {
-      this.matchesCount = data.length;
       this.matches = data;
-      this.aggregateCareerStats();
-      this.cdr.detectChanges();
+      this.matchesCount = data.length;
     });
+    this.cdr.detectChanges()
   }
 
   async UpdateDisplayName() {
@@ -228,7 +239,9 @@ export class PlayerInfo implements OnInit {
                   totalHattricks: 0,
                   totalFifers: 0,
                   totalWides: 0,
-                  totalNoBalls: 0
+                  totalNoBalls: 0,
+                  recentRuns: [],
+                  recentWickets: []
                 };
               }
 
@@ -268,6 +281,7 @@ export class PlayerInfo implements OnInit {
               careerStats[playerId].totalHattricks += stats.hatTricks || 0;
 
               careerStats[playerId].totalFifers += stats.fifers || stats.fifer || 0;
+
             });
           });
 
@@ -277,6 +291,9 @@ export class PlayerInfo implements OnInit {
         });
 
         this.stats = careerStats[this.playerId] || {};
+
+
+        this.aggregateCareerStats();
 
         this.cdr.detectChanges();
       });
@@ -290,11 +307,15 @@ export class PlayerInfo implements OnInit {
     return value && value > 0 ? value : fallback;
   }
 
+  
+
   totalExtras(stats: any) {
     const wides = Number(stats?.totalWides || 0);
     const noBalls = Number(stats?.totalNoBalls || 0);
     return wides + noBalls;
   }
+
+
 
   aggregateCareerStats() {
     this.careerStats = {};
