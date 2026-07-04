@@ -387,7 +387,6 @@ export class LiveMatch implements OnInit {
   //confirm selection
 
   confirmBatsman() {
-    this.saveSnapshot()
 
     this.currentBatsman = this.selectedBatsman;
     this.showBatsmenDialog = false;
@@ -500,7 +499,6 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBallDot() {
-    this.saveSnapshot()
 
     this.voiceAnnouncementService.speak('No Ball')
 
@@ -983,14 +981,18 @@ export class LiveMatch implements OnInit {
 
   undo() {
 
-    const previousSnapshot =
-      this.matchHistory.pop();
+    const previousSnapshot = this.matchHistory.pop();
 
     if (!previousSnapshot) {
       return;
     }
 
     Object.assign(this, previousSnapshot);
+
+    // Never restore temporary dialogs/animations
+    this.isShowingNoBallDialog = false;
+    this.isDismissalDialogOpen = false;
+    this.isShowingCatchingDialog = false;
 
     this.saveMatchState();
   }
