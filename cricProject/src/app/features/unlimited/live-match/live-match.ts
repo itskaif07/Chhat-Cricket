@@ -6,6 +6,7 @@ import { PlayerStats } from '../../../shared/models/playerStats.model';
 import { Router, RouterLink } from '@angular/router';
 import { MatchService } from '../../../services/matchService/match-service';
 import { OfflinePersistanceService } from '../../../services/offline-persistance/offline-persistance-service';
+import { VoiceAnnouncementService } from '../../../services/voiceAnnouncement/voice-announcement-service';
 
 @Component({
   selector: 'app-live-match',
@@ -20,6 +21,7 @@ export class LiveMatch implements OnInit {
     private matchService: MatchService,
     private router: Router,
     private offlinePersistanceService: OfflinePersistanceService,
+    private voiceAnnouncementService: VoiceAnnouncementService
   ) { }
 
   allSelectedPlayers: Player[] = [];
@@ -481,6 +483,7 @@ export class LiveMatch implements OnInit {
 
   addDot() {
     this.saveSnapshot()
+    this.voiceAnnouncementService.speak('Dot Ball')
     this.totalDeliveries += 1;
     this.currentBatsmanBalls += 1;
     this.currentBowlerBalls += 1;
@@ -499,6 +502,7 @@ export class LiveMatch implements OnInit {
   addNoBallDot() {
     this.saveSnapshot()
 
+    this.voiceAnnouncementService.speak('No Ball')
 
     this.lastAction = 'NB+0';
 
@@ -523,6 +527,7 @@ export class LiveMatch implements OnInit {
 
   addFour() {
     this.saveSnapshot()
+    this.voiceAnnouncementService.speak('Four')
     this.totalRuns += 4;
     this.totalDeliveries += 1;
     this.currentBatsmanRuns += 4;
@@ -550,6 +555,8 @@ export class LiveMatch implements OnInit {
 
   addNoBallFour() {
     this.saveSnapshot()
+    this.voiceAnnouncementService.speak('No Ball and a Four')
+
     this.totalRuns += 4;
 
     this.currentBatsmanRuns += 4;
@@ -583,6 +590,7 @@ export class LiveMatch implements OnInit {
   addSix() {
     this.saveSnapshot()
 
+    this.voiceAnnouncementService.speak('Six')
     this.totalRuns += 6;
     this.totalDeliveries += 1;
     this.currentBatsmanRuns += 6;
@@ -610,6 +618,7 @@ export class LiveMatch implements OnInit {
 
   addNoBallSix() {
     this.saveSnapshot()
+    this.voiceAnnouncementService.speak('No Ball and a Six')
 
     this.totalRuns += 6;
 
@@ -662,6 +671,7 @@ export class LiveMatch implements OnInit {
 
   addWide() {
     this.saveSnapshot()
+    this.voiceAnnouncementService.speak('Wide Ball')
 
     this.recentDeliveries.unshift({ value: 'WD', type: 'wide', bowlerId: this.currentBowler?.id! });
     this.lastAction = 'WD';
@@ -684,6 +694,7 @@ export class LiveMatch implements OnInit {
   addWicket() {
     this.saveSnapshot()
 
+    this.voiceAnnouncementService.speak('Wicket !!!')
 
     this.totalWickets += 1;
     this.totalDeliveries += 1;
@@ -796,6 +807,7 @@ export class LiveMatch implements OnInit {
     this.saveSnapshot();
 
     if (!this.currentBatsman?.id) return;
+    this.voiceAnnouncementService.speak('Batsman Is Retired Out')
 
 
     this.playerStats[this.currentBatsman.id].dismissalType =
@@ -823,6 +835,7 @@ export class LiveMatch implements OnInit {
     this.saveSnapshot();
 
     if (!this.currentBatsman?.id) return;
+    this.voiceAnnouncementService.speak('Batsman is Retired Hurt')
 
 
     this.playerStats[this.currentBatsman.id].dismissalType =
@@ -854,6 +867,7 @@ export class LiveMatch implements OnInit {
 
     if (this.totalWickets >= this.maxWickets) {
       this.isInningsOver = true;
+      this.voiceAnnouncementService.speak('Innings Over')
 
       return;
     }
@@ -868,6 +882,7 @@ export class LiveMatch implements OnInit {
     const bowler = this.playerStats[this.currentBowler?.id!];
 
     if (bowler.wickets === 5) {
+      this.voiceAnnouncementService.speak('Five Wicket Haul for Bowler', true)
       bowler.fifer += 1;
     }
   }
@@ -880,11 +895,13 @@ export class LiveMatch implements OnInit {
       if (currentBatter.runs >= 50 && !currentBatter.hasScoredFifty) {
         currentBatter.hasScoredFifty = true;
         currentBatter.fifty += 1;
+        this.voiceAnnouncementService.speak('Half Century', true)
       }
-
+      
       if (currentBatter.runs >= 100 && !currentBatter.hasScoredHundred) {
         currentBatter.hasScoredHundred = true;
         currentBatter.hundred += 1;
+        this.voiceAnnouncementService.speak('Century', true)
       }
     }
   }
@@ -929,11 +946,17 @@ export class LiveMatch implements OnInit {
       return false;
     }
 
-    if (this.recentDeliveries.length < 3) {
+    // Ignore wides and no-balls
+    const legalDeliveries = this.recentDeliveries.filter(delivery =>
+      delivery.type !== 'wide' &&
+      delivery.type !== 'noball'
+    );
+
+    if (legalDeliveries.length < 3) {
       return false;
     }
 
-    const lastThree = this.recentDeliveries.slice(0, 3);
+    const lastThree = legalDeliveries.slice(0, 3);
 
     const isHatTrick = lastThree.every(delivery =>
       delivery.type === 'wicket' &&
@@ -944,13 +967,16 @@ export class LiveMatch implements OnInit {
       return false;
     }
 
+    // Prevent counting a 4th consecutive wicket as another hat-trick
     if (
-      this.recentDeliveries.length >= 4 &&
-      this.recentDeliveries[3].type === 'wicket' &&
-      this.recentDeliveries[3].bowlerId === this.currentBowler?.id
+      legalDeliveries.length >= 4 &&
+      legalDeliveries[3].type === 'wicket' &&
+      legalDeliveries[3].bowlerId === this.currentBowler.id
     ) {
       return false;
     }
+
+    this.voiceAnnouncementService.speak('Hat Trick!', true);
 
     return true;
   }
@@ -971,6 +997,7 @@ export class LiveMatch implements OnInit {
 
   manageOversChange() {
     if (this.totalDeliveries % 6 === 0 && this.totalDeliveries > 0) {
+      this.voiceAnnouncementService.speak("Over Complete");
       this.isOverComplete = true;
 
       this.showBowlerDialog = true;
@@ -1052,7 +1079,7 @@ export class LiveMatch implements OnInit {
 
     if (this.totalRuns > this.firstInningRuns) {
       this.matchResult = 'won';
-
+      this.voiceAnnouncementService.speak("Match Over");
       return;
     }
 
@@ -1060,7 +1087,7 @@ export class LiveMatch implements OnInit {
 
     if (this.totalRuns < this.firstInningRuns && this.totalWickets >= this.maxWickets) {
       this.matchResult = 'lost';
-
+      this.voiceAnnouncementService.speak("Match Over");
       return;
     }
 
@@ -1068,11 +1095,16 @@ export class LiveMatch implements OnInit {
 
     if (this.totalRuns === this.firstInningRuns && this.totalWickets >= this.maxWickets) {
       this.matchResult = 'tie';
+      this.voiceAnnouncementService.speak("Match Over");
     }
+
+
   }
 
   startSecondInnings() {
     this.saveSnapshot()
+
+    this.voiceAnnouncementService.speak('Starting Second Innings')
 
     this.firstInningRuns = this.totalRuns;
 
