@@ -273,7 +273,7 @@ export class LiveMatch implements OnInit {
       return 0;
     }
 
-    return this.firstInningRuns + 1 - this.totalRuns;
+    return this.firstInningRuns + 2 - this.totalRuns;
   }
 
   get matchResultMessage() {
@@ -926,7 +926,10 @@ export class LiveMatch implements OnInit {
     return this.currentBowlingTeam.filter(player =>
       this.playerStats[player.id!] &&
       this.playerStats[player.id!].runsConceded === 0 &&
-      this.playerStats[player.id!].ballsDelivered === 0
+      this.playerStats[player.id!].ballsDelivered === 0 &&
+      this.playerStats[player.id!].wides === 0 &&
+      this.playerStats[player.id!].noBalls === 0 
+
     );
   }
 
@@ -934,7 +937,9 @@ export class LiveMatch implements OnInit {
     return (this.firstInningsBowlingTeam ?? []).filter(player =>
       this.firstInningsPlayerStats[player.id!] &&
       this.firstInningsPlayerStats[player.id!].runsConceded === 0 &&
-      this.firstInningsPlayerStats[player.id!].ballsDelivered === 0
+      this.firstInningsPlayerStats[player.id!].ballsDelivered === 0 &&
+      this.firstInningsPlayerStats[player.id!].wides === 0 &&
+      this.firstInningsPlayerStats[player.id!].noBalls === 0 
     );
   }
 
