@@ -1,4 +1,3 @@
-
 @if (loading) {
 <div class="loader-wrapper">
   <div class="loader">
@@ -554,7 +553,7 @@
     <!-- FEATURED RECORDS -->
     <div class="grid md:grid-cols-3 gap-4">
       <!-- Highest Score -->
-      <div routerLink="rankings/highest-score"
+      <!-- <div routerLink="rankings/highest-score"
         class="relative overflow-hidden rounded-4xl border border-amber-400/20 bg-linear-to-br from-amber-400/10 to-transparent p-6 cursor-pointer">
         <p class="text-amber-300 uppercase text-xs tracking-widest">Highest Score</p>
 
@@ -565,10 +564,23 @@
         <p class="text-zinc-300 mt-2">
           {{ highestScorePlayer ? highestScorePlayer.playerName : 'No Records Yet' }}
         </p>
+      </div> -->
+
+      <div routerLink="rankings/sixes"
+        class="relative overflow-hidden rounded-4xl border border-amber-400/20 bg-linear-to-br from-amber-400/10 to-transparent p-6 cursor-pointer">
+        <p class="text-amber-300 uppercase text-xs tracking-widest">Most Sixes</p>
+
+        <h1 class="text-6xl font-black mt-4">
+          {{ mostSixes > 0 ? mostSixes : '--' }}
+        </h1>
+
+        <p class="text-zinc-300 mt-2">
+          {{ mostSixes > 0 ? mostSixesPlayer?.playerName : 'No Records Yet' }}
+        </p>
       </div>
 
       <!-- Best Bowling Figures -->
-      <div routerLink="/rankings/best-figures"
+      <!-- <div routerLink="/rankings/best-figures"
         class="relative overflow-hidden rounded-4xl border border-sky-400/20 bg-linear-to-br from-sky-400/10 to-transparent p-6 cursor-pointer">
         <p class="text-sky-300 uppercase text-xs tracking-widest">Best Figures</p>
 
@@ -578,6 +590,21 @@
 
         <p class="text-zinc-300 mt-2">
           {{ bestFiguresPlayer ? bestFiguresPlayer?.playerName : 'No Records Yet' }}
+        </p>
+      </div> -->
+
+      <div routerLink="/rankings/fours"
+        class="relative overflow-hidden rounded-4xl border border-sky-400/20 bg-linear-to-br from-sky-400/10 to-transparent p-6 cursor-pointer">
+        <p class="text-sky-300 uppercase text-xs tracking-widest">Most Fours</p>
+
+        <h1 class="text-6xl font-black mt-4">
+          {{ mostFours > 0 ? mostFours : '--' }}
+
+        </h1>
+
+        <p class="text-zinc-300 mt-2">
+          {{ mostFours > 0 ? mostFoursPlayer?.playerName : 'No Records Yet' }}
+
         </p>
       </div>
 
@@ -589,7 +616,7 @@
         <h1 class="text-4xl font-black mt-3">
           {{ mostFifties > 0 ? mostFifties : '--' }}
         </h1>
-        
+
         <p class="text-zinc-300 mt-2">
           {{ mostFifties > 0 ? mostFiftiesPlayer?.playerName : 'No Records Yet' }}
         </p>
@@ -597,32 +624,8 @@
     </div>
 
     <!-- MINI RECORDS -->
-    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Most Sixes -->
-      <div routerLink="/rankings/sixes" class="glass-card p-5 text-center cursor-pointer">
-        <p class="text-zinc-500 text-xs uppercase">Most Sixes</p>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
-        <h1 class="text-4xl font-black mt-3">
-          {{ mostSixes > 0 ? mostSixes : '--' }}
-        </h1>
-
-        <p class="text-zinc-300 mt-2">
-          {{ mostSixes > 0 ? mostSixesPlayer?.playerName : 'No Records Yet' }}
-        </p>
-      </div>
-
-      <!-- Most Fours -->
-      <div routerLink="/rankings/fours" class="glass-card p-5 text-center cursor-pointer">
-        <p class="text-zinc-500 text-xs uppercase">Most Fours</p>
-
-        <h1 class="text-4xl font-black mt-3">
-          {{ mostFours > 0 ? mostFours : '--' }}
-        </h1>
-
-        <p class="text-zinc-300 mt-2">
-          {{ mostFours > 0 ? mostFoursPlayer?.playerName : 'No Records Yet' }}
-        </p>
-      </div>
 
       <!-- Most Maidens -->
       <div routerLink="/rankings/maidens" class="glass-card p-5 text-center cursor-pointer">
@@ -678,7 +681,241 @@
     </div>
   </section>
 
-  <section id="section7" class="space-y-5 px-4 py-12 lg:px-12 w-full">
+
+  <section class="w-full px-4 lg:px-12 py-12 space-y-8">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="text-center space-y-3">
+
+      <p class="text-amber-400 text-sm font-semibold uppercase tracking-[0.35em]">
+        Record Book
+      </p>
+
+      <h1 class="text-3xl lg:text-5xl font-black">
+        Greatest Performances
+      </h1>
+
+      <p class="text-zinc-400 max-w-xl mx-auto">
+        Switch between individual career records and the greatest match performances ever recorded.
+      </p>
+
+    </div>
+
+    <!-- ================= SEGMENTED CONTROL ================= -->
+
+    <div class="flex justify-center cursor-pointer">
+
+      <div class="relative flex w-full max-w-sm bg-white/5 rounded-2xl border border-white/10 p-1 overflow-hidden">
+
+        <!-- Sliding Background -->
+
+        <div
+          class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl bg-amber-400 transition-all duration-300 ease-out"
+          [class.translate-x-full]="recordMode==='allTime'">
+
+        </div>
+
+        <button (click)="recordMode='personal'"
+          class="relative z-10 flex-1 py-3 text-sm font-bold transition duration-300 cursor-pointer"
+          [class.text-black]="recordMode==='personal'" [class.text-zinc-400]="recordMode!=='personal'">
+
+          Personal
+
+        </button>
+
+        <button (click)="recordMode='allTime'"
+          class="relative z-10 flex-1 py-3 text-sm font-bold transition duration-300 cursor-pointer"
+          [class.text-black]="recordMode==='allTime'" [class.text-zinc-400]="recordMode!=='allTime'">
+
+          All Time
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- ================= RECORDS ================= -->
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Highest Score -->
+
+      <div [routerLink]="['/rankings', recordMode === 'personal' ? 'highest-score' : 'all-time-highest-scores']"
+        class="relative rounded-4xl overflow-hidden border border-amber-400/20 bg-linear-to-br from-amber-400/10
+        via-[#08111F] to-[#08111F] p-8 min-h-60 cursor-pointer group">
+
+        <!-- Glow -->
+
+        <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-amber-400/10 blur-[90px]">
+        </div>
+
+        <!-- Flip Container -->
+
+        <div class="transition-all duration-500">
+
+          @if(recordMode === 'personal'){
+
+          <p class="uppercase text-xs tracking-[0.3em] text-amber-300">
+            Highest Score
+          </p>
+
+          <div class="mt-5">
+
+            <h1 class="text-8xl font-black text-white">
+              {{ highestScore }}
+            </h1>
+
+            <h2 class="text-3xl font-bold mt-5 uppercase text-white">
+              {{ highestScorePlayer?.playerName }}
+            </h2>
+
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full
+                border border-amber-400/20
+                bg-amber-400/10
+                px-4 py-2">
+
+              <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+
+              <span class="text-sm font-semibold text-amber-300 tracking-wide">
+                Personal
+              </span>
+
+            </div>
+
+          </div>
+
+          }
+
+          @else {
+
+          <p class="uppercase text-xs tracking-[0.3em] text-yellow-300">
+            Highest Score
+          </p>
+
+          <div class="mt-5">
+
+            <h1 class="text-8xl font-black text-yellow-200">
+              {{ highestScore }}
+            </h1>
+
+            <h2 class="text-3xl font-bold mt-5 uppercase text-white">
+              {{ highestScorePlayer?.playerName }}
+            </h2>
+
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full
+                border border-yellow-400/20
+                bg-yellow-400/10
+                px-4 py-2">
+
+              <span class="text-lg">🏆</span>
+
+              <span class="text-sm font-semibold text-yellow-300 tracking-wide">
+                All-Time Record
+              </span>
+
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+
+      <!-- Bowling -->
+
+      <div [routerLink]="['/rankings', recordMode === 'personal' ? 'best-figures' : 'all-time-best-figures']" class="relative rounded-4xl overflow-hidden border 
+    {{ recordMode === 'personal'
+        ? 'border-sky-400/20 bg-linear-to-br from-sky-400/10 via-[#08111F] to-[#08111F]'
+        : 'border-cyan-300/25 bg-linear-to-br from-cyan-400/15 via-[#08111F] to-[#08111F]' }}
+    p-8 min-h-60 cursor-pointer">
+
+        <!-- Glow -->
+        <div class="absolute -right-16 -top-16 w-48 h-48 rounded-full blur-[90px]"
+          [class.bg-sky-400/10]="recordMode==='personal'" [class.bg-cyan-300/15]="recordMode==='allTime'">
+        </div>
+
+        <div class="transition-all duration-500">
+
+          @if(recordMode === 'personal'){
+
+          <p class="uppercase text-xs tracking-[0.3em] text-sky-300">
+            Best Figures
+          </p>
+
+          <div class="mt-10">
+
+            <h1 class="text-7xl font-black text-white">
+              {{ bestFigures }}
+            </h1>
+
+            <h2 class="text-3xl font-bold mt-5 uppercase text-white">
+              {{ bestFiguresPlayer?.playerName }}
+            </h2>
+
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full
+                    border border-sky-400/20
+                    bg-sky-400/10
+                    px-4 py-2">
+
+              <span class="h-2 w-2 rounded-full bg-sky-400"></span>
+
+              <span class="text-sm font-semibold text-sky-300 tracking-wide">
+                Personal
+              </span>
+
+            </div>
+
+          </div>
+
+          }
+
+          @else {
+
+          <p class="uppercase text-xs tracking-[0.3em] text-cyan-300">
+            Best Figures
+          </p>
+
+          <div class="mt-10">
+
+            <h1 class="text-7xl font-black text-cyan-200">
+              {{ bestFigures }}
+            </h1>
+
+            <h2 class="text-3xl font-bold mt-5 uppercase text-white">
+              {{ bestFiguresPlayer?.playerName }}
+            </h2>
+
+            <div class="mt-5 inline-flex items-center gap-2 rounded-full
+                    border border-cyan-300/20
+                    bg-cyan-300/10
+                    px-4 py-2">
+
+              <span class="text-lg">💎</span>
+
+              <span class="text-sm font-semibold text-cyan-300 tracking-wide">
+                All-Time Record
+              </span>
+
+            </div>
+
+          </div>
+
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section id="section8" class="space-y-5 px-4 py-12 lg:px-12 w-full">
     <div class="w-full flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3 pb-3">
       <div>
         <p class="text-yellow-400 text-sm font-semibold uppercase tracking-[0.3em]">LEGENDS CLUB</p>

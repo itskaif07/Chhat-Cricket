@@ -20,6 +20,8 @@ export class Rankings implements OnInit {
   title = '';
   valueField = '';
   players: any[] = [];
+  highestScoreRecords: any[] = [];
+  bestFiguresRecords: any[] = [];
   careerStats: any = {};
   loading: boolean = false
   isBattingRanking = false
@@ -59,7 +61,6 @@ export class Rankings implements OnInit {
         'hundreds',
         'strike-rate',
         'batting-average',
-        'highest-score'
       ].includes(this.rankingType)
     ) {
 
@@ -70,9 +71,9 @@ export class Rankings implements OnInit {
       [
         'wickets',
         'bowling-average',
-        'best-figures',
         'five-fers',
         'hat-tricks',
+        'best-figures',
       ].includes(this.rankingType)
     ) {
 
@@ -90,6 +91,9 @@ export class Rankings implements OnInit {
       ].includes(this.rankingType)
     ) {
       this.isExtraRanking = true
+    }
+
+    else if (['all-time-highest-scores', 'highest-score', 'best-figures', 'all-time-best-figures'].includes(this.rankingType)) {
     }
     else {
       this.isOtherRanking = true;
@@ -152,8 +156,16 @@ export class Rankings implements OnInit {
         this.title = 'Highest Score'
         break
 
+      case 'all-time-highest-scores':
+        this.title = 'All Time Highest Scores'
+        break
+
       case 'best-figures':
         this.title = 'Best Figures'
+        break
+
+      case 'all-time-best-figures':
+        this.title = 'All Time Best Figures'
         break
 
       case 'five-fers':
@@ -232,6 +244,8 @@ export class Rankings implements OnInit {
 
               highestScore: 0,
 
+              highestScoreBalls: 0,
+
               bestFiguresWickets: 0,
 
               bestFiguresRuns: 999,
@@ -252,7 +266,6 @@ export class Rankings implements OnInit {
           this.careerStats[playerId].totalRuns += stats.runs || 0;
 
           this.careerStats[playerId].totalWickets += stats.wickets || 0;
-
 
           this.careerStats[playerId].totalInnings += stats.innings || 0;
 
@@ -291,23 +304,19 @@ export class Rankings implements OnInit {
             }
           }
 
-          this.careerStats[playerId].highestScore =
-            Math.max(
-              this.careerStats[playerId].highestScore,
-              stats.runs || 0
-            );
+          this.personalHighestScore(stats, playerId)
 
+          this.updateAllTimeHighestScores(stats, playerId)
 
           this.getBestFigures(stats, playerId)
 
+          this.updateAllTimeBestFigures(stats, playerId)
 
 
         });
 
       }
       );
-
-
 
 
 
@@ -340,12 +349,97 @@ export class Rankings implements OnInit {
     this.cdr.detectChanges();
   }
 
-  convertToOvers(totalDeliveries: number) {
 
-    const overs = Math.floor(totalDeliveries / 6);
-    const balls = totalDeliveries % 6;
+  getRankValue(player: any) {
 
-    return `${overs}.${balls}`;
+    switch (this.rankingType) {
+
+      case 'runs':
+        return player.totalRuns;
+
+      case 'wickets':
+        return player.totalWickets;
+
+      case 'fours':
+        return player.totalFours
+
+      case 'sixes':
+        return player.totalSixes
+
+      case 'maidens':
+        return player.totalMaidens
+
+      case 'fifties':
+        return player.totalFifties
+
+      case 'hundreds':
+        return player.totalHundreds
+
+      case 'mvp':
+        return player.totalMotm;
+
+      case 'catches':
+        return player.totalCatches;
+
+      case 'wides':
+        return player.totalWides;
+
+      case 'no-balls':
+        return player.totalNoBalls;
+
+      case 'strike-rate':
+        return this.getStrikeRate(player)
+          .toFixed(2);
+
+      case 'economy':
+        return this.getEconomy(player)
+          .toFixed(2);
+
+      case 'batting-average':
+        return this.getBattingAverage(player).toFixed(2)
+
+      case 'bowling-average':
+        return this.getBowlingAverage(player).toFixed(2);
+
+      case 'highest-score':
+        return `${player.highestScore} (${player.highestScoreBalls})`;
+
+      case 'all-time-highest-scores':
+        return `${player.runs} (${player.balls})`;
+
+      case 'all-time-best-figures':
+        return `${player.wickets}/${player.runsConceded}`;
+
+      case 'best-figures':
+        return `${player.bestFiguresWickets}/${player.bestFiguresRuns}`;
+
+      case 'five-fers':
+        return player.totalFiveFers
+
+      case 'hat-tricks':
+        return player.totalHattricks
+
+      default:
+        return 0;
+
+    }
+
+  }
+
+  personalHighestScore(stats: any, playerId: string) {
+    const currentRuns = stats.runs || 0;
+    const currentBalls = stats.ballsFaced || 0;
+
+    if (
+      currentRuns > this.careerStats[playerId].highestScore ||
+      (
+        currentRuns === this.careerStats[playerId].highestScore &&
+        currentBalls < this.careerStats[playerId].highestScoreBalls
+      )
+    ) {
+      this.careerStats[playerId].highestScore = currentRuns;
+      this.careerStats[playerId].highestScoreBalls = currentBalls;
+    }
   }
 
   sortPlayers() {
@@ -487,7 +581,7 @@ export class Rankings implements OnInit {
         this.players = this.players.filter(
           (player) => player.highestScore > 0
         );
-        
+
         this.players.sort(
           (a: any, b: any) =>
             b.highestScore - a.highestScore ||
@@ -509,6 +603,18 @@ export class Rankings implements OnInit {
             this.getEconomy(a) - this.getEconomy(b) ||
             this.getBowlingAverage(a) - this.getBowlingAverage(b)
         );
+
+        break;
+
+      case 'all-time-highest-scores':
+
+        this.players = [...this.highestScoreRecords];
+
+        break;
+
+      case 'all-time-best-figures':
+
+        this.players = [...this.bestFiguresRecords];
 
         break;
 
@@ -588,76 +694,80 @@ export class Rankings implements OnInit {
     }
   }
 
+  updateAllTimeHighestScores(stats: any, playerId: string) {
 
-  getRankValue(player: any) {
+    const runs = stats.runs || 0;
 
-    switch (this.rankingType) {
+    if (runs === 0) return;
 
-      case 'runs':
-        return player.totalRuns;
+    this.highestScoreRecords.push({
+      playerId,
+      playerName: stats.playerName,
+      playerPhoto: stats.playerPhoto,
+      runs,
+      balls: stats.ballsFaced,
+      innings: stats.innings
+    });
 
-      case 'wickets':
-        return player.totalWickets;
+    this.highestScoreRecords.sort(
+      (a, b) =>
+        b.runs - a.runs ||
+        a.balls - b.balls
+    );
 
-      case 'fours':
-        return player.totalFours
+    this.highestScoreRecords =
+      this.highestScoreRecords.slice(0, 30);
+  }
 
-      case 'sixes':
-        return player.totalSixes
+  updateAllTimeBestFigures(stats: any, playerId: string) {
 
-      case 'maidens':
-        return player.totalMaidens
+    const currentWickets = stats.wickets || 0;
+    const currentRuns = stats.runsConceded || 0;
+    const balls = stats.ballsDelivered || 0
 
-      case 'fifties':
-        return player.totalFifties
+    if (currentWickets === 0) return;
 
-      case 'hundreds':
-        return player.totalHundreds
+    this.bestFiguresRecords.push({
 
-      case 'mvp':
-        return player.totalMotm;
+      playerId,
 
-      case 'catches':
-        return player.totalCatches;
+      playerName: stats.playerName,
 
-      case 'wides':
-        return player.totalWides;
+      playerPhoto: stats.playerPhoto,
 
-      case 'no-balls':
-        return player.totalNoBalls;
+      wickets: currentWickets,
 
-      case 'strike-rate':
-        return this.getStrikeRate(player)
-          .toFixed(2);
+      runsConceded: currentRuns,
 
-      case 'economy':
-        return this.getEconomy(player)
-          .toFixed(2);
+      overs: this.convertToOvers(balls)
 
-      case 'batting-average':
-        return this.getBattingAverage(player).toFixed(2)
+    });
 
-      case 'bowling-average':
-        return this.getBowlingAverage(player).toFixed(2);
+    this.bestFiguresRecords.sort(
+      (a, b) =>
+        b.wickets - a.wickets ||
+        a.runsConceded - b.runsConceded ||
+        this.getSpellEconomy(a.runsConceded, a.balls) -
+        this.getSpellEconomy(b.runsConceded, b.balls)
+    );
 
-      case 'highest-score':
-        console.log(player.highestScore)
-        return player.highestScore
+    
+    // Keep only the best 10 performances
+    this.bestFiguresRecords = this.bestFiguresRecords.slice(0, 20);
+  }
 
-      case 'best-figures':
-        return `${player.bestFiguresWickets}/${player.bestFiguresRuns}`;
+  getSpellEconomy(runs: number, balls: number) {
+    if (!balls) return 0;
 
-      case 'five-fers':
-        return player.totalFiveFers
+    return runs / (balls / 6);
+  }
 
-      case 'hat-tricks':
-        return player.totalHattricks
+  convertToOvers(totalDeliveries: number) {
 
-      default:
-        return 0;
+    const overs = Math.floor(totalDeliveries / 6);
+    const balls = totalDeliveries % 6;
 
-    }
-
+    return `${overs}.${balls}`;
   }
 
 }

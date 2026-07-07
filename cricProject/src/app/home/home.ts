@@ -65,6 +65,9 @@ export class Home implements OnInit {
   mostMaidens:number = 0
   mostMaidensPlayer: any = null
 
+  recordMode: 'personal'| 'allTime' = 'personal'
+  
+
 
   constructor(
     private auth: Auth,
