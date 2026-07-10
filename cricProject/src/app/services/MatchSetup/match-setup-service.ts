@@ -53,31 +53,12 @@ export class MatchSetupService {
     this.selectedPlayers = [...teamA, ...teamB];
   }
 
-  setLeftOverPlayer(player: Player) {
-    if (this.tossWinner === 'A') {
-      this.teamA.push(player);
-    } else if (this.tossWinner === 'B') {
-      this.teamB.push(player);
-    }
-
-    this.selectedPlayers = [...this.teamA, ...this.teamB];
+  updateTeams(teamA: Player[], teamB: Player[]) {
+    this.teamA = teamA;
+    this.teamB = teamB;
+    this.selectedPlayers = [...teamA, ...teamB];
   }
 
-  setLeftOverPlayerToBattingTeam(player: Player) {
-    const targetTeam = this.firstBattingTeam === 'A' ? this.teamA : this.teamB;
-
-    const alreadyExists = targetTeam.some((teamPlayer) => teamPlayer.id === player.id);
-
-    if (!alreadyExists) {
-      targetTeam.push(player);
-    }
-
-    this.selectedPlayers = [...this.teamA, ...this.teamB];
-  }
-
-  setLeftOverPlayerInTeamA(player: Player) {
-    this.setLeftOverPlayerToBattingTeam(player);
-  }
 
   getTeamA() {
     return this.teamA;

@@ -38,7 +38,9 @@ export class SelectPlayers implements OnInit {
 
   async getPlayers() {
     try {
-      this.players = await this.RetrievePlayersService.getAllPlayers();
+      this.RetrievePlayersService.getAllPlayers().subscribe((data:any)=>{
+        this.players = data
+      })
       this.cdr.detectChanges();
     } catch (e) {
       console.log(e);

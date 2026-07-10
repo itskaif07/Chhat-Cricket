@@ -113,10 +113,8 @@ export class Home implements OnInit {
 
     if (this.offlinePersistence.hasSavedMatch()) {
       this.router.navigate(['/unlimited/live-match']);
-      console.log('offline storage')
       return;
     }
-    console.log('no offline storage')
     this.router.navigate(['/unlimited/welcome']);
   }
 
@@ -127,7 +125,7 @@ export class Home implements OnInit {
     this.matchService.retrieveMatches().subscribe((data) => {
       this.matchesCount = data.length;
       this.matches = data;
-      console.log(data);
+      // console.log(data);
       this.aggregateTotalRuns();
       this.aggregateTotalWickets();
       this.aggregateCareerStats();
@@ -181,11 +179,6 @@ export class Home implements OnInit {
       match.innings.forEach((innings: any, i: number) => {
         Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
 
-          if (stats.hatTricks > 0) {
-            console.log(match.id);
-            console.log('innings', i + 1);
-            console.log(stats);
-          }
 
           if (!this.careerStats[playerId]) {
             this.careerStats[playerId] = {

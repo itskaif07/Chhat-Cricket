@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   collection,
+  collectionData,
   doc,
   docData,
   Firestore,
@@ -18,17 +19,19 @@ import { Observable } from 'rxjs';
 export class RetrievePlayersService {
   constructor(private fireStore: Firestore) {}
 
-  async getAllPlayers(): Promise<Player[]> {
+  getAllPlayers(): Observable<Player[]> {
+
     const playerRef = collection(this.fireStore, 'players');
 
-    const q = query(playerRef, orderBy('displayName', 'asc'));
+    const q = query(
+      playerRef,
+      orderBy('displayName', 'asc')
+    );
 
-    const snapshot = await getDocs(q);
+    return collectionData(q, {
+      idField: 'id',
+    }) as Observable<Player[]>;
 
-    return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Player[];
   }
 
   getPlayer(playerId: string): Observable<Player> {

@@ -7,6 +7,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MatchService } from '../../../services/matchService/match-service';
 import { OfflinePersistanceService } from '../../../services/offline-persistance/offline-persistance-service';
 import { VoiceAnnouncementService } from '../../../services/voiceAnnouncement/voice-announcement-service';
+import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
 
 @Component({
   selector: 'app-live-match',
@@ -21,19 +22,23 @@ export class LiveMatch implements OnInit {
     private matchService: MatchService,
     private router: Router,
     private offlinePersistanceService: OfflinePersistanceService,
-    private voiceAnnouncementService: VoiceAnnouncementService
+    private voiceAnnouncementService: VoiceAnnouncementService,
+    private registeredPlayers: RetrievePlayersService
   ) { }
 
   allSelectedPlayers: Player[] = [];
+  allRegisteredPlayers: Player[] | null = null
   teamA: Player[] = [];
   teamB: Player[] = [];
   outPlayersIds: string[] = [];
   retiredHurtPlayers: Player[] = [];
+  unselectedPlayers: Player[] = []
   playerStats: { [playerId: string]: PlayerStats } = {};
 
   tossWinner: 'A' | 'B' | '' = '';
   battingFirst: 'A' | 'B' | '' = '';
   bowlingFirst: 'A' | 'B' | '' = '';
+  selectedExtraPlayerTeam: 'A' | 'B' | null = null
 
   currentInnings: 1 | 2 = 1;
   firstInningRuns: number = 0;
@@ -42,6 +47,7 @@ export class LiveMatch implements OnInit {
   firstInningsBattingTeam: Player[] | null = null
   firstInningsBowlingTeam: Player[] | null = null
   firstInningsPlayerStats: Record<string, PlayerStats> = {};
+  wicketSnapshot: any = {}
 
   isInningsOver: boolean = false;
   showBatsmenDialog: boolean = false;
@@ -55,8 +61,8 @@ export class LiveMatch implements OnInit {
   isShowingNoBallDialog: boolean = false
   showHatTrickAnimation = false;
   changeInningsDisplay: boolean = false
-  isShowingMatchInfo:boolean = false
-  wicketSnapshot: any = {}
+  isShowingMatchInfo: boolean = false
+  isShowingExtraPlayerDialog: boolean = false
 
   captainA: Player | null = null;
   captainB: Player | null = null;
@@ -70,6 +76,7 @@ export class LiveMatch implements OnInit {
 
   selectedBatsman: Player | null = null;
   selectedBowler: Player | null = null;
+  selectedExtraPlayer: Player | null = null
 
   matchHistory: any[] = [];
 
@@ -129,40 +136,48 @@ export class LiveMatch implements OnInit {
   }
 
   initializePlayerStats() {
+
     const allPlayers = [...this.teamA, ...this.teamB];
 
-    allPlayers.forEach((player) => {
-      if (player.id) {
-        this.playerStats[player.id] = {
-          playerId: player.id,
-          playerName: player.displayName,
-          playerPhoto: player.photoURL || '',
-          matches: 1,
-          innings: 0,
-          runs: 0,
-          ballsFaced: 0,
-          wickets: 0,
-          ballsDelivered: 0,
-          fours: 0,
-          sixes: 0,
-          runsConceded: 0,
-          dismissalType: null,
-          caughtBy: null,
-          dismissedBy: '',
-          hatTricks: 0,
-          maiden: 0,
-          fifer: 0,
-          hasScoredFifty: false,
-          fifty: 0,
-          hasScoredHundred: false,
-          hundred: 0,
-          wides: 0,
-          noBalls: 0,
-          recentRuns: [],
-          recentWickets: []
-        };
-      }
+    allPlayers.forEach(player => {
+      this.createPlayerStats(player);
     });
+
+  }
+
+  createPlayerStats(player: Player) {
+
+    if (!player.id) return;
+
+    this.playerStats[player.id] = {
+      playerId: player.id,
+      playerName: player.displayName,
+      playerPhoto: player.photoURL || '',
+      matches: 1,
+      innings: 0,
+      runs: 0,
+      ballsFaced: 0,
+      wickets: 0,
+      ballsDelivered: 0,
+      fours: 0,
+      sixes: 0,
+      runsConceded: 0,
+      dismissalType: null,
+      caughtBy: null,
+      dismissedBy: '',
+      hatTricks: 0,
+      maiden: 0,
+      fifer: 0,
+      hasScoredFifty: false,
+      fifty: 0,
+      hasScoredHundred: false,
+      hundred: 0,
+      wides: 0,
+      noBalls: 0,
+      recentRuns: [],
+      recentWickets: []
+    };
+
   }
 
   get currentBattingTeam(): Player[] {
@@ -371,6 +386,83 @@ export class LiveMatch implements OnInit {
   getCaptains() {
     this.captainA = this.matchSetupService.getTeamACaptain();
     this.captainB = this.matchSetupService.getTeamBCaptain();
+  }
+
+  openExtraPlayerDialogForA() {
+    this.selectedExtraPlayerTeam = 'A'
+    this.isShowingExtraPlayerDialog = true;
+    this.getUnselectedPlayers()
+  }
+
+  openExtraPlayerDialogForB() {
+    this.selectedExtraPlayerTeam = 'B'
+    this.isShowingExtraPlayerDialog = true;
+    this.getUnselectedPlayers()
+  }
+
+  addExtraPlayerToTeam() {
+
+    if (this.selectedExtraPlayerTeam === 'A') {
+
+      this.teamA = [
+        ...this.teamA,
+        this.selectedExtraPlayer!
+      ];
+
+    } else {
+
+      this.teamB = [
+        ...this.teamB,
+        this.selectedExtraPlayer!
+      ];
+
+    }
+
+    this.allSelectedPlayers = [
+      ...this.allSelectedPlayers,
+      this.selectedExtraPlayer!
+    ];
+
+    // Initialize stats for the new player only
+    this.createPlayerStats(this.selectedExtraPlayer!);
+    this.updateTeamInService()
+
+    this.closeExtraPlayerDialog()
+
+  }
+
+  closeExtraPlayerDialog() {
+    this.selectedExtraPlayer = null;
+    this.selectedExtraPlayerTeam = null;
+    this.unselectedPlayers = [];
+    this.isShowingExtraPlayerDialog = false;
+  }
+
+  getUnselectedPlayers() {
+
+    this.registeredPlayers.getAllPlayers().subscribe((data: Player[]) => {
+
+      this.unselectedPlayers = data.filter(
+        player =>
+          !this.allSelectedPlayers.some(
+            selected => selected.id === player.id
+          )
+      );
+
+
+    });
+
+  }
+
+  selectExtraPlayer(player: Player) {
+    this.selectedExtraPlayer = player
+  }
+
+  updateTeamInService() {
+    this.matchSetupService.updateTeams(
+      this.teamA,
+      this.teamB
+    );
   }
 
   selectBatsman(player: Player) {
@@ -895,7 +987,7 @@ export class LiveMatch implements OnInit {
         currentBatter.fifty += 1;
         this.voiceAnnouncementService.speak('Half Century', true)
       }
-      
+
       if (currentBatter.runs >= 100 && !currentBatter.hasScoredHundred) {
         currentBatter.hasScoredHundred = true;
         currentBatter.hundred += 1;
@@ -928,7 +1020,7 @@ export class LiveMatch implements OnInit {
       this.playerStats[player.id!].runsConceded === 0 &&
       this.playerStats[player.id!].ballsDelivered === 0 &&
       this.playerStats[player.id!].wides === 0 &&
-      this.playerStats[player.id!].noBalls === 0 
+      this.playerStats[player.id!].noBalls === 0
 
     );
   }
@@ -939,7 +1031,7 @@ export class LiveMatch implements OnInit {
       this.firstInningsPlayerStats[player.id!].runsConceded === 0 &&
       this.firstInningsPlayerStats[player.id!].ballsDelivered === 0 &&
       this.firstInningsPlayerStats[player.id!].wides === 0 &&
-      this.firstInningsPlayerStats[player.id!].noBalls === 0 
+      this.firstInningsPlayerStats[player.id!].noBalls === 0
     );
   }
 
@@ -1076,7 +1168,7 @@ export class LiveMatch implements OnInit {
   }
 
   checkMatchResult() {
-    
+
     if (this.currentInnings !== 2) {
       return;
     }
@@ -1138,7 +1230,7 @@ export class LiveMatch implements OnInit {
 
     this.selectedBatsman = null;
     this.selectedBowler = null;
-    
+
 
     this.outPlayersIds = [];
 
