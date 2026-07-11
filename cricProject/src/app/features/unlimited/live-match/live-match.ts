@@ -63,6 +63,7 @@ export class LiveMatch implements OnInit {
   changeInningsDisplay: boolean = false
   isShowingMatchInfo: boolean = false
   isShowingExtraPlayerDialog: boolean = false
+  isLoading = false
 
   captainA: Player | null = null;
   captainB: Player | null = null;
@@ -440,15 +441,29 @@ export class LiveMatch implements OnInit {
 
   getUnselectedPlayers() {
 
-    this.registeredPlayers.getAllPlayers().subscribe((data: Player[]) => {
+    this.isLoading = true;
 
-      this.unselectedPlayers = data.filter(
-        player =>
-          !this.allSelectedPlayers.some(
-            selected => selected.id === player.id
-          )
-      );
+    this.registeredPlayers.getAllPlayers().subscribe({
 
+      next: (data: Player[]) => {
+
+        this.unselectedPlayers = data.filter(
+          player =>
+            !this.allSelectedPlayers.some(
+              selected => selected.id === player.id
+            )
+        );
+
+        this.isLoading = false;
+
+      },
+
+      error: (err) => {
+
+        console.error(err);
+        this.isLoading = false;
+
+      }
 
     });
 
