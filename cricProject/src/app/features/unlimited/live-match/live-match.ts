@@ -1262,12 +1262,21 @@ export class LiveMatch implements OnInit {
   }
 
   buildMatchStats() {
+
     const matchStats = structuredClone(this.firstInningsPlayerStats);
 
     for (const playerId in this.playerStats) {
-      const first = matchStats[playerId];
 
       const second = this.playerStats[playerId];
+
+      if (!matchStats[playerId]) {
+
+        matchStats[playerId] = structuredClone(second);
+        continue;
+
+      }
+
+      const first = matchStats[playerId];
 
       first.runs += second.runs;
       first.wickets += second.wickets;
@@ -1276,6 +1285,7 @@ export class LiveMatch implements OnInit {
       first.runsConceded += second.runsConceded;
       first.fours += second.fours;
       first.sixes += second.sixes;
+
     }
 
     return matchStats;
