@@ -110,12 +110,25 @@ export class Home implements OnInit {
   }
 
   startUnlimitedMatch() {
+    const savedMatch = this.offlinePersistence.loadMatch<any>();
 
-    if (this.offlinePersistence.hasSavedMatch()) {
+    if (savedMatch && savedMatch.matchType !== 'limited') {
       this.router.navigate(['/unlimited/live-match']);
       return;
     }
+
     this.router.navigate(['/unlimited/welcome']);
+  }
+
+  startLimitedMatch() {
+    const savedMatch = this.offlinePersistence.loadMatch<any>();
+
+    if (savedMatch?.matchType === 'limited') {
+      this.router.navigate(['/limited/live-match']);
+      return;
+    }
+
+    this.router.navigate(['/limited/welcome']);
   }
 
   //Platform Stats

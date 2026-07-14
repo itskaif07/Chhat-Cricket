@@ -11,6 +11,10 @@ import { LiveMatch } from './features/unlimited/live-match/live-match';
 import { MainPage } from './match-history/main-page/main-page';
 import { Scorecard } from './match-history/scorecard/scorecard';
 import { Rankings } from './rankings/rankings';
+import { LimitedWelcome } from './features/limited/welcome/welcome';
+import { LimitedSelectPlayers } from './features/limited/select-players/select-players';
+import { LimitedTossPage } from './features/limited/toss-page/toss-page';
+import { LimitedLiveMatch } from './features/limited/live-match/live-match';
 
 export const routes: Routes = [
   {
@@ -71,6 +75,28 @@ export const routes: Routes = [
   {
     path: 'unlimited/live-match',
     component: LiveMatch,
+  },
+
+  // Limited Match
+
+  {
+    path: 'limited/welcome',
+    component: LimitedWelcome
+  },
+
+  {
+    path: 'limited/select-players',
+    component: LimitedSelectPlayers
+  },
+
+  {
+    path: 'limited/toss',
+    component: LimitedTossPage
+  },
+
+  {
+    path: 'limited/live-match',
+    component: LimitedLiveMatch
   },
 
   // Rankings

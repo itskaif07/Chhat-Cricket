@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatchSetupService } from '../../../services/MatchSetup/match-setup-service';
 import { Player } from '../../../shared/models/player.model';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { PlayerStats } from '../../../shared/models/playerStats.model';
 import { Router } from '@angular/router';
 import { MatchService } from '../../../services/matchService/match-service';
@@ -10,12 +11,12 @@ import { VoiceAnnouncementService } from '../../../services/voiceAnnouncement/vo
 import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
 
 @Component({
-  selector: 'app-live-match',
-  imports: [CommonModule],
+  selector: 'app-limited-live-match',
+  imports: [CommonModule, FormsModule],
   templateUrl: './live-match.html',
   styleUrl: './live-match.css',
 })
-export class LiveMatch implements OnInit {
+export class LimitedLiveMatch implements OnInit {
   constructor(
     private matchSetupService: MatchSetupService,
     private cdr: ChangeDetectorRef,
@@ -61,9 +62,14 @@ export class LiveMatch implements OnInit {
   changeInningsDisplay: boolean = false
   isShowingMatchInfo: boolean = false
   isShowingExtraPlayerDialog: boolean = false
+  isShowingOversDialog: boolean = false
   isLoading = false
 
-  matchType: 'unlimited' = 'unlimited';
+  matchType: 'limited' = 'limited';
+  oversOptions = [4, 5, 6, 8];
+  selectedOversOption: number | null = null;
+  customOversInput: number | null = null;
+  maxOvers: number | null = null;
 
   captainA: Player | null = null;
   captainB: Player | null = null;
@@ -116,13 +122,14 @@ export class LiveMatch implements OnInit {
   startMatch() {
     const savedMatch = this.offlinePersistanceService.loadMatch<any>();
 
-    if (savedMatch && savedMatch.matchType !== 'limited') {
+    if (savedMatch?.matchType === 'limited') {
       // Resume
       this.showBatsmenDialog = false;
       this.showBowlerDialog = false;
     } else {
       // New Match
-      this.showBatsmenDialog = true;
+      this.isShowingOversDialog = true;
+      this.showBatsmenDialog = false;
       this.showBowlerDialog = false;
     }
   }
@@ -277,6 +284,65 @@ export class LiveMatch implements OnInit {
     return `${overs}.${balls}`;
   }
 
+  get maxDeliveries(): number {
+    return (this.maxOvers || 0) * 6;
+  }
+
+  get ballsRemaining(): number {
+    if (!this.maxOvers) {
+      return 0;
+    }
+
+    return Math.max(this.maxDeliveries - this.totalDeliveries, 0);
+  }
+
+  get oversRemaining(): string {
+    return this.formatOvers(this.ballsRemaining);
+  }
+
+  get inningsLimitLabel(): string {
+    return this.maxOvers ? `${this.maxOvers} Overs` : 'Limited Overs';
+  }
+
+  get requiredRunRate(): string {
+    if (this.currentInnings !== 2 || this.ballsRemaining <= 0) {
+      return '0.00';
+    }
+
+    const remainingOvers = this.ballsRemaining / 6;
+
+    return (this.runsNeeded / remainingOvers).toFixed(2);
+  }
+
+  get chaseSummary(): string {
+    if (this.currentInnings !== 2) {
+      return '';
+    }
+
+    const ballLabel = this.ballsRemaining === 1 ? 'ball' : 'balls';
+
+    return `Team ${this.currentBattingTeamName} needs ${this.runsNeeded} runs from ${this.ballsRemaining} ${ballLabel}.`;
+  }
+
+  get inningsLimitReached(): boolean {
+    return Boolean(this.maxOvers && this.totalDeliveries >= this.maxDeliveries);
+  }
+
+  get scoringClosed(): boolean {
+    return Boolean(
+      this.matchResult ||
+      this.isInningsOver ||
+      (this.inningsLimitReached && !this.isDismissalDialogOpen && !this.isShowingCatchingDialog)
+    );
+  }
+
+  formatOvers(balls: number): string {
+    const overs = Math.floor(balls / 6);
+    const remainingBalls = balls % 6;
+
+    return `${overs}.${remainingBalls}`;
+  }
+
   get currentRunRate(): string {
     if (this.totalDeliveries == 0) {
       return '0.00';
@@ -391,6 +457,28 @@ export class LiveMatch implements OnInit {
   getCaptains() {
     this.captainA = this.matchSetupService.getTeamACaptain();
     this.captainB = this.matchSetupService.getTeamBCaptain();
+  }
+
+  selectOversOption(overs: number) {
+    this.selectedOversOption = overs;
+    this.customOversInput = null;
+  }
+
+  selectCustomOvers() {
+    this.selectedOversOption = null;
+  }
+
+  confirmOversLimit() {
+    const overs = this.selectedOversOption ?? Number(this.customOversInput);
+
+    if (!Number.isFinite(overs) || overs <= 0) {
+      return;
+    }
+
+    this.maxOvers = Math.floor(overs);
+    this.isShowingOversDialog = false;
+    this.showBatsmenDialog = true;
+    this.saveMatchState();
   }
 
   openExtraPlayerDialogForA() {
@@ -529,6 +617,9 @@ export class LiveMatch implements OnInit {
 
         // SCORE
         matchType: this.matchType,
+        maxOvers: this.maxOvers,
+        selectedOversOption: this.selectedOversOption,
+        customOversInput: this.customOversInput,
         totalRuns: this.totalRuns,
         totalWickets: this.totalWickets,
         totalDeliveries: this.totalDeliveries,
@@ -569,6 +660,7 @@ export class LiveMatch implements OnInit {
         // DIALOGS
         showBatsmenDialog: this.showBatsmenDialog,
         showBowlerDialog: this.showBowlerDialog,
+        isShowingOversDialog: this.isShowingOversDialog,
 
         isDismissalDialogOpen: this.isDismissalDialogOpen,
         isShowingCatchingDialog: this.isShowingCatchingDialog,
@@ -595,6 +687,8 @@ export class LiveMatch implements OnInit {
   }
 
   addDot() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
     this.voiceAnnouncementService.speak('Dot Ball')
     this.totalDeliveries += 1;
@@ -613,6 +707,8 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBallDot() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
 
     this.voiceAnnouncementService.speak('No Ball')
@@ -639,6 +735,8 @@ export class LiveMatch implements OnInit {
 
 
   addFour() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
     this.voiceAnnouncementService.speak('Four')
     this.totalRuns += 4;
@@ -667,6 +765,8 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBallFour() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
     this.voiceAnnouncementService.speak('No Ball and a Four')
 
@@ -701,6 +801,8 @@ export class LiveMatch implements OnInit {
   }
 
   addSix() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
 
     this.voiceAnnouncementService.speak('Six')
@@ -730,6 +832,8 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBallSix() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
     this.voiceAnnouncementService.speak('No Ball and a Six')
 
@@ -783,6 +887,8 @@ export class LiveMatch implements OnInit {
 
 
   addWide() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
     this.voiceAnnouncementService.speak('Wide Ball')
 
@@ -801,11 +907,15 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBall() {
+    if (this.scoringClosed) return;
+
     this.isShowingNoBallDialog = true
   }
 
 
   addWicket() {
+    if (this.scoringClosed) return;
+
     this.saveSnapshot()
 
     this.voiceAnnouncementService.speak('Wicket !!!')
@@ -917,6 +1027,7 @@ export class LiveMatch implements OnInit {
   }
 
   retireOut() {
+    if (this.scoringClosed) return;
 
     this.saveSnapshot();
 
@@ -945,6 +1056,7 @@ export class LiveMatch implements OnInit {
   }
 
   retireHurt() {
+    if (this.scoringClosed) return;
 
     this.saveSnapshot();
 
@@ -977,11 +1089,17 @@ export class LiveMatch implements OnInit {
 
     this.checkMatchResult();
 
-    // LAST WICKET
+    // LAST WICKET OR OVERS LIMIT
 
-    if (this.totalWickets >= this.maxWickets) {
-      this.isInningsOver = true;
-      this.voiceAnnouncementService.speak('Innings Over')
+    if (this.totalWickets >= this.maxWickets || this.inningsLimitReached) {
+      this.showBatsmenDialog = false;
+
+      if (this.currentInnings === 1) {
+        this.isInningsOver = true;
+        this.voiceAnnouncementService.speak('Innings Over')
+      }
+
+      this.saveMatchState();
 
       return;
     }
@@ -1119,6 +1237,11 @@ export class LiveMatch implements OnInit {
   }
 
   manageOversChange() {
+    if (this.inningsLimitReached) {
+      this.finishInningsByOversLimit();
+      return;
+    }
+
     if (this.totalDeliveries % 6 === 0 && this.totalDeliveries > 0) {
       this.voiceAnnouncementService.speak("Over Complete");
       this.isOverComplete = true;
@@ -1141,10 +1264,29 @@ export class LiveMatch implements OnInit {
 
   }
 
+  finishInningsByOversLimit() {
+    this.isOverComplete = false;
+    this.showBowlerDialog = false;
+    this.showBatsmenDialog = false;
+
+    if (this.currentInnings === 1) {
+      this.isInningsOver = true;
+      this.voiceAnnouncementService.speak('Innings Over');
+      this.saveMatchState();
+      return;
+    }
+
+    this.checkMatchResult();
+    this.saveMatchState();
+  }
+
 
   saveMatchState() {
     this.offlinePersistanceService.saveMatch({
       matchType: this.matchType,
+      maxOvers: this.maxOvers,
+      selectedOversOption: this.selectedOversOption,
+      customOversInput: this.customOversInput,
       allSelectedPlayers: this.allSelectedPlayers,
       teamA: this.teamA,
       teamB: this.teamB,
@@ -1185,13 +1327,36 @@ export class LiveMatch implements OnInit {
   restoreMatchState() {
     const saved = this.offlinePersistanceService.loadMatch<any>();
 
-    if (!saved || saved.matchType === 'limited') {
+    if (!saved || saved.matchType !== 'limited') {
       return false;
     }
 
     Object.assign(this, saved);
+    this.reconcileLimitedInningsState();
 
     return true;
+  }
+
+  reconcileLimitedInningsState() {
+    if (!this.inningsLimitReached) {
+      return;
+    }
+
+    this.showBatsmenDialog = false;
+    this.showBowlerDialog = false;
+    this.isOverComplete = false;
+    this.isShowingOversDialog = false;
+
+    if (this.currentInnings === 1 && !this.isDismissalDialogOpen && !this.isShowingCatchingDialog) {
+      this.isInningsOver = true;
+      this.saveMatchState();
+      return;
+    }
+
+    if (this.currentInnings === 2 && !this.matchResult) {
+      this.checkMatchResult();
+      this.saveMatchState();
+    }
   }
 
   checkMatchResult() {
@@ -1211,7 +1376,9 @@ export class LiveMatch implements OnInit {
 
     // LOSS
 
-    if (this.totalRuns < this.firstInningRuns && this.totalWickets >= this.maxWickets) {
+    const inningsComplete = this.totalWickets >= this.maxWickets || this.inningsLimitReached;
+
+    if (this.totalRuns < this.firstInningRuns && inningsComplete) {
       this.matchResult = 'lost';
       this.voiceAnnouncementService.speak("Match Over");
       return;
@@ -1219,7 +1386,7 @@ export class LiveMatch implements OnInit {
 
     // TIE
 
-    if (this.totalRuns === this.firstInningRuns && this.totalWickets >= this.maxWickets) {
+    if (this.totalRuns === this.firstInningRuns && inningsComplete) {
       this.matchResult = 'tie';
       this.voiceAnnouncementService.speak("Match Over");
     }
@@ -1266,6 +1433,7 @@ export class LiveMatch implements OnInit {
 
     this.isWicketFallen = false;
     this.isOverComplete = false;
+    this.isInningsOver = false;
 
     this.showBowlerDialog = false;
     this.showBatsmenDialog = true;
@@ -1310,6 +1478,7 @@ export class LiveMatch implements OnInit {
 
       year: new Date().getFullYear(),
       matchType: this.matchType,
+      maxOvers: this.maxOvers,
       teamA: this.teamA,
       teamB: this.teamB,
       motm: this.Motm,
