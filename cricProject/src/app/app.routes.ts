@@ -5,7 +5,6 @@ import { PlayersList } from './players-list/players-list';
 import { PlayerInfo } from './player-info/player-info';
 import { Welcome } from './features/unlimited/welcome/welcome';
 import { SelectPlayers } from './features/unlimited/select-players/select-players';
-import { About } from './about/about';
 import { TossPage } from './features/unlimited/toss-page/toss-page';
 import { LiveMatch } from './features/unlimited/live-match/live-match';
 import { MainPage } from './match-history/main-page/main-page';
@@ -15,6 +14,7 @@ import { LimitedWelcome } from './features/limited/welcome/welcome';
 import { LimitedSelectPlayers } from './features/limited/select-players/select-players';
 import { LimitedTossPage } from './features/limited/toss-page/toss-page';
 import { LimitedLiveMatch } from './features/limited/live-match/live-match';
+import { LandingPage } from './about/landing-page/landing-page';
 
 export const routes: Routes = [
   {
@@ -28,8 +28,8 @@ export const routes: Routes = [
   },
 
   {
-    path: 'about',
-    component: About,
+    path: 'about/landing-page',
+    component: LandingPage,
   },
 
   {

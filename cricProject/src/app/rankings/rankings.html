@@ -95,7 +95,8 @@
             {{players[0].totalInnings}} Innings
             }
             @else if(isBowlingRanking){
-            {{getEconomy(players[0]).toFixed(2)}} Economy
+            {{getEconomy(players[0]).toFixed(2)}} Economy | {{convertToOvers(players[0].totalBallsBowled)}} Overs
+
             }
             @else if(isEconomyRanking){
             {{getBowlingAverage(players[0]).toFixed(2)}} Average
@@ -137,7 +138,8 @@
                 {{players[0].totalInnings}} Innings
                 }
                 @else if(isBowlingRanking){
-                {{getEconomy(players[0]).toFixed(2)}} Economy
+                {{getEconomy(players[0]).toFixed(2)}} Economy | {{convertToOvers(players[0].totalBallsBowled)}} Overs
+
                 }
                 @else if(isEconomyRanking){
                 {{getBowlingAverage(players[0]).toFixed(2)}} Average
@@ -178,7 +180,9 @@
                     {{players[1].totalInnings}} Innings
                     }
                     @else if(isBowlingRanking){
-                    {{getEconomy(players[1]).toFixed(2)}} Economy
+                    {{getEconomy(players[1]).toFixed(2)}} Economy | {{convertToOvers(players[1].totalBallsBowled)}}
+                    Overs
+
                     }
                     @else if(isEconomyRanking){
                     {{getBowlingAverage(players[1]).toFixed(2)}} Average
@@ -227,7 +231,8 @@
                 {{players[1].totalInnings}} Innings
                 }
                 @else if(isBowlingRanking){
-                {{getEconomy(players[1]).toFixed(2)}} Economy
+                {{getEconomy(players[1]).toFixed(2)}} Economy | {{convertToOvers(players[1].totalBallsBowled)}} Overs
+
                 }
                 @else if(isEconomyRanking){
                 {{getBowlingAverage(players[1]).toFixed(2)}} Average
@@ -270,7 +275,8 @@
                 {{players[0].totalInnings}} Innings
                 }
                 @else if(isBowlingRanking){
-                {{getEconomy(players[0]).toFixed(2)}} Economy
+                {{getEconomy(players[0]).toFixed(2)}} Economy | {{convertToOvers(players[0].totalBallsBowled)}} Overs
+
                 }
                 @else if(isEconomyRanking){
                 {{getBowlingAverage(players[0]).toFixed(2)}} Average
@@ -315,7 +321,8 @@
                 {{players[0].totalInnings}} Innings
                 }
                 @else if(isBowlingRanking){
-                {{getEconomy(players[0]).toFixed(2)}} Economy
+                {{getEconomy(players[0]).toFixed(2)}} Economy | {{convertToOvers(players[0].totalBallsBowled)}} Overs
+
                 }
                 @else if(isEconomyRanking){
                 {{getBowlingAverage(players[0]).toFixed(2)}} Average
@@ -356,7 +363,9 @@
                     {{players[1].totalInnings}} Innings
                     }
                     @else if(isBowlingRanking){
-                    {{getEconomy(players[1]).toFixed(2)}} Economy
+                    {{getEconomy(players[1]).toFixed(2)}} Economy | {{convertToOvers(players[1].totalBallsBowled)}}
+                    Overs
+
                     }
                     @else if(isEconomyRanking){
                     {{getBowlingAverage(players[1]).toFixed(2)}} Average
@@ -394,7 +403,9 @@
                     {{players[2].totalInnings}} Innings
                     }
                     @else if(isBowlingRanking){
-                    {{getEconomy(players[2]).toFixed(2)}} Economy
+                    {{getEconomy(players[2]).toFixed(2)}} Economy | {{convertToOvers(players[2].totalBallsBowled)}}
+                    Overs
+
                     }
                     @else if(isEconomyRanking){
                     {{getBowlingAverage(players[2]).toFixed(2)}} Average
@@ -443,7 +454,8 @@
                 {{players[1].totalInnings}} Innings
                 }
                 @else if(isBowlingRanking){
-                {{getEconomy(players[1]).toFixed(2)}} Economy
+                {{getEconomy(players[1]).toFixed(2)}} Economy | {{convertToOvers(players[1].totalBallsBowled)}} Overs
+
                 }
                 @else if(isEconomyRanking){
                 {{getBowlingAverage(players[1]).toFixed(2)}} Average
@@ -484,7 +496,8 @@
                 {{players[0].totalInnings}} Innings
                 }
                 @else if(isBowlingRanking){
-                {{getEconomy(players[0]).toFixed(2)}} Economy
+                {{getEconomy(players[0]).toFixed(2)}} Economy | {{convertToOvers(players[0].totalBallsBowled)}} Overs
+
                 }
                 @else if(isEconomyRanking){
                 {{getBowlingAverage(players[0]).toFixed(2)}} Average
@@ -521,21 +534,22 @@
             </p>
 
             <p class="text-xs text-zinc-500">
-                        @if(isBattingRanking){
-                        {{players[2].totalInnings}} Innings
-                        }
-                        @else if(isBowlingRanking){
-                        {{getEconomy(players[2]).toFixed(2)}} Economy
-                        }
-                        @else if(isEconomyRanking){
-                        {{getBowlingAverage(players[2]).toFixed(2)}} Average
-                        }
-                        @else if(isExtraRanking){
-                        {{convertToOvers(players[2].totalBallsBowled)}} Overs
-                        }
-                        @else if(isOtherRanking){
-                        {{players[2].totalMatches}} Matches
-                        }
+                @if(isBattingRanking){
+                {{players[2].totalInnings}} Innings
+                }
+                @else if(isBowlingRanking){
+                {{getEconomy(players[2]).toFixed(2)}} Economy | {{convertToOvers(players[2].totalBallsBowled)}} Overs
+
+                }
+                @else if(isEconomyRanking){
+                {{getBowlingAverage(players[2]).toFixed(2)}} Average
+                }
+                @else if(isExtraRanking){
+                {{convertToOvers(players[2].totalBallsBowled)}} Overs
+                }
+                @else if(isOtherRanking){
+                {{players[2].totalMatches}} Matches
+                }
             </p>
 
         </div>
@@ -585,7 +599,7 @@
                         {{player.totalInnings}} Innings
                         }
                         @else if(isBowlingRanking){
-                        {{getEconomy(player).toFixed(2)}} Economy
+                        {{getEconomy(player).toFixed(2)}} Economy | {{convertToOvers(player.totalBallsBowled)}} Overs
                         }
                         @else if(isEconomyRanking){
                         {{getBowlingAverage(player).toFixed(2)}} Average

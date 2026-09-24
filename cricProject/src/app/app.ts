@@ -77,9 +77,13 @@ export class App implements OnDestroy {
     document.body.style.overflow = 'auto';
   }
   navigateToAbout() {
-    this.router.navigate(['/about']);
+    this.router.navigate(['/about/landing-page']);
     this.isSidebarOpen = false;
     document.body.style.overflow = 'auto';
+  }
+
+  about(){
+    this.router.navigate(['/about/landing-page']);
   }
   
   home(){

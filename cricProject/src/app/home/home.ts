@@ -38,6 +38,8 @@ export class Home implements OnInit {
   bestBattingAverage: number = 0;
   bestBowlingAveragePlayer: any = null;
   bestBowlingAverage: number = 0;
+  bestBowlingStrikeRatePlayer: any = null;
+  bestBowlingStrikeRate: number = 0;
   highestScore: number = 0;
   highestScorePlayer: any = null;
   bestFiguresPlayer: any = null;
@@ -138,7 +140,7 @@ export class Home implements OnInit {
     this.matchService.retrieveMatches().subscribe((data) => {
       this.matchesCount = data.length;
       this.matches = data;
-      // console.log(data);
+      console.log(data);
       this.aggregateTotalRuns();
       this.aggregateTotalWickets();
       this.aggregateCareerStats();
@@ -171,13 +173,11 @@ export class Home implements OnInit {
     if (this.matches) {
       this.matches.forEach((match: any) => {
         match.innings.forEach((innings: any) => {
-          if (innings.inning == 1) {
-            this.totalWickets += innings.firstInningsTotalWickets || 0;
-          }
 
-          if (innings.inning == 2) {
-            this.totalWickets += innings.firstInningsTotalWickets || 0;
-          }
+          Object.values(innings.playerStats || {}).forEach((stats: any) => {
+            this.totalWickets += stats.wickets || 0;
+          });
+
         });
       });
     }
@@ -190,6 +190,8 @@ export class Home implements OnInit {
 
     this.matches.forEach((match: any) => {
       match.innings.forEach((innings: any, i: number) => {
+
+
         Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
 
 
@@ -217,6 +219,13 @@ export class Home implements OnInit {
 
               dismissed: 0,
 
+              dismissals: {
+                bowled: 0,
+                caught: 0,
+                offside: 0,
+                'retired-out': 0
+              },
+
               totalFours: 0,
 
               totalSixes: 0,
@@ -237,8 +246,25 @@ export class Home implements OnInit {
 
               totalNoBalls: 0,
 
-              totalMaidens: 0
+              totalMaidens: 0,
+
             };
+          }
+
+          if (stats.dismissalType === 'bowled') {
+            this.careerStats[playerId].dismissals.bowled++;
+          }
+
+          if (stats.dismissalType === 'caught') {
+            this.careerStats[playerId].dismissals.caught++;
+          }
+
+          if (stats.dismissalType === 'offside') {
+            this.careerStats[playerId].dismissals.offside++;
+          }
+
+          if (stats.dismissalType === 'retired-out') {
+            this.careerStats[playerId].dismissals['retired-out']++;
           }
 
           this.careerStats[playerId].totalRuns += stats.runs || 0;
@@ -297,12 +323,14 @@ export class Home implements OnInit {
 
     });
 
+    this.updateDismissalSummary()
     this.getOrangeCap();
     this.getPurpleCap();
     this.getStrikeRate();
     this.getEconomy();
     this.getBattingAverage();
     this.getBowlingAverage();
+    this.getBowlingStrikeRate()
     this.getHighestScore();
     this.getBestFigures();
     this.getMostFours();
@@ -491,6 +519,39 @@ export class Home implements OnInit {
         this.bestBowlingAveragePlayer.totalWickets
         : 0;
 
+  }
+
+  getBowlingStrikeRate() {
+    if (!this.careerStats) {
+      return;
+    }
+
+    const players = Object.values(this.careerStats).filter(
+      (player: any) =>
+        player.totalBallsDelivered >= 36 &&
+        player.totalWickets > 0
+    );
+
+    if (players.length === 0) {
+      return;
+    }
+
+    this.bestBowlingStrikeRatePlayer = players.reduce(
+      (prev: any, next: any) => {
+
+        const prevStrikeRate =
+          prev.totalBallsDelivered / prev.totalWickets;
+
+        const nextStrikeRate =
+          next.totalBallsDelivered / next.totalWickets;
+
+        return nextStrikeRate < prevStrikeRate ? next : prev;
+      }
+    );
+
+    this.bestBowlingStrikeRate =
+      this.bestBowlingStrikeRatePlayer.totalBallsDelivered /
+      this.bestBowlingStrikeRatePlayer.totalWickets;
   }
 
   getHighestScore() {
@@ -863,5 +924,78 @@ export class Home implements OnInit {
     );
 
     this.mostMotm = this.mostMotmPlayer.totalMotm;
+  }
+
+  dismissalSummary = [
+    {
+      type: 'Bowled',
+      count: 0,
+      percentage: 0,
+      route: '/rankings/dismissals'
+    },
+    {
+      type: 'Caught',
+      count: 0,
+      percentage: 0,
+      route: '/rankings/dismissals'
+    },
+    {
+      type: 'Offside',
+      count: 0,
+      percentage: 0,
+      route: '/rankings/dismissals'
+    },
+    {
+      type: 'Retired Out',
+      count: 0,
+      percentage: 0,
+      route: '/rankings/dismissals'
+    }
+  ];
+
+  updateDismissalSummary() {
+
+    let bowled = 0;
+    let caught = 0;
+    let offside = 0;
+    let retiredOut = 0;
+
+    Object.values(this.careerStats).forEach((player: any) => {
+
+      bowled += player.dismissals?.bowled || 0;
+      caught += player.dismissals?.caught || 0;
+      offside += player.dismissals?.offside || 0;
+      retiredOut += player.dismissals?.['retired-out'] || 0;
+
+    });
+
+    const total = bowled + caught + offside + retiredOut;
+
+    this.dismissalSummary = [
+      {
+        type: 'Bowled',
+        count: bowled,
+        percentage: total > 0 ? (bowled / total) * 100 : 0,
+        route: '/rankings/dismissals'
+      },
+      {
+        type: 'Caught',
+        count: caught,
+        percentage: total > 0 ? (caught / total) * 100 : 0,
+        route: '/rankings/dismissals'
+      },
+      {
+        type: 'Offside',
+        count: offside,
+        percentage: total > 0 ? (offside / total) * 100 : 0,
+        route: '/rankings/dismissals'
+      },
+      {
+        type: 'Retired Out',
+        count: retiredOut,
+        percentage: total > 0 ? (retiredOut / total) * 100 : 0,
+        route: '/rankings/dismissals'
+      }
+    ];
   }
 }

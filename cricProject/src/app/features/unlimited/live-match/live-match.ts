@@ -977,6 +977,15 @@ export class LiveMatch implements OnInit {
 
     this.checkMatchResult();
 
+    console.log({
+      currentInnings: this.currentInnings,
+      currentBattingTeam: this.currentBattingTeam.map(p => p.displayName),
+      teamA: this.teamA.map(p => p.displayName),
+      teamB: this.teamB.map(p => p.displayName),
+      totalWickets: this.totalWickets,
+      maxWickets: this.maxWickets
+    });
+
     // LAST WICKET
 
     if (this.totalWickets >= this.maxWickets) {
@@ -1059,38 +1068,41 @@ export class LiveMatch implements OnInit {
     );
   }
 
+
   isHatTrick(): boolean {
 
     if (!this.currentBowler?.id) {
       return false;
     }
 
-    // Ignore wides and no-balls
-    const legalDeliveries = this.recentDeliveries.filter(delivery =>
-      delivery.type !== 'wide' &&
-      delivery.type !== 'noball'
+    // Only legal deliveries bowled by the current bowler
+    const bowlerLegalDeliveries = this.recentDeliveries.filter(
+      delivery =>
+        delivery.bowlerId === this.currentBowler?.id &&
+        delivery.type !== 'wide' &&
+        delivery.type !== 'noball'
     );
 
-    if (legalDeliveries.length < 3) {
+    if (bowlerLegalDeliveries.length < 3) {
       return false;
     }
 
-    const lastThree = legalDeliveries.slice(0, 3);
+    // Most recent 3 legal deliveries by this bowler
+    const lastThree = bowlerLegalDeliveries.slice(0, 3);
 
-    const isHatTrick = lastThree.every(delivery =>
-      delivery.type === 'wicket' &&
-      delivery.bowlerId === this.currentBowler?.id
+    const isHatTrick = lastThree.every(
+      delivery => delivery.type === 'wicket'
     );
 
     if (!isHatTrick) {
       return false;
     }
 
-    // Prevent counting a 4th consecutive wicket as another hat-trick
+    // Prevent a 4th consecutive wicket from triggering
+    // another hat-trick
     if (
-      legalDeliveries.length >= 4 &&
-      legalDeliveries[3].type === 'wicket' &&
-      legalDeliveries[3].bowlerId === this.currentBowler.id
+      bowlerLegalDeliveries.length >= 4 &&
+      bowlerLegalDeliveries[3].type === 'wicket'
     ) {
       return false;
     }
@@ -1348,17 +1360,28 @@ export class LiveMatch implements OnInit {
 
 
   async saveCompletedMatch() {
-    try {
-      const matchData = this.buildMatchObject();
 
+    this.isLoading = true;
+
+    try {
+
+      const matchData = this.buildMatchObject();
 
       await this.matchService.saveMatch(matchData);
 
       this.offlinePersistanceService.clearMatch();
 
-      this.router.navigate(['/']);
+      await this.router.navigate(['/']);
+
     } catch (error) {
+
       console.log('Error Saving Match', error);
+
+    } finally {
+
+      this.isLoading = false;
+
     }
+
   }
 }

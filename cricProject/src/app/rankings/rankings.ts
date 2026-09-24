@@ -74,6 +74,7 @@ export class Rankings implements OnInit {
         'five-fers',
         'hat-tricks',
         'best-figures',
+        'bowling-strike-rate'
       ].includes(this.rankingType)
     ) {
 
@@ -150,6 +151,10 @@ export class Rankings implements OnInit {
 
       case 'bowling-average':
         this.title = 'Bowling Average'
+        break
+
+      case 'bowling-strike-rate':
+        this.title = 'Bowling Strike Rate'
         break
 
       case 'highest-score':
@@ -401,6 +406,9 @@ export class Rankings implements OnInit {
       case 'bowling-average':
         return this.getBowlingAverage(player).toFixed(2);
 
+      case 'bowling-strike-rate':
+        return this.getBowlingStrikeRate(player).toFixed(2);
+
       case 'highest-score':
         return `${player.highestScore} (${player.highestScoreBalls})`;
 
@@ -577,6 +585,21 @@ export class Rankings implements OnInit {
         );
         break;
 
+      case 'bowling-strike-rate':
+        this.players = this.players.filter(
+          (player) =>
+            player.totalBallsBowled >= 36 &&
+            player.totalWickets > 0
+        );
+        
+
+        this.players.sort(
+          (a: any, b: any) =>
+            this.getBowlingStrikeRate(a) - this.getBowlingStrikeRate(b) || this.getEconomy(a) - this.getEconomy(b) || b.totalBallsBowled - a.totalBallsBowled ||
+            a.totalRunsConceded - b.totalRunsConceded
+        );
+        break;
+
       case 'highest-score':
         this.players = this.players.filter(
           (player) => player.highestScore > 0
@@ -585,6 +608,7 @@ export class Rankings implements OnInit {
         this.players.sort(
           (a: any, b: any) =>
             b.highestScore - a.highestScore ||
+            this.getStrikeRate(b) - this.getStrikeRate(a) ||
             a.totalInnings - b.totalInnings ||
             b.totalRuns - a.totalRuns ||
             this.getBattingAverage(b) - this.getBattingAverage(a)
@@ -669,6 +693,12 @@ export class Rankings implements OnInit {
     if (!player.totalWickets) return 0;
 
     return player.totalRunsConceded / player.totalWickets;
+  }
+
+  getBowlingStrikeRate(player:any){
+    if(!player.totalWickets) return 0;
+
+    return player.totalBallsBowled / player.totalWickets
   }
 
   getBestFigures(stats: any, playerId: any) {

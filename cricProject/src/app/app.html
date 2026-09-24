@@ -20,19 +20,12 @@
     <h2 class="mt-3 text-3xl font-black uppercase
              text-orange-400">
 
-      MERI BAAT KAAN KHOL KE SUN LE
+      MATCH IS RUNNING
 
     </h2>
 
-    <p class="mt-4 text-zinc-300">
-
-        Abhi match chal raha hai.
-        
-        Pehle match finish kar
-        ya cancel kar.
-        
-        Uske baad jahan jaana hai ja.
-
+    <p class="mt-4 text-zinc-300 ">
+      Complete or End the Current Match First
     </p>
 
     <div class="mt-6 flex justify-end">
@@ -46,7 +39,7 @@
                transition-all
                hover:bg-orange-500/25">
 
-        THEEK HAI BHAI
+         OK
 
       </button>
 
@@ -64,7 +57,9 @@
 <div class="w-full h-full bg-[#050B18] text-white relative">
   <nav id="navbar"
     class="w-full h-16 backdrop-blur-md bg-[#050B18]/30 hidden lg:flex items-center justify-end px-8 sticky top-0 z-40 space-x-10">
-    <h1 (click)="home()" class="font-bold text-lg cursor-pointer">Home</h1>
+    <h1 (click)="home()" class="font-bold cursor-pointer">Home</h1>
+
+    <h1 (click)="about()" class="font-bold cursor-pointer">Rulebook</h1>
 
     <button routerLink="/add-player"
       class="px-4 py-2 rounded bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-all duration-300 text-sm">
@@ -143,7 +138,7 @@
         class="group w-full h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center px-5 space-x-5 cursor-pointer transition-all duration-300 hover:bg-white/10 hover:translate-x-1">
         <img src="icons/cricket.png" class="w-6" />
 
-        <h1 class="font-semibold text-white text-lg">About</h1>
+        <h1 class="font-semibold text-white text-lg">Rulebook</h1>
       </div>
     </div>
 

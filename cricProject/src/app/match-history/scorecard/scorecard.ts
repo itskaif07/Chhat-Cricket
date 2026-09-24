@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatchService } from '../../services/matchService/match-service';
 import { MatchSetupService } from '../../services/MatchSetup/match-setup-service';
 import { Player } from '../../shared/models/player.model';
 
 @Component({
   selector: 'app-scorecard',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './scorecard.html',
   styleUrl: './scorecard.css',
 })

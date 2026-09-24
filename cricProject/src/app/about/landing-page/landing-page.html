@@ -1,0 +1,486 @@
+<div class="min-h-screen overflow-x-hidden bg-[#07111f] text-white">
+
+    <!-- HERO -->
+    <section class="relative h-155 min-h-140 overflow-hidden sm:h-170">
+
+
+        <div class="absolute inset-0 bg-linear-to-r from-[#040a14]/95 via-[#040a14]/75 to-transparent"></div>
+
+        <div class="absolute inset-x-0 bottom-0 h-48 bg-linear-to-t from-[#07111f] to-transparent"></div>
+
+        <div class="absolute inset-x-0 top-1/2 mx-auto max-w-7xl -translate-y-1/2 px-6 sm:px-10 lg:px-12">
+
+            <div class="max-w-2xl">
+
+                <span class="text-[11px] font-bold tracking-[0.25em] text-amber-400">
+                    CHHAT CRICKET
+                </span>
+
+                <h1 class="mt-5 text-6xl font-black leading-[0.85] tracking-[-0.06em] sm:text-8xl lg:text-9xl">
+                    ROOFTOP
+                    <span class="block text-amber-400">RULEBOOK</span>
+                </h1>
+
+                <p class="mt-7 max-w-md text-sm leading-7 text-slate-300 sm:text-base">
+                    Hamare rooftop ke rules, boundaries aur woh decisions
+                    jo is ground ko alag banate hain.
+                </p>
+
+                <button routerLink="/rulebook/rules"
+                    class="mt-8 inline-flex items-center gap-5 rounded-2xl bg-amber-400 px-5 py-4 text-[11px] font-extrabold tracking-widest text-[#07111f] transition hover:-translate-y-1 hover:bg-amber-300">
+                    EXPLORE RULES
+                    <span class="text-lg">→</span>
+                </button>
+
+            </div>
+        </div>
+
+        <div
+            class="absolute bottom-7 left-6 right-6 mx-auto flex max-w-7xl items-end justify-between sm:left-10 sm:right-10 lg:left-12 lg:right-12">
+
+            <div>
+                <span class="block text-[10px] font-bold tracking-[0.2em]">
+                    OUR GROUND
+                </span>
+
+                <span class="mt-1 block text-xs text-slate-400">
+                    One rooftop. Its own rules.
+                </span>
+            </div>
+
+            <span class="text-2xl text-amber-400">↓</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- INTRO -->
+    <section class="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-12 lg:py-28">
+
+        <div class="grid gap-8 lg:grid-cols-2 lg:items-end lg:gap-20">
+
+            <div>
+                <span class="text-[11px] font-bold tracking-[0.22em] text-amber-400">
+                    THE RULEBOOK
+                </span>
+
+                <h2 class="mt-4 text-4xl font-black leading-[0.95] tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+                    Rules made for<br />
+                    our rooftop.
+                </h2>
+            </div>
+
+            <p class="max-w-xl text-sm leading-7 text-slate-400 sm:text-base">
+                Chhat Cricket koi normal cricket ground nahi hai.
+                Yahan walls, pipes, pillars aur rooftop layout bhi game ka
+                part hain. Is rulebook mein hum document kar rahe hain ki
+                hamare ground par cricket kaise kheli jaati hai.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- STATS -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 sm:px-10 lg:px-12">
+
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+
+            <div class="rounded-3xl border border-white/[0.07] bg-[#0c1929] p-6 sm:p-8">
+                <span class="block text-4xl font-extrabold tracking-tight sm:text-5xl">
+                    12
+                </span>
+
+                <span class="mt-2 block text-[10px] font-bold tracking-[0.18em] text-slate-500">
+                    ACTIVE RULES
+                </span>
+            </div>
+
+            <div class="rounded-3xl border border-white/[0.07] bg-[#0c1929] p-6 sm:p-8">
+                <span class="block text-4xl font-extrabold tracking-tight sm:text-5xl">
+                    05
+                </span>
+
+                <span class="mt-2 block text-[10px] font-bold tracking-[0.18em] text-slate-500">
+                    SPECIAL RULES
+                </span>
+            </div>
+
+            <div class="col-span-2 rounded-3xl border border-white/[0.07] bg-[#0c1929] p-6 sm:col-span-1 sm:p-8">
+                <span class="block text-4xl font-extrabold tracking-tight sm:text-5xl">
+                    04
+                </span>
+
+                <span class="mt-2 block text-[10px] font-bold tracking-[0.18em] text-slate-500">
+                    PAST DECISIONS
+                </span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 sm:px-10 lg:px-12">
+
+        <div class="mb-8 flex items-end justify-between gap-5">
+
+            <div>
+                <span class="text-[11px] font-bold tracking-[0.22em] text-amber-400">
+                    RULE CATEGORIES
+                </span>
+
+                <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+                    Know the ground.
+                </h2>
+            </div>
+
+            <button routerLink="/rulebook/rules"
+                class="hidden text-[10px] font-extrabold tracking-widest text-amber-400 sm:block">
+                VIEW ALL →
+            </button>
+
+        </div>
+
+
+        <div class="grid gap-4 md:grid-cols-2">
+
+            <!-- Boundary -->
+            <article routerLink="/rulebook/boundary"
+                class="group relative h-130 cursor-pointer overflow-hidden rounded-4xl border border-white/[0.07] md:row-span-2">
+
+                <img src="dcim/boundary.png" alt="Boundary rules"
+                    class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+
+                <div class="absolute inset-0 bg-linear-to-t from-[#040a14] via-[#040a14]/30 to-transparent"></div>
+
+                <div class="absolute left-7 bottom-7 right-7">
+
+                    <span class="text-[10px] font-extrabold text-amber-400">
+                        01
+                    </span>
+
+                    <h3 class="mt-2 text-4xl font-black leading-[0.9] tracking-tight">
+                        BOUNDARY<br />RULES
+                    </h3>
+
+                    <p class="mt-3 text-xs text-slate-300">
+                        4 aur 6 kaise decide hote hain
+                    </p>
+
+                </div>
+
+                <span
+                    class="absolute right-6 top-6 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-[#07111f]/70 text-lg">
+                    ↗
+                </span>
+
+            </article>
+
+
+            <!-- Offside -->
+            <article routerLink="/rulebook/offside"
+                class="group relative h-62.5 cursor-pointer overflow-hidden rounded-4xl border border-white/[0.07]">
+
+                <img src="dcim/offside.png" alt="Offside rules"
+                    class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+
+                <div class="absolute inset-0 bg-linear-to-t from-[#040a14] to-transparent"></div>
+
+                <div class="absolute bottom-6 left-6">
+                    <span class="text-[10px] font-extrabold text-amber-400">02</span>
+
+                    <h3 class="mt-1 text-3xl font-black leading-none">
+                        OFFSIDE<br />RULES
+                    </h3>
+
+                    <p class="mt-2 text-xs text-slate-300">
+                        Walls aur Out zones ke rules
+                    </p>
+                </div>
+
+                <span class="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full bg-[#07111f]/70">
+                    ↗
+                </span>
+
+            </article>
+
+
+            <!-- Special -->
+            <article routerLink="/rulebook/special-rules"
+                class="group relative h-62.5 cursor-pointer overflow-hidden rounded-4xl border border-white/[0.07]">
+
+                <img src="dcim/pipe.jpeg" alt="Special rooftop rules"
+                    class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+
+                <div class="absolute inset-0 bg-linear-to-t from-[#040a14] to-transparent"></div>
+
+                <div class="absolute bottom-6 left-6">
+                    <span class="text-[10px] font-extrabold text-amber-400">03</span>
+
+                    <h3 class="mt-1 text-3xl font-black leading-none">
+                        SPECIAL<br />RULES
+                    </h3>
+
+                    <p class="mt-2 text-xs text-slate-300">
+                        Pipe, pillars aur doosre rooftop objects
+                    </p>
+                </div>
+
+                <span class="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full bg-[#07111f]/70">
+                    ↗
+                </span>
+
+            </article>
+
+
+            <!-- Player -->
+            <article routerLink="/rulebook/player-interception"
+                class="group relative h-62.5 cursor-pointer overflow-hidden rounded-4xl border border-white/[0.07]">
+
+                <img src="dcim/interception.png" alt="Player interception"
+                    class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+
+                <div class="absolute inset-0 bg-linear-to-t from-[#040a14] to-transparent"></div>
+
+                <div class="absolute bottom-6 left-6">
+                    <span class="text-[10px] font-extrabold text-amber-400">04</span>
+
+                    <h3 class="mt-1 text-3xl font-black leading-none">
+                        PLAYER<br />INTERCEPTION
+                    </h3>
+
+                    <p class="mt-2 text-xs text-slate-300">
+                        Player ki position aur accidental contact
+                    </p>
+                </div>
+
+                <span class="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full bg-[#07111f]/70">
+                    ↗
+                </span>
+
+            </article>
+
+
+            <!-- Pillars -->
+            <article routerLink="/rulebook/pillars"
+                class="group relative h-62.5 cursor-pointer overflow-hidden rounded-4xl border border-white/[0.07]">
+
+                <img src="dcim/boundary.png" alt="Pillars and boundaries"
+                    class="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+
+                <div class="absolute inset-0 bg-linear-to-t from-[#040a14] to-transparent"></div>
+
+                <div class="absolute bottom-6 left-6">
+                    <span class="text-[10px] font-extrabold text-amber-400">05</span>
+
+                    <h3 class="mt-1 text-3xl font-black leading-none">
+                        PILLARS &<br />BOUNDARIES
+                    </h3>
+
+                    <p class="mt-2 text-xs text-slate-300">
+                        Ground ke important reference points
+                    </p>
+                </div>
+
+                <span class="absolute right-5 top-5 grid h-9 w-9 place-items-center rounded-full bg-[#07111f]/70">
+                    ↗
+                </span>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- FEATURED RULE -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 sm:px-10 lg:px-12">
+
+        <div
+            class="grid overflow-hidden rounded-4xl border border-white/[0.07] bg-[#0c1929] lg:grid-cols-[1.15fr_.85fr]">
+
+            <div class="relative min-h-87.5 lg:min-h-125">
+
+                <img src="dcim/boundary.png" alt="Boundary threshold"
+                    class="absolute inset-0 h-full w-full object-cover" />
+
+                <span
+                    class="absolute left-5 top-5 rounded-lg bg-amber-400 px-3 py-2 text-[9px] font-extrabold tracking-widest text-[#07111f]">
+                    FEATURED RULE
+                </span>
+
+            </div>
+
+            <div class="flex flex-col justify-center p-8 sm:p-12">
+
+                <span class="text-[10px] font-bold tracking-[0.2em] text-amber-400">
+                    BOUNDARY · 01
+                </span>
+
+                <h2 class="mt-5 text-4xl font-black leading-[0.9] tracking-tight sm:text-5xl">
+                    When is it
+                    <span class="text-amber-400">FOUR</span>
+                    or
+                    <span class="text-amber-400">SIX</span>?
+                </h2>
+
+                <p class="mt-6 text-sm leading-7 text-slate-400">
+                    Boundary sirf ball ki height se decide nahi hoti.
+                    Threshold cross hua ya nahi, ball kis direction mein gayi
+                    aur kahan contact hua, sab matter karta hai.
+                </p>
+
+                <button routerLink="/rulebook/boundary"
+                    class="mt-8 self-start rounded-xl bg-amber-400 px-5 py-4 text-[10px] font-extrabold tracking-widest text-[#07111f] transition hover:bg-amber-300">
+                    READ THE RULE →
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PRECEDENTS -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 sm:px-10 lg:px-12">
+
+        <div class="mb-8 flex items-end justify-between">
+
+            <div>
+                <span class="text-[11px] font-bold tracking-[0.22em] text-amber-400">
+                    Past Decisions
+                </span>
+
+                <h2 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+                    Decisions that shaped the rules.
+                </h2>
+            </div>
+
+            <button routerLink="/rulebook/precedents"
+                class="hidden text-[10px] font-extrabold tracking-widest text-amber-400 sm:block">
+                VIEW ALL →
+            </button>
+
+        </div>
+
+
+        <div class="space-y-3">
+
+            <article routerLink="/rulebook/precedents/offside-deflection"
+                class="group grid cursor-pointer grid-cols-[45px_1fr_25px] items-center gap-4 rounded-3xl border border-white/[0.07] bg-[#0c1929] p-5 transition hover:border-amber-400/30 hover:bg-[#101e30] sm:grid-cols-[70px_1fr_40px] sm:p-7">
+
+                <span class="text-xl font-extrabold text-amber-400">
+                    01
+                </span>
+
+                <div>
+                    <span class="text-[9px] font-bold tracking-[0.18em] text-slate-500">
+                        RULE CLARIFICATION
+                    </span>
+
+                    <h3 class="mt-2 text-lg font-bold sm:text-xl">
+                        Accidental Player Deflection
+                    </h3>
+
+                    <p class="mt-1 text-xs leading-5 text-slate-500">
+                        Jab legally positioned player se edged ball accidentally deflect ho jaaye.
+                    </p>
+                </div>
+
+                <span class="text-lg text-amber-400 transition group-hover:translate-x-1">
+                    →
+                </span>
+
+            </article>
+
+
+            <article routerLink="/rulebook/precedents/pipe-wall"
+                class="group grid cursor-pointer grid-cols-[45px_1fr_25px] items-center gap-4 rounded-3xl border border-white/[0.07] bg-[#0c1929] p-5 transition hover:border-amber-400/30 hover:bg-[#101e30] sm:grid-cols-[70px_1fr_40px] sm:p-7">
+
+                <span class="text-xl font-extrabold text-amber-400">
+                    02
+                </span>
+
+                <div>
+                    <span class="text-[9px] font-bold tracking-[0.18em] text-slate-500">
+                        HISTORICAL DECISION
+                    </span>
+
+                    <h3 class="mt-2 text-lg font-bold sm:text-xl">
+                        Pipe → Offside Wall
+                    </h3>
+
+                    <p class="mt-1 text-xs leading-5 text-slate-500">
+                        Jab ball pipe se takra kar offside wall ki taraf chali jaaye.
+                    </p>
+                </div>
+
+                <span class="text-lg text-amber-400 transition group-hover:translate-x-1">
+                    →
+                </span>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- GROUND MAP -->
+    <section class="mx-auto max-w-7xl px-6 pb-24 sm:px-10 lg:px-12">
+
+        <div class="relative h-105 overflow-hidden rounded-4xl sm:h-125">
+
+            <img src="dcim/ground.png" alt="Chhat Cricket ground map"
+                class="absolute inset-0 h-full w-full object-cover" />
+
+            <div class="absolute inset-0 bg-linear-to-r from-[#040a14]/95 via-[#040a14]/50 to-transparent"></div>
+
+            <div class="absolute left-7 top-1/2 max-w-md -translate-y-1/2 sm:left-12">
+
+                <span class="text-[10px] font-extrabold tracking-[0.2em] text-amber-400">
+                    GROUND REFERENCE
+                </span>
+
+                <h2 class="mt-4 text-5xl font-black leading-[0.9] tracking-tight sm:text-6xl">
+                    Know where<br />
+                    you are playing.
+                </h2>
+
+                <button routerLink="/rulebook/ground-map"
+                    class="mt-7 rounded-xl bg-amber-400 px-5 py-4 text-[10px] font-extrabold tracking-widest text-[#07111f]">
+                    VIEW GROUND MAP →
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <section class="mx-auto max-w-7xl border-t border-white/[0.07] px-6 py-16 sm:px-10 lg:px-12">
+
+        <span class="text-[10px] font-extrabold tracking-[0.2em] text-amber-400">
+            CHHAT CRICKET
+        </span>
+
+        <h2 class="mt-4 text-5xl font-black leading-[0.9] tracking-tight sm:text-7xl">
+            Same rooftop.<br />
+            Clear rules.
+        </h2>
+
+        <p class="mt-6 text-xs text-slate-500">
+            Rules time ke saath update ho sakte hain,
+            lekin purane decisions apne record ka hissa rahenge.
+        </p>
+
+    </section>
+
+</div>

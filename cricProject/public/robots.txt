@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /add-player
+Disallow: /unlimited/
+Disallow: /limited/
+
+Sitemap: https://chhat-cricket.web.app/sitemap.xml
