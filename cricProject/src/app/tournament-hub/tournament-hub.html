@@ -1,0 +1,48 @@
+﻿<div class="min-h-screen bg-[#050816] px-4 py-8 text-white sm:px-6 lg:px-10">
+  <div class="mx-auto max-w-7xl">
+    <section class="hero-shell overflow-hidden rounded-lg border border-amber-300/20 px-6 py-10 sm:px-10 sm:py-14">
+      <p class="text-xs font-black uppercase tracking-[0.32em] text-amber-300">Chhat Cricket Championship</p>
+      <div class="mt-5 flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h1 class="max-w-3xl text-4xl font-black leading-tight sm:text-6xl">Tournament<br />Headquarters</h1>
+          <p class="mt-5 max-w-xl text-sm leading-6 text-zinc-300 sm:text-base">Plan the day before the first ball, lock in auction squads, and let every tournament match build the story.</p>
+        </div>
+        <button (click)="openCreate()" class="create-button">Create tournament</button>
+      </div>
+    </section>
+
+    <section class="mt-9">
+      <div class="mb-5 flex items-end justify-between gap-4"><div><p class="text-xs font-black uppercase tracking-[0.25em] text-cyan-400">Scheduled events</p><h2 class="mt-2 text-2xl font-black">Your tournaments</h2></div><p class="text-sm text-zinc-500">{{ tournamentCountLabel }}</p></div>
+      @if (loading) { <div class="empty-state">Loading tournaments...</div> }
+      @else if (!tournaments.length) { <div class="empty-state"><h3>Your first tournament starts here</h3><p>Create tomorrow&apos;s event now. Its teams, auction squads, fixtures, and records will live in one place.</p></div> }
+      @else { <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        @for (tournament of tournaments; track tournament.id) {
+          <a [routerLink]="['/tournaments', tournament.id]" class="tournament-card">
+            <div class="flex items-start justify-between gap-3"><span class="status" [class.status-live]="status(tournament) === 'Match day'">{{ status(tournament) }}</span><span class="text-xs font-bold text-zinc-500">{{ formatDate(tournament.date) }}</span></div>
+            <h3 class="mt-7 text-2xl font-black">{{ tournament.name }}</h3>
+            <p class="mt-2 text-sm text-zinc-400">First to {{ tournament.winsToWin }} wins · {{ tournament.matchLimit }} matches</p>
+            <div class="mt-7 grid grid-cols-[1fr_auto_1fr] items-center gap-3 border-t border-white/10 pt-5 text-center"><strong>{{ tournament.teamAName }}</strong><span class="text-xs font-black text-amber-300">VS</span><strong>{{ tournament.teamBName }}</strong></div>
+          </a>
+        }
+      </div> }
+    </section>
+  </div>
+</div>
+
+@if (creating) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm h-full lg:h-screen">
+    <div class="w-full max-w-xl rounded-lg border border-white/15 bg-[#0b1020] p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-4"><div><p class="text-xs font-black uppercase tracking-[0.25em] text-amber-300">New tournament</p><h2 class="mt-2 text-2xl font-black text-white">Set the stage</h2></div><button (click)="creating = false" class="close-button" aria-label="Close">×</button></div>
+      <div class="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <label class="field sm:col-span-2"><span>Tournament name</span><input [(ngModel)]="form.name" placeholder="Chhat Cricket Cup" /></label>
+        <label class="field"><span>Tournament date</span><input type="date" [(ngModel)]="form.date" /></label>
+        <label class="field"><span>Match format</span><select [(ngModel)]="form.matchLimit"><option [ngValue]="3">Best of 3</option><option [ngValue]="5">Best of 5</option><option [ngValue]="7">Best of 7</option></select></label>
+        <label class="field"><span>Team one</span><input [(ngModel)]="form.teamAName" /></label>
+        <label class="field"><span>Team two</span><input [(ngModel)]="form.teamBName" /></label>
+        <label class="field"><span>Wins needed</span><input type="number" min="1" [max]="form.matchLimit" [(ngModel)]="form.winsToWin" /></label>
+      </div>
+      @if (error) { <p class="mt-4 text-sm font-semibold text-red-300">{{ error }}</p> }
+      <div class="mt-8 flex justify-end gap-3"><button (click)="creating = false" class="cancel-button">Cancel</button><button (click)="createTournament()" [disabled]="saving" class="create-button">{{ saving ? 'Saving...' : 'Create tournament' }}</button></div>
+    </div>
+  </div>
+}

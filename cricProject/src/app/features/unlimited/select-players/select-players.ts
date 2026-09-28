@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
 import { MatchSetupService } from '../../../services/MatchSetup/match-setup-service';
+import { TournamentService } from '../../../services/tournament/tournament-service';
 
 @Component({
   selector: 'app-select-players',
@@ -17,6 +18,7 @@ export class SelectPlayers implements OnInit {
     private cdr: ChangeDetectorRef,
     private matchSetupService: MatchSetupService,
     private router: Router,
+    private tournamentService: TournamentService,
   ) {}
 
   players: Player[] = [];
@@ -39,7 +41,8 @@ export class SelectPlayers implements OnInit {
   async getPlayers() {
     try {
       this.RetrievePlayersService.getAllPlayers().subscribe((data:any)=>{
-        this.players = data
+        this.players = data;
+        this.loadTournamentSquads();
       })
       this.cdr.detectChanges();
     } catch (e) {
@@ -47,6 +50,18 @@ export class SelectPlayers implements OnInit {
     }
   }
 
+  private loadTournamentSquads() {
+    const tournamentId = this.matchSetupService.getTournamentContext();
+    if (!tournamentId) return;
+
+    this.tournamentService.getTournament(tournamentId).subscribe((tournament) => {
+      const lookup = new Map(this.players.map((player) => [player.id, player]));
+      this.teamA = tournament.teamAPlayers.map((entry) => lookup.get(entry.id)).filter((player): player is Player => !!player);
+      this.teamB = tournament.teamBPlayers.map((entry) => lookup.get(entry.id)).filter((player): player is Player => !!player);
+      this.selectedPlayers = [...this.teamA, ...this.teamB].map((player) => player.id).filter((id): id is string => !!id);
+      this.cdr.detectChanges();
+    });
+  }
   selectPlayer(player: Player) {
     const playerId = player.id;
 

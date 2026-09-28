@@ -1,0 +1,18 @@
+.stat-card { min-height: 100px; border: 1px solid rgb(255 255 255 / .1); border-radius: 8px; background: rgb(255 255 255 / .035); padding: 1rem; }
+.stat-card span, .leader-label { display: block; color: #a1a1aa; font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.stat-card strong { display: block; margin-top: .7rem; font-size: 2rem; line-height: 1; }
+.leader-card, .match-card, .empty-state { border: 1px solid rgb(255 255 255 / .1); border-radius: 8px; background: rgb(255 255 255 / .03); }
+.leader-card { padding: 1.1rem; }
+.leader-label { margin-bottom: .85rem; }
+.leader-row { display: grid; grid-template-columns: 1.3rem 2rem minmax(0, 1fr) auto; align-items: center; gap: .55rem; min-height: 3rem; border-top: 1px solid rgb(255 255 255 / .07); }
+.leader-row img { width: 2rem; height: 2rem; border-radius: 999px; object-fit: cover; background: rgb(255 255 255 / .08); }
+.leader-row .rank { color: #71717a; font-size: .75rem; font-weight: 800; }
+.leader-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .85rem; font-weight: 700; }
+.leader-row strong { color: #f4f4f5; font-size: .9rem; }
+.leader-empty { min-height: 3rem; display: flex; align-items: center; color: #71717a; font-size: .85rem; }
+.match-card { padding: 1.25rem; }
+.view-scorecard { border: 1px solid rgb(34 211 238 / .3); border-radius: 6px; color: #a5f3fc; padding: .45rem .7rem; font-size: .75rem; font-weight: 800; transition: background-color 150ms ease; }
+.view-scorecard:hover { background: rgb(34 211 238 / .12); }
+.empty-state { padding: 3rem 1.5rem; text-align: center; }
+.empty-state h2 { font-size: 1.4rem; font-weight: 900; }
+.empty-state p { margin: .75rem auto 0; max-width: 28rem; color: #a1a1aa; }

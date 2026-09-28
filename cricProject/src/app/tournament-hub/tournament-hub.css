@@ -1,0 +1,17 @@
+﻿.hero-shell { background: linear-gradient(120deg, #1b111a 0%, #11162b 55%, #06232b 100%); }
+.create-button { border: 1px solid rgb(251 191 36 / .45); border-radius: 6px; background: rgb(251 191 36 / .14); padding: .8rem 1rem; color: #fde68a; font-size: .78rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; transition: background-color 150ms ease; }
+.create-button:hover { background: rgb(251 191 36 / .24); }
+.create-button:disabled { cursor: not-allowed; opacity: .6; }
+.tournament-card { display: block; border: 1px solid rgb(255 255 255 / .11); border-radius: 8px; background: rgb(255 255 255 / .035); padding: 1.35rem; transition: transform 150ms ease, border-color 150ms ease; }
+.tournament-card:hover { transform: translateY(-3px); border-color: rgb(251 191 36 / .4); }
+.status { border: 1px solid rgb(34 211 238 / .25); border-radius: 999px; background: rgb(34 211 238 / .09); padding: .28rem .55rem; color: #a5f3fc; font-size: .65rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.status-live { border-color: rgb(251 191 36 / .32); background: rgb(251 191 36 / .1); color: #fde68a; }
+.empty-state { border: 1px solid rgb(255 255 255 / .1); border-radius: 8px; background: rgb(255 255 255 / .03); padding: 3rem 1.5rem; text-align: center; color: #a1a1aa; }
+.empty-state h3 { color: white; font-size: 1.4rem; font-weight: 900; }
+.empty-state p { margin: .8rem auto 0; max-width: 35rem; }
+.field { display: block; }
+.field span { display: block; margin-bottom: .45rem; color: #a1a1aa; font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.field input, .field select { width: 100%; border: 1px solid rgb(255 255 255 / .14); border-radius: 6px; background: rgb(255 255 255 / .05); padding: .75rem; color: white; outline: none; }
+.field input:focus, .field select:focus { border-color: rgb(251 191 36 / .55); }
+.close-button { width: 2.25rem; height: 2.25rem; border: 1px solid rgb(255 255 255 / .15); border-radius: 6px; color: #d4d4d8; font-size: 1.5rem; line-height: 1; }
+.cancel-button { border: 1px solid rgb(255 255 255 / .15); border-radius: 6px; padding: .8rem 1rem; color: #d4d4d8; font-size: .78rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }

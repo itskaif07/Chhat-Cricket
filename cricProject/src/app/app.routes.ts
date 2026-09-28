@@ -15,6 +15,10 @@ import { LimitedSelectPlayers } from './features/limited/select-players/select-p
 import { LimitedTossPage } from './features/limited/toss-page/toss-page';
 import { LimitedLiveMatch } from './features/limited/live-match/live-match';
 import { LandingPage } from './about/landing-page/landing-page';
+import { DismissalRanking } from './dismissal-ranking/dismissal-ranking';
+import { Tournament } from './tournament/tournament';
+import { TournamentHub } from './tournament-hub/tournament-hub';
+import { TournamentDetail } from './tournament-detail/tournament-detail';
 
 export const routes: Routes = [
   {
@@ -52,6 +56,21 @@ export const routes: Routes = [
   {
     path: 'match-scorecard/:id',
     component: Scorecard,
+  },
+
+  {
+    path: 'day-stats',
+    component: Tournament,
+  },
+
+  {
+    path: 'tournaments',
+    component: TournamentHub,
+  },
+
+  {
+    path: 'tournaments/:id',
+    component: TournamentDetail,
   },
 
   // Unlimited Match
@@ -105,4 +124,10 @@ export const routes: Routes = [
     path: 'rankings/:type',
     component: Rankings,
   },
+
+  {
+    path: 'dismissal-rankings',
+    component: DismissalRanking
+  }
 ];
+ 

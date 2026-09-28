@@ -1,0 +1,294 @@
+<div class="min-h-screen bg-[#07111f] text-white">
+
+    <!-- HEADER -->
+    <section class="border-b border-white/[0.06]">
+        <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
+
+            <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+
+                <div>
+                    <div class="flex items-center gap-3">
+                        <span class="h-px w-8 bg-[#00d95a]"></span>
+
+                        <span class="text-[10px] font-bold tracking-[0.25em] text-[#00d95a]">
+                            DISMISSAL ANALYSIS
+                        </span>
+                    </div>
+
+                    <h1 class="mt-4 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
+                        How Players
+                        <span class="text-[#00d95a]">Get Out</span>
+                    </h1>
+
+                    <p class="mt-3 max-w-xl text-sm leading-6 text-slate-400">
+                        Har dismissal type mein players ka complete breakdown,
+                        count aur total dismissals mein unka share.
+                    </p>
+                </div>
+
+
+                <!-- TOTAL PLAYERS -->
+                <div class="w-fit rounded-2xl border border-white/[0.07] bg-[#0d1928] px-5 py-4">
+                    <span class="block text-[9px] font-bold tracking-[0.18em] text-slate-500">
+                        PLAYERS TRACKED
+                    </span>
+
+                    <span class="mt-1 block text-2xl font-extrabold">
+                        {{ dismissalRanking.length }}
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- TABS -->
+    <section class="sticky top-0 z-20 border-b border-white/[0.06] bg-[#07111f]/95 backdrop-blur-xl">
+
+        <div class="mx-auto max-w-6xl overflow-x-auto px-5 sm:px-8 lg:px-10">
+
+            <div class="flex min-w-max gap-2 py-3">
+
+                <button *ngFor="let type of dismissalTypes" (click)="selectDismissalType($any(type.key))"
+                    class="rounded-xl border px-5 py-3 text-[10px] font-extrabold tracking-widest transition duration-200"
+                    [class.border-[#00d95a]]="selectedDismissalType === type.key"
+                    [class.bg-[#00d95a]]="selectedDismissalType === type.key"
+                    [class.text-[#07111f]]="selectedDismissalType === type.key"
+                    [class.border-white/[0.07]]="selectedDismissalType !== type.key"
+                    [class.bg-[#0d1928]]="selectedDismissalType !== type.key"
+                    [class.text-slate-400]="selectedDismissalType !== type.key"
+                    [class.hover:text-white]="selectedDismissalType !== type.key">
+                    {{ type.label }}
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MAIN -->
+    <main class="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:px-10">
+
+
+        <!-- CATEGORY HERO -->
+        <section class="relative mb-8 overflow-hidden rounded-3xl border border-white/[0.07] bg-[#0d1928]">
+
+            <!-- Glow -->
+            <div class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#00d95a]/[0.07] blur-3xl"></div>
+
+            <div class="relative p-6 sm:p-8 lg:p-10">
+
+                <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+
+                    <!-- CATEGORY INFO -->
+                    <div>
+
+                        <div class="flex items-center gap-3">
+
+                            <span
+                                class="grid h-10 w-10 place-items-center rounded-xl border border-[#00d95a]/20 bg-[#00d95a]/10">
+
+                                <span
+                                    class="h-2.5 w-2.5 rounded-full bg-[#00d95a] shadow-[0_0_14px_rgba(0,217,90,.7)]"></span>
+
+                            </span>
+
+                            <div>
+
+                                <span class="block text-[9px] font-bold tracking-[0.2em] text-[#00d95a]">
+                                    SELECTED DISMISSAL
+                                </span>
+
+                                <h2 class="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                                    {{ selectedDismissalLabel }}
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <p class="mt-5 max-w-xl text-sm leading-6 text-slate-400">
+                            Is category mein players kitni baar out hue aur
+                            total {{ selectedDismissalLabel.toLowerCase() }}
+                            dismissals mein unka kitna share hai.
+                        </p>
+
+                    </div>
+
+
+                    <!-- TOTAL -->
+                    <div class="lg:border-l lg:border-white/[0.06] lg:pl-10">
+
+                        <span class="block text-5xl font-extrabold tracking-[-0.04em] sm:text-6xl">
+                            {{ totalDismissals }}
+                        </span>
+
+                        <span class="mt-2 block text-[9px] font-bold tracking-[0.22em] text-slate-500">
+                            TOTAL {{ selectedDismissalLabel }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RANKING HEADER -->
+        <div class="mb-4 flex items-center justify-between">
+
+            <div>
+                <span class="text-[10px] font-bold tracking-[0.18em] text-slate-500">
+                    CAREER BREAKDOWN
+                </span>
+
+                <h3 class="mt-1 text-xl font-bold">
+                    Player Ranking
+                </h3>
+            </div>
+
+            <span class="text-[9px] font-bold tracking-[0.18em] text-slate-600">
+                {{ dismissalRanking.length }} PLAYERS
+            </span>
+
+        </div>
+
+
+        <!-- RANKING CARD -->
+        <section class="overflow-hidden rounded-3xl border border-white/[0.07] bg-[#0d1928]">
+
+            <!-- PLAYER ROW -->
+            <div *ngFor="let player of dismissalRanking; let i = index"
+                class="group border-b border-white/[0.05] px-5 py-6 last:border-b-0 sm:px-7 sm:py-7">
+
+                <!-- HEADER ROW -->
+                <div class="flex items-center gap-4">
+
+
+                    <!-- RANK -->
+                    <div class="w-8 shrink-0 sm:w-10">
+
+                        <span class="text-sm font-extrabold" [class.text-[#00d95a]]="i === 0"
+                            [class.text-slate-300]="i === 1" [class.text-slate-400]="i === 2"
+                            [class.text-slate-600]="i > 2">
+                            {{ (i + 1).toString().padStart(2, '0') }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- PHOTO -->
+                    <div class="shrink-0">
+
+                        <img [src]="player.playerPhoto || 'assets/default-player.png'" [alt]="player.playerName"
+                            class="h-12 w-12 rounded-2xl border border-white/10 object-cover sm:h-14 sm:w-14"
+                            [class.border-[#00d95a]/40]="i === 0" />
+
+                    </div>
+
+
+                    <!-- NAME -->
+                    <div class="min-w-0 flex-1">
+
+                        <p class="truncate text-base font-bold sm:text-lg" [class.text-white]="true">
+                            {{ player.playerName }}
+                        </p>
+
+                        <p class="mt-1 text-[9px] font-bold tracking-[0.16em] text-slate-600">
+                            DISMISSED {{ player.count }} TIMES
+                        </p>
+
+                    </div>
+
+
+                    <!-- COUNT -->
+                    <div class="text-right">
+
+                        <span class="block text-2xl font-extrabold tracking-tight sm:text-3xl">
+                            {{ player.count }}
+                        </span>
+
+                        <span class="text-[8px] font-bold tracking-[0.16em] text-slate-600">
+                            TIMES
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROGRESS -->
+                <div class="mt-5 ml-12 sm:ml-[4.5rem]">
+
+                    <div class="mb-2 flex items-center justify-between gap-4">
+
+                        <span class="text-[8px] font-bold tracking-[0.15em] text-slate-600 sm:text-[9px]">
+                            SHARE OF TOTAL {{ selectedDismissalLabel }}
+                        </span>
+
+                        <span class="shrink-0 text-[10px] font-extrabold text-slate-300">
+                            {{ player.percentage | number:'1.2-2' }}%
+                        </span>
+
+                    </div>
+
+
+                    <!-- TRACK -->
+                    <div class="h-2 overflow-hidden rounded-full bg-white/[0.05]">
+
+                        <div class="h-full rounded-full bg-gradient-to-r from-[#00b84d] to-[#00e866] transition-all duration-700 ease-out"
+                            [style.width.%]="player.percentage"></div>
+
+                    </div>
+
+
+                    <!-- DETAILS -->
+                    <div class="mt-2 flex items-center justify-between">
+
+                        <span class="text-[8px] text-slate-700">
+                            {{ player.count }} of {{ totalDismissals }}
+                        </span>
+
+                        <span *ngIf="i === 0" class="text-[8px] font-bold tracking-[0.12em] text-[#00d95a]">
+                            MOST {{ selectedDismissalLabel }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- EXPLANATION -->
+        <section class="mt-5 rounded-2xl border border-white/[0.05] bg-white/[0.02] px-5 py-4">
+
+            <div class="flex gap-3">
+
+                <span
+                    class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#00d95a]/10 text-[10px] font-bold text-[#00d95a]">
+                    i
+                </span>
+
+                <p class="text-[9px] leading-5 text-slate-600">
+                    Percentage batata hai ki selected dismissal type ke total cases
+                    mein player ka kitna share hai. Ranking highest dismissal count
+                    se lowest count tak arranged hai.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>

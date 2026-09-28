@@ -617,6 +617,9 @@ export class LimitedLiveMatch implements OnInit {
 
         // SCORE
         matchType: this.matchType,
+      tournamentId: this.matchSetupService.getTournamentContext(),
+      matchResult: this.matchResult,
+      winningTeam: this.winningTeam,
         maxOvers: this.maxOvers,
         selectedOversOption: this.selectedOversOption,
         customOversInput: this.customOversInput,
@@ -681,7 +684,7 @@ export class LimitedLiveMatch implements OnInit {
         retiredHurtPlayers: this.retiredHurtPlayers,
 
         // RESULT
-        matchResult: this.matchResult
+        matchResults: this.matchResult
       })
     );
   }
@@ -1284,6 +1287,9 @@ export class LimitedLiveMatch implements OnInit {
   saveMatchState() {
     this.offlinePersistanceService.saveMatch({
       matchType: this.matchType,
+      tournamentId: this.matchSetupService.getTournamentContext(),
+      matchResult: this.matchResult,
+      winningTeam: this.winningTeam,
       maxOvers: this.maxOvers,
       selectedOversOption: this.selectedOversOption,
       customOversInput: this.customOversInput,
@@ -1478,6 +1484,9 @@ export class LimitedLiveMatch implements OnInit {
 
       year: new Date().getFullYear(),
       matchType: this.matchType,
+      tournamentId: this.matchSetupService.getTournamentContext(),
+      matchResult: this.matchResult,
+      winningTeam: this.winningTeam,
       maxOvers: this.maxOvers,
       teamA: this.teamA,
       teamB: this.teamB,
@@ -1511,6 +1520,7 @@ export class LimitedLiveMatch implements OnInit {
 
   clearMatch() {
     this.offlinePersistanceService.clearMatch()
+    this.matchSetupService.clearTournamentContext()
     this.router.navigate(['/'])
 
   }
@@ -1524,6 +1534,7 @@ export class LimitedLiveMatch implements OnInit {
       await this.matchService.saveMatch(matchData);
 
       this.offlinePersistanceService.clearMatch();
+      this.matchSetupService.clearTournamentContext();
 
       this.router.navigate(['/']);
     } catch (error) {

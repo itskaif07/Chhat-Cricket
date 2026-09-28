@@ -12,6 +12,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MatchService } from '../services/matchService/match-service';
 import { Player } from '../shared/models/player.model';
 import { OfflinePersistanceService } from '../services/offline-persistance/offline-persistance-service';
+import { DismissalRankingService } from '../services/dismissalRankingService/dismissal-ranking-service';
 
 @Component({
   selector: 'app-home',
@@ -68,6 +69,8 @@ export class Home implements OnInit {
   mostMaidensPlayer: any = null
 
   recordMode: 'personal'| 'allTime' = 'personal'
+
+
   
 
 
@@ -77,6 +80,7 @@ export class Home implements OnInit {
     private cdr: ChangeDetectorRef,
     private matchService: MatchService,
     private offlinePersistence: OfflinePersistanceService,
+    private dismissalRankingService: DismissalRankingService,
     private router: Router
   ) {
     onAuthStateChanged(this.auth, (user) => {
@@ -321,7 +325,9 @@ export class Home implements OnInit {
 
 
 
-    });
+      this.dismissalRankingService.setCareerStats(this.careerStats)
+    }
+  );
 
     this.updateDismissalSummary()
     this.getOrangeCap();
@@ -928,28 +934,28 @@ export class Home implements OnInit {
 
   dismissalSummary = [
     {
-      type: 'Bowled',
+      type: 'bowled',
       count: 0,
       percentage: 0,
-      route: '/rankings/dismissals'
+      route: '/dismissal-rankings/'
     },
     {
-      type: 'Caught',
+      type: 'caught',
       count: 0,
       percentage: 0,
-      route: '/rankings/dismissals'
+      route: '/dismissal-rankings/'
     },
     {
-      type: 'Offside',
+      type: 'offside',
       count: 0,
       percentage: 0,
-      route: '/rankings/dismissals'
+      route: '/dismissal-rankings/'
     },
     {
-      type: 'Retired Out',
+      type: 'retired-out',
       count: 0,
       percentage: 0,
-      route: '/rankings/dismissals'
+      route: '/dismissal-rankings/'
     }
   ];
 
@@ -973,28 +979,28 @@ export class Home implements OnInit {
 
     this.dismissalSummary = [
       {
-        type: 'Bowled',
+        type: 'bowled',
         count: bowled,
         percentage: total > 0 ? (bowled / total) * 100 : 0,
-        route: '/rankings/dismissals'
+        route: '/dismissal-rankings/'
       },
       {
-        type: 'Caught',
+        type: 'caught',
         count: caught,
         percentage: total > 0 ? (caught / total) * 100 : 0,
-        route: '/rankings/dismissals'
+        route: '/dismissal-rankings/'
       },
       {
-        type: 'Offside',
+        type: 'offside',
         count: offside,
         percentage: total > 0 ? (offside / total) * 100 : 0,
-        route: '/rankings/dismissals'
+        route: '/dismissal-rankings/'
       },
       {
-        type: 'Retired Out',
+        type: 'retired Out',
         count: retiredOut,
         percentage: total > 0 ? (retiredOut / total) * 100 : 0,
-        route: '/rankings/dismissals'
+        route: '/dismissal-rankings/'
       }
     ];
   }

@@ -529,6 +529,8 @@ export class LiveMatch implements OnInit {
 
         // SCORE
         matchType: this.matchType,
+        tournamentId: this.matchSetupService.getTournamentContext(),
+        winningTeam: this.winningTeam,
         totalRuns: this.totalRuns,
         totalWickets: this.totalWickets,
         totalDeliveries: this.totalDeliveries,
@@ -1157,6 +1159,8 @@ export class LiveMatch implements OnInit {
   saveMatchState() {
     this.offlinePersistanceService.saveMatch({
       matchType: this.matchType,
+      tournamentId: this.matchSetupService.getTournamentContext(),
+      winningTeam: this.winningTeam,
       allSelectedPlayers: this.allSelectedPlayers,
       teamA: this.teamA,
       teamB: this.teamB,
@@ -1322,6 +1326,9 @@ export class LiveMatch implements OnInit {
 
       year: new Date().getFullYear(),
       matchType: this.matchType,
+      tournamentId: this.matchSetupService.getTournamentContext(),
+      matchResult: this.matchResult,
+      winningTeam: this.winningTeam,
       teamA: this.teamA,
       teamB: this.teamB,
       motm: this.Motm,
@@ -1354,6 +1361,7 @@ export class LiveMatch implements OnInit {
 
   clearMatch() {
     this.offlinePersistanceService.clearMatch()
+    this.matchSetupService.clearTournamentContext()
     this.router.navigate(['/'])
 
   }
@@ -1370,6 +1378,7 @@ export class LiveMatch implements OnInit {
       await this.matchService.saveMatch(matchData);
 
       this.offlinePersistanceService.clearMatch();
+      this.matchSetupService.clearTournamentContext();
 
       await this.router.navigate(['/']);
 

@@ -76,14 +76,24 @@ export class App implements OnDestroy {
     this.isSidebarOpen = false;
     document.body.style.overflow = 'auto';
   }
-  navigateToAbout() {
+  navigateToRulebook() {
     this.router.navigate(['/about/landing-page']);
     this.isSidebarOpen = false;
     document.body.style.overflow = 'auto';
   }
 
-  about(){
+  navigateTodayStats() {
+    this.router.navigate(['/day-stats']);
+    this.isSidebarOpen = false;
+    document.body.style.overflow = 'auto';
+  }
+
+  rulebook(){
     this.router.navigate(['/about/landing-page']);
+  }
+
+  dayStats(){
+    this.router.navigate(['/day-stats']);
   }
   
   home(){
