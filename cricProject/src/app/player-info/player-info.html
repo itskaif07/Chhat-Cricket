@@ -192,10 +192,19 @@
 
           <div class="flex flex-wrap items-center justify-center gap-3 lg:justify-start"
             [ngClass]="{'lg:mt-4 mt-12': editingFullName, 'mt-2': !editingFullName}">
-            <span
-              class="rounded-full border border-[#94F505]/25 bg-[#94F505]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#94F505]">
+
+            <span (click)="UpdateStyle()"
+              class="rounded-full border border-[#94F505]/25 bg-[#94F505]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#94F505]"
+              [ngClass]="{
+                    'cursor-pointer hover:bg-[#94F505]/20 transition': isAdmin,
+                    'cursor-default': !isAdmin
+                  }">
+
               {{ player?.style === 'right' ? 'Right Handed' : 'Left Handed' }}
+
             </span>
+
+
 
             <span
               class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-zinc-300">
@@ -223,6 +232,8 @@
       </div>
     </div>
   </section>
+
+
 
   <section class="mx-auto grid w-full lg:space-x-6 space-y-10 lg:space-y-0 px-2 lg:grid-cols-2 mt-10">
     <article class="stat-panel stat-panel-batting">
@@ -339,6 +350,190 @@
       </div>
     </article>
   </section>
+
+
+
+<!-- Dismissal Breakdown -->
+<section class="mx-auto flex h-full space-y-6 min-h-[99vh] w-full flex-col px-6 py-6 lg:px-10">
+
+  <!-- Header -->
+  <div class="flex flex-none min-h-[18%] flex-col justify-center">
+
+    <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#94F505]">
+      Dismissal Breakdown
+    </p>
+
+    <h2 class="mt-2 text-2xl font-black lg:text-3xl">
+      How They Get Out
+    </h2>
+
+    <p class="mt-2 max-w-xl text-sm text-zinc-400">
+      A breakdown of this player's career dismissals.
+    </p>
+
+  </div>
+
+
+  <!-- Main Ranking Area -->
+  <div
+    class="flex min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-[#071224] shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
+
+    <div class="grid h-full w-full min-h-0 items-center gap-8 p-6 lg:grid-cols-2 lg:gap-12 lg:p-10">
+
+      <!-- Donut Chart -->
+      <div class="flex h-full min-h-0 items-center justify-center">
+
+        <div
+          class="relative h-[min(55vw,420px)] w-[min(55vw,420px)] max-h-105 max-w-105 rounded-full p-10 lg:p-12"
+          [style.background]="getDismissalChart()">
+
+          <!-- Inner Circle -->
+          <div class="flex h-full w-full flex-col items-center justify-center rounded-full bg-[#071224]">
+
+            <span class="text-5xl font-black text-white lg:text-6xl">
+              {{ dismissalBreakdown.total }}
+            </span>
+
+            <span class="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 lg:text-sm">
+              Dismissals
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Breakdown -->
+      <div class="flex h-full min-h-0 flex-col justify-center space-y-4">
+
+        <!-- Bowled -->
+        <div
+          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+
+          <div class="flex items-center gap-4">
+
+            <span class="h-4 w-4 shrink-0 rounded-full bg-red-500">
+            </span>
+
+            <span class="text-base font-semibold text-white lg:text-lg">
+              Bowled
+            </span>
+
+          </div>
+
+          <div class="flex items-center gap-4 lg:gap-6">
+
+            <span class="text-lg font-black text-white lg:text-xl">
+              {{ dismissalBreakdown.bowled }}
+            </span>
+
+            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+              {{ getDismissalPercentage(dismissalBreakdown.bowled) }}%
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- Caught -->
+        <div
+          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+
+          <div class="flex items-center gap-4">
+
+            <span class="h-4 w-4 shrink-0 rounded-full bg-blue-700">
+            </span>
+
+            <span class="text-base font-semibold text-white lg:text-lg">
+              Caught
+            </span>
+
+          </div>
+
+          <div class="flex items-center gap-4 lg:gap-6">
+
+            <span class="text-lg font-black text-white lg:text-xl">
+              {{ dismissalBreakdown.caught }}
+            </span>
+
+            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+              {{ getDismissalPercentage(dismissalBreakdown.caught) }}%
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- Offside -->
+        <div
+          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+
+          <div class="flex items-center gap-4">
+
+            <span class="h-4 w-4 shrink-0 rounded-full bg-amber-400">
+            </span>
+
+            <span class="text-base font-semibold text-white lg:text-lg">
+              Offside
+            </span>
+
+          </div>
+
+          <div class="flex items-center gap-4 lg:gap-6">
+
+            <span class="text-lg font-black text-white lg:text-xl">
+              {{ dismissalBreakdown.offside }}
+            </span>
+
+            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+              {{ getDismissalPercentage(dismissalBreakdown.offside) }}%
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- Retired Out -->
+        <div
+          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+
+          <div class="flex items-center gap-4">
+
+            <span class="h-4 w-4 shrink-0 rounded-full bg-gray-500">
+            </span>
+
+            <span class="text-base font-semibold text-white lg:text-lg">
+              Retired Out
+            </span>
+
+          </div>
+
+          <div class="flex items-center gap-4 lg:gap-6">
+
+            <span class="text-lg font-black text-white lg:text-xl">
+              {{ dismissalBreakdown.retiredOut }}
+            </span>
+
+            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+              {{ getDismissalPercentage(dismissalBreakdown.retiredOut) }}%
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
   <section class="mx-auto w-full px-2 py-8">
     <div class="mb-5 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">

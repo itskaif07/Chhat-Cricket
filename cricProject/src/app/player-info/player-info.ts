@@ -25,11 +25,13 @@ export class PlayerInfo implements OnInit {
   adminId: string = 'BYoCGh5dXHSeTq73hWKFyZC1Upe2'
   isAdmin = false
   editingDisplayName = false;
-  editedDisplayName = '';
   editingFullName = false
-  editedFullName = ''
   editingPhoto = false
+  editingStyle = false
+  editedDisplayName = '';
+  editedFullName = ''
   editedPhoto = ''
+  editedStyle = ''
   selectedFile: File | null = null
   previewPhoto: string | null = null
 
@@ -63,6 +65,7 @@ export class PlayerInfo implements OnInit {
     this.getPlayer();
     this.getStats();
   }
+
   getPlayer() {
     this.loading = true;
     this.retrievePlayerService.getPlayer(this.playerId).subscribe((data: any) => {
@@ -71,22 +74,13 @@ export class PlayerInfo implements OnInit {
       this.editedDisplayName = this.player.displayName
       this.editedFullName = this.player.fullName
       this.editedPhoto = this.player.photoURL
+      this.editedStyle = this.player.style
       this.loading = false;
       this.cdr.detectChanges();
     });
   }
 
-  // retrieveMatches() {
-  //   this.matchService.retrieveMatches().subscribe((data) => {
-  //     this.matchesCount = data.length;
-  //     this.matches = data;
 
-  //     this.stats = this.careerStats[this.playerId] || {};
-  //     this.getRecentForm(data);
-  //     this.aggregateCareerStats();
-  //     this.cdr.detectChanges();
-  //   });
-  // }
 
   retrieveMatches() {
     this.matchService.retrieveMatches().subscribe((data) => {
@@ -122,6 +116,27 @@ export class PlayerInfo implements OnInit {
     }
   }
 
+  async UpdateStyle() {
+
+    if (!this.isAdmin) {
+      return
+    }
+
+    const newStyle = this.editedStyle === 'right' ? 'left' : 'right';
+
+    try {
+      const playerRef = doc(this.fireStore, 'players', this.playerId)
+      await updateDoc(playerRef, { style: newStyle })
+
+      this.editedStyle = newStyle;
+      this.player.style = newStyle
+      this.cdr.detectChanges();
+    }
+    catch (e) {
+      console.log(e)
+    }
+  }
+
   cancelDisplayNameEdit() {
 
     this.editedDisplayName =
@@ -138,6 +153,16 @@ export class PlayerInfo implements OnInit {
       this.player.fullName;
 
     this.editingFullName =
+      false;
+
+  }
+
+  cancelStyleEdit() {
+
+    this.editedStyle =
+      this.player.style;
+
+    this.editingStyle =
       false;
 
   }
@@ -241,7 +266,13 @@ export class PlayerInfo implements OnInit {
                   totalWides: 0,
                   totalNoBalls: 0,
                   recentRuns: [],
-                  recentWickets: []
+                  recentWickets: [],
+                  dismissals: {
+                    bowled: 0,
+                    caught: 0,
+                    offside: 0,
+                    'retired-out': 0
+                  },
                 };
               }
 
@@ -264,6 +295,22 @@ export class PlayerInfo implements OnInit {
               careerStats[playerId].totalHundreds += stats.hundred || 0;
 
               careerStats[playerId].dismissed += stats.dismissalType ? 1 : 0;
+
+              if (stats.dismissalType === 'bowled') {
+                careerStats[playerId].dismissals.bowled++;
+              }
+
+              if (stats.dismissalType === 'caught') {
+                careerStats[playerId].dismissals.caught++;
+              }
+
+              if (stats.dismissalType === 'offside') {
+                careerStats[playerId].dismissals.offside++;
+              }
+
+              if (stats.dismissalType === 'retired-out') {
+                careerStats[playerId].dismissals['retired-out']++;
+              }
 
               careerStats[playerId].highestScore = Math.max(
                 careerStats[playerId].highestScore,
@@ -292,8 +339,22 @@ export class PlayerInfo implements OnInit {
 
         this.stats = careerStats[this.playerId] || {};
 
+        this.dismissalBreakdown = {
+          bowled: this.stats?.dismissals?.bowled || 0,
+          caught: this.stats?.dismissals?.caught || 0,
+          offside: this.stats?.dismissals?.offside || 0,
+          retiredOut: this.stats?.dismissals?.['retired-out'] || 0,
+          total:
+            (this.stats?.dismissals?.bowled || 0) +
+            (this.stats?.dismissals?.caught || 0) +
+            (this.stats?.dismissals?.offside || 0) +
+            (this.stats?.dismissals?.['retired-out'] || 0)
+        };
+
 
         this.aggregateCareerStats();
+
+
 
         this.cdr.detectChanges();
       });
@@ -307,7 +368,7 @@ export class PlayerInfo implements OnInit {
     return value && value > 0 ? value : fallback;
   }
 
-  
+
 
   totalExtras(stats: any) {
     const wides = Number(stats?.totalWides || 0);
@@ -349,6 +410,48 @@ export class PlayerInfo implements OnInit {
     this.getOrangeCap()
     this.getPurpleCap()
     this.cdr.detectChanges();
+  }
+
+  dismissalBreakdown = {
+    total: 0,
+    bowled: 0,
+    caught: 0,
+    offside: 0,
+    retiredOut: 0
+  };
+
+  getDismissalPercentage(count: number): string {
+    if (!this.dismissalBreakdown.total) return '0.00';
+
+    return (
+      (count / this.dismissalBreakdown.total) * 100
+    ).toFixed(2);
+  }
+
+  getDismissalChart(): string {
+    const total = this.dismissalBreakdown.total;
+
+    if (!total) {
+      return 'conic-gradient(#1f2937 0% 100%)';
+    }
+
+    const bowled = (this.dismissalBreakdown.bowled / total) * 100;
+    const caught = (this.dismissalBreakdown.caught / total) * 100;
+    const offside = (this.dismissalBreakdown.offside / total) * 100;
+
+    const bowledEnd = bowled;
+    const caughtEnd = bowled + caught;
+    const offsideEnd = caughtEnd + offside;
+    const retiredOutEnd = bowled + caughtEnd + offsideEnd
+
+    return `
+   conic-gradient(
+  #EF4444 0% ${bowledEnd}%,        /* bg-red-500 */
+  #1D4ED8 ${bowledEnd}% ${caughtEnd}%, /* bg-blue-700 */
+  #FBBF24 ${caughtEnd}% ${offsideEnd}%, /* bg-amber-400 */
+  #6B7280 ${offsideEnd}% 100%       /* bg-gray-500 */
+)
+  `;
   }
 
   getOrangeCap() {
@@ -411,4 +514,6 @@ export class PlayerInfo implements OnInit {
 
     return (this.stats.totalRunsConceded / this.stats.totalWickets).toFixed(2);
   }
+
+
 }
