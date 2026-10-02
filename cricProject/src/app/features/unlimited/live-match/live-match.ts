@@ -101,6 +101,10 @@ export class LiveMatch implements OnInit {
   Math = Math;
 
   ngOnInit() {
+    const saved = this.offlinePersistanceService.loadMatch<any>();
+
+    console.log('SAVED MATCH ON LOAD:', saved);
+
     this.startMatch()
     const restored = this.restoreMatchState();
 
@@ -116,12 +120,17 @@ export class LiveMatch implements OnInit {
   startMatch() {
     const savedMatch = this.offlinePersistanceService.loadMatch<any>();
 
-    if (savedMatch && savedMatch.matchType !== 'limited') {
+    if (savedMatch) {
       // Resume
       this.showBatsmenDialog = false;
       this.showBowlerDialog = false;
     } else {
       // New Match
+      this.isInningsOver = false;
+      this.isOverComplete = false;
+      this.isWicketFallen = false;
+      this.matchResult = null;
+
       this.showBatsmenDialog = true;
       this.showBowlerDialog = false;
     }
@@ -530,7 +539,6 @@ export class LiveMatch implements OnInit {
         // SCORE
         matchType: this.matchType,
         tournamentId: this.matchSetupService.getTournamentContext(),
-        winningTeam: this.winningTeam,
         totalRuns: this.totalRuns,
         totalWickets: this.totalWickets,
         totalDeliveries: this.totalDeliveries,
@@ -918,6 +926,40 @@ export class LiveMatch implements OnInit {
     this.continueAfterDismissal();
   }
 
+  unavailablePlayer() {
+
+    this.saveSnapshot();
+
+    if (!this.currentBatsman?.id) return;
+
+    const playerId = this.currentBatsman.id;
+
+    // Player was selected as a batsman, but didn't play an innings
+    if (this.playerStats[playerId].innings > 0) {
+      this.playerStats[playerId].innings -= 1;
+    }
+
+    // Counts as a wicket slot, but NOT as a dismissal
+    this.totalWickets++;
+
+    this.outPlayersIds.push(playerId);
+
+    this.isWicketFallen = true;
+
+    this.selectedBatsman = null;
+    this.currentBatsman = null;
+    this.currentBatsmanRuns = 0;
+    this.currentBatsmanBalls = 0;
+
+    this.showBatsmenDialog = false;
+
+    this.continueAfterDismissal();
+
+    this.lastAction = 'UN';
+
+    this.saveMatchState();
+  }
+
   retireOut() {
 
     this.saveSnapshot();
@@ -979,21 +1021,11 @@ export class LiveMatch implements OnInit {
 
     this.checkMatchResult();
 
-    console.log({
-      currentInnings: this.currentInnings,
-      currentBattingTeam: this.currentBattingTeam.map(p => p.displayName),
-      teamA: this.teamA.map(p => p.displayName),
-      teamB: this.teamB.map(p => p.displayName),
-      totalWickets: this.totalWickets,
-      maxWickets: this.maxWickets
-    });
-
     // LAST WICKET
 
     if (this.totalWickets >= this.maxWickets) {
       this.isInningsOver = true;
-      this.voiceAnnouncementService.speak('Innings Over')
-
+      this.voiceAnnouncementService.speak('Innings Over');
       return;
     }
 
@@ -1011,6 +1043,7 @@ export class LiveMatch implements OnInit {
       bowler.fifer += 1;
     }
   }
+
 
 
   manageBattingMilestone() {
@@ -1122,6 +1155,8 @@ export class LiveMatch implements OnInit {
       return;
     }
 
+    const { winningTeam, ...restoredSnapshot } = previousSnapshot;
+
     Object.assign(this, previousSnapshot);
 
     // Never restore temporary dialogs/animations
@@ -1160,7 +1195,6 @@ export class LiveMatch implements OnInit {
     this.offlinePersistanceService.saveMatch({
       matchType: this.matchType,
       tournamentId: this.matchSetupService.getTournamentContext(),
-      winningTeam: this.winningTeam,
       allSelectedPlayers: this.allSelectedPlayers,
       teamA: this.teamA,
       teamB: this.teamB,
@@ -1192,18 +1226,24 @@ export class LiveMatch implements OnInit {
 
       currentBatsman: this.currentBatsman,
       currentBowler: this.currentBowler,
-
+      
       selectedBatsman: this.selectedBatsman,
       selectedBowler: this.selectedBowler,
+      
+      isInningsOver: this.isInningsOver,
+      isOverComplete: this.isOverComplete,
+      isWicketFallen: this.isWicketFallen,
     });
   }
 
   restoreMatchState() {
     const saved = this.offlinePersistanceService.loadMatch<any>();
 
-    if (!saved || saved.matchType === 'limited') {
+    if (!saved) {
       return false;
     }
+
+    const { winningTeam, ...restoredState } = saved;
 
     Object.assign(this, saved);
 
@@ -1215,6 +1255,7 @@ export class LiveMatch implements OnInit {
     if (this.currentInnings !== 2) {
       return;
     }
+
 
 
     // WIN
@@ -1244,25 +1285,26 @@ export class LiveMatch implements OnInit {
   }
 
   startSecondInnings() {
-    this.saveSnapshot()
+    this.saveSnapshot();
 
-    this.voiceAnnouncementService.speak('Starting Second Innings')
+    this.voiceAnnouncementService.speak('Starting Second Innings');
 
     this.firstInningRuns = this.totalRuns;
-
     this.firstInningsBalls = this.totalDeliveries;
     this.firstInningsWickets = this.totalWickets;
 
     this.firstInningsPlayerStats = structuredClone(this.playerStats);
     this.firstInningsBattingTeam = structuredClone(this.currentBattingTeam);
-    this.firstInningsBowlingTeam = structuredClone(this.currentBowlingTeam)
+    this.firstInningsBowlingTeam = structuredClone(this.currentBowlingTeam);
     this.firstInningsOutPlayerIds = structuredClone(this.outPlayersIds);
-
 
     this.playerStats = {};
     this.initializePlayerStats();
 
     this.currentInnings = 2;
+
+    // IMPORTANT
+    this.isInningsOver = false;
 
     this.isDismissalDialogOpen = false;
     this.totalRuns = 0;
@@ -1275,9 +1317,7 @@ export class LiveMatch implements OnInit {
     this.selectedBatsman = null;
     this.selectedBowler = null;
 
-
     this.outPlayersIds = [];
-
     this.recentDeliveries = [];
 
     this.isWicketFallen = false;
@@ -1287,6 +1327,7 @@ export class LiveMatch implements OnInit {
     this.showBatsmenDialog = true;
     this.isShowingCatchingDialog = false;
     this.dismissalType = null;
+
     this.saveMatchState();
   }
 
