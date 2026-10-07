@@ -8,6 +8,7 @@ import { MatchService } from '../../../services/matchService/match-service';
 import { OfflinePersistanceService } from '../../../services/offline-persistance/offline-persistance-service';
 import { VoiceAnnouncementService } from '../../../services/voiceAnnouncement/voice-announcement-service';
 import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
+import { DeliveryType, DismissalType, MatchDelivery } from '../../../shared/models/delivery.model';
 
 @Component({
   selector: 'app-live-match',
@@ -34,6 +35,9 @@ export class LiveMatch implements OnInit {
   retiredHurtPlayers: Player[] = [];
   unselectedPlayers: Player[] = []
   playerStats: { [playerId: string]: PlayerStats } = {};
+  deliveries: MatchDelivery [] = []
+  undoHistory: any[] = [];
+  redoHistory: any[] = [];
 
   tossWinner: 'A' | 'B' | '' = '';
   battingFirst: 'A' | 'B' | '' = '';
@@ -153,6 +157,63 @@ export class LiveMatch implements OnInit {
       this.createPlayerStats(player);
     });
 
+  }
+
+  recordDelivery(
+    type: DeliveryType,
+    batterRuns: number,
+    totalRuns: number,
+    legalBall: boolean,
+    wicket = false,
+    dismissalType: DismissalType = null,
+    dismissedBatsmanId: string | null = null,
+    caughtById: string | null = null
+  ) {
+    if (!this.currentBatsman?.id || !this.currentBowler?.id) return;
+
+    const delivery: MatchDelivery = {
+      innings: this.currentInnings,
+
+      deliveryNumber: this.deliveries.length + 1,
+
+      overNumber: Math.floor(
+        (this.totalDeliveries - (legalBall ? 1 : 0)) / 6
+      ) + 1,
+
+      ballNumber: legalBall
+        ? ((this.totalDeliveries - 1) % 6) + 1
+        : (this.totalDeliveries % 6) + 1,
+
+      batsmanId: this.currentBatsman.id,
+      bowlerId: this.currentBowler.id,
+
+      type,
+
+      batterRuns,
+      totalRuns,
+
+      legalBall,
+
+      wicket,
+      dismissalType,
+
+      dismissedBatsmanId,
+      caughtById
+    };
+
+    this.deliveries.push(delivery);
+  }
+
+  updateLastDelivery(
+    dismissalType: DismissalType,
+    caughtById: string | null = null
+  ) {
+    const lastDelivery = this.deliveries[this.deliveries.length - 1];
+
+    if (!lastDelivery) return;
+
+    lastDelivery.dismissalType = dismissalType;
+    lastDelivery.caughtById = caughtById;
   }
 
   createPlayerStats(player: Player) {
@@ -532,76 +593,72 @@ export class LiveMatch implements OnInit {
 
   // Score
 
+  getCurrentSnapshot() {
+    return structuredClone({
+      matchType: this.matchType,
+      tournamentId: this.matchSetupService.getTournamentContext(),
+
+      totalRuns: this.totalRuns,
+      totalWickets: this.totalWickets,
+      totalDeliveries: this.totalDeliveries,
+
+      playerStats: this.playerStats,
+
+      currentBatsman: this.currentBatsman,
+      currentBowler: this.currentBowler,
+
+      selectedBatsman: this.selectedBatsman,
+      selectedBowler: this.selectedBowler,
+
+      outPlayersIds: this.outPlayersIds,
+
+      currentBatsmanRuns: this.currentBatsmanRuns,
+      currentBatsmanBalls: this.currentBatsmanBalls,
+
+      currentBowlerRunsConceded: this.currentBowlerRunsConceded,
+      currentBowlerBalls: this.currentBowlerBalls,
+      currentBowlerWickets: this.currentBowlerWickets,
+
+      recentDeliveries: this.recentDeliveries,
+      deliveries: this.deliveries,
+
+      lastAction: this.lastAction,
+
+      currentInnings: this.currentInnings,
+
+      isWicketFallen: this.isWicketFallen,
+      isOverComplete: this.isOverComplete,
+      isInningsOver: this.isInningsOver,
+
+      showBatsmenDialog: this.showBatsmenDialog,
+      showBowlerDialog: this.showBowlerDialog,
+
+      isDismissalDialogOpen: this.isDismissalDialogOpen,
+      isShowingCatchingDialog: this.isShowingCatchingDialog,
+      isShowingNoBallDialog: this.isShowingNoBallDialog,
+
+      dismissalType: this.dismissalType,
+      selectedNoBallRuns: this.selectedNoBallRuns,
+
+      firstInningRuns: this.firstInningRuns,
+      firstInningsBalls: this.firstInningsBalls,
+      firstInningsWickets: this.firstInningsWickets,
+
+      firstInningsPlayerStats: this.firstInningsPlayerStats,
+      firstInningsBattingTeam: this.firstInningsBattingTeam,
+      firstInningsBowlingTeam: this.firstInningsBowlingTeam,
+      firstInningsOutPlayerIds: this.firstInningsOutPlayerIds,
+
+      retiredHurtPlayers: this.retiredHurtPlayers,
+
+      matchResult: this.matchResult
+    });
+  }
+
   saveSnapshot() {
-    this.matchHistory.push(
-      structuredClone({
+    this.undoHistory.push(this.getCurrentSnapshot());
 
-        // SCORE
-        matchType: this.matchType,
-        tournamentId: this.matchSetupService.getTournamentContext(),
-        totalRuns: this.totalRuns,
-        totalWickets: this.totalWickets,
-        totalDeliveries: this.totalDeliveries,
-
-        // PLAYER STATS
-        playerStats: this.playerStats,
-
-        // CURRENT PLAYERS
-        currentBatsman: this.currentBatsman,
-        currentBowler: this.currentBowler,
-
-        selectedBatsman: this.selectedBatsman,
-        selectedBowler: this.selectedBowler,
-
-        // OUT PLAYERS
-        outPlayersIds: this.outPlayersIds,
-
-        // CURRENT BATSMAN STATS
-        currentBatsmanRuns: this.currentBatsmanRuns,
-        currentBatsmanBalls: this.currentBatsmanBalls,
-
-        // CURRENT BOWLER STATS
-        currentBowlerRunsConceded: this.currentBowlerRunsConceded,
-        currentBowlerBalls: this.currentBowlerBalls,
-        currentBowlerWickets: this.currentBowlerWickets,
-
-        // DELIVERY HISTORY
-        recentDeliveries: this.recentDeliveries,
-        lastAction: this.lastAction,
-
-        // MATCH FLOW
-        currentInnings: this.currentInnings,
-
-        isWicketFallen: this.isWicketFallen,
-        isOverComplete: this.isOverComplete,
-        isInningsOver: this.isInningsOver,
-
-        // DIALOGS
-        showBatsmenDialog: this.showBatsmenDialog,
-        showBowlerDialog: this.showBowlerDialog,
-
-        isDismissalDialogOpen: this.isDismissalDialogOpen,
-        isShowingCatchingDialog: this.isShowingCatchingDialog,
-        isShowingNoBallDialog: this.isShowingNoBallDialog,
-
-        // DISMISSAL
-        dismissalType: this.dismissalType,
-        selectedNoBallRuns: this.selectedNoBallRuns,
-
-        // 1ST INNINGS DATA
-        firstInningRuns: this.firstInningRuns,
-        firstInningsBalls: this.firstInningsBalls,
-        firstInningsWickets: this.firstInningsWickets,
-        firstInningsPlayerStats: this.firstInningsPlayerStats,
-        firstInningsBattingTeam: this.firstInningsBattingTeam,
-        firstInningsBowlingTeam: this.firstInningsBowlingTeam,
-        firstInningsOutPlayerIds: this.firstInningsOutPlayerIds,
-        retiredHurtPlayers: this.retiredHurtPlayers,
-
-        // RESULT
-        matchResult: this.matchResult
-      })
-    );
+    this.redoHistory = [];
   }
 
   addDot() {
@@ -618,7 +675,21 @@ export class LiveMatch implements OnInit {
       this.playerStats[this.currentBowler?.id].ballsDelivered += 1;
     }
 
+    this.recordDelivery(
+      'dot',
+      0,
+      0,
+      true,
+      false,
+      null,
+      null,
+      null
+    );
+
+    console.log(this.deliveries);
+
     this.saveMatchState();
+    this.manageBattingMilestone();
     this.manageOversChange();
   }
 
@@ -641,6 +712,17 @@ export class LiveMatch implements OnInit {
     }
 
     this.isShowingNoBallDialog = false;
+
+    this.recordDelivery(
+      'noball',
+      0,
+      0,
+      false,
+      false,
+      null,
+      null,
+      null
+    );
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -669,6 +751,17 @@ export class LiveMatch implements OnInit {
       this.playerStats[this.currentBowler?.id].ballsDelivered += 1;
       this.playerStats[this.currentBowler?.id].runsConceded += 4;
     }
+
+    this.recordDelivery(
+      'four',
+      4,
+      4,
+      true,
+      false,
+      null,
+      null,
+      null
+    );
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -705,6 +798,17 @@ export class LiveMatch implements OnInit {
 
     this.isShowingNoBallDialog = false;
 
+    this.recordDelivery(
+      'noball',
+      4,
+      4,
+      false,
+      false,
+      null,
+      null,
+      null
+    );
+
     this.saveMatchState();
     this.manageBattingMilestone();
     this.checkMatchResult();
@@ -732,6 +836,17 @@ export class LiveMatch implements OnInit {
       this.playerStats[this.currentBowler?.id].ballsDelivered += 1;
       this.playerStats[this.currentBowler?.id].runsConceded += 6;
     }
+
+    this.recordDelivery(
+      'six',
+      6,
+      6,
+      true,
+      false,
+      null,
+      null,
+      null
+    );
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -769,6 +884,17 @@ export class LiveMatch implements OnInit {
 
     this.isShowingNoBallDialog = false;
 
+    this.recordDelivery(
+      'noball',
+      6,
+      6,
+      false,
+      false,
+      null,
+      null,
+      null
+    );
+
     this.saveMatchState();
     this.manageBattingMilestone();
     this.checkMatchResult();
@@ -801,6 +927,16 @@ export class LiveMatch implements OnInit {
     if (this.currentBowler?.id) {
       this.playerStats[this.currentBowler?.id].wides += 1
     }
+    this.recordDelivery(
+      'wide',
+      0,
+      0,
+      false,
+      false,
+      null,
+      null,
+      null
+    );
     this.saveMatchState();
   }
 
@@ -811,6 +947,7 @@ export class LiveMatch implements OnInit {
   }
 
   addNoBall() {
+
     this.isShowingNoBallDialog = true
   }
 
@@ -847,6 +984,16 @@ export class LiveMatch implements OnInit {
       bowlerId: this.currentBowler?.id!
     });
 
+    this.recordDelivery(
+      'wicket',
+      0,
+      0,
+      true,
+      true,
+      null,
+      this.currentBatsman?.id || null,
+      null
+    );
 
     this.saveMatchState();
     this.manageOversChange();
@@ -857,6 +1004,7 @@ export class LiveMatch implements OnInit {
     if (this.currentBatsman?.id) {
       this.outPlayersIds.push(this.currentBatsman.id);
     }
+
 
     this.dismissalType = null;
   }
@@ -875,7 +1023,6 @@ export class LiveMatch implements OnInit {
     if (this.currentBatsman?.id && this.currentBowler?.id) {
 
       this.playerStats[this.currentBatsman.id].dismissalType = type;
-
       this.playerStats[this.currentBatsman.id].dismissedBy =
         this.currentBowler.displayName || '';
 
@@ -891,6 +1038,9 @@ export class LiveMatch implements OnInit {
 
 
     }
+
+
+    this.updateLastDelivery(type);
 
     this.continueAfterDismissal();
   }
@@ -916,6 +1066,8 @@ export class LiveMatch implements OnInit {
 
       this.playerStats[this.currentBatsman.id].caughtBy = player;
     }
+
+    this.updateLastDelivery('caught', player.id || null);
 
     // CLOSE DIALOG
 
@@ -1033,6 +1185,7 @@ export class LiveMatch implements OnInit {
     // OTHERWISE
 
     this.showBatsmenDialog = true;
+    this.saveMatchState();
   }
 
   addFiveFers() {
@@ -1148,18 +1301,34 @@ export class LiveMatch implements OnInit {
   }
 
   undo() {
+    const previousSnapshot = this.undoHistory.pop();
 
-    const previousSnapshot = this.matchHistory.pop();
+    if (!previousSnapshot) return;
 
-    if (!previousSnapshot) {
-      return;
-    }
+    this.redoHistory.push(this.getCurrentSnapshot());
 
     const { winningTeam, ...restoredSnapshot } = previousSnapshot;
 
-    Object.assign(this, previousSnapshot);
+    Object.assign(this, restoredSnapshot);
 
-    // Never restore temporary dialogs/animations
+    this.isShowingNoBallDialog = false;
+    this.isDismissalDialogOpen = false;
+    this.isShowingCatchingDialog = false;
+
+    this.saveMatchState();
+  }
+
+  redo() {
+    const nextSnapshot = this.redoHistory.pop();
+
+    if (!nextSnapshot) return;
+
+    this.undoHistory.push(this.getCurrentSnapshot());
+
+    const { winningTeam, ...restoredSnapshot } = nextSnapshot;
+
+    Object.assign(this, restoredSnapshot);
+
     this.isShowingNoBallDialog = false;
     this.isDismissalDialogOpen = false;
     this.isShowingCatchingDialog = false;

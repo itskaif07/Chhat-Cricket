@@ -19,6 +19,7 @@ import { DismissalRanking } from './dismissal-ranking/dismissal-ranking';
 import { Tournament } from './tournament/tournament';
 import { TournamentHub } from './tournament-hub/tournament-hub';
 import { TournamentDetail } from './tournament-detail/tournament-detail';
+import { HeadToHead } from './head-to-head/head-to-head';
 
 export const routes: Routes = [
   {
@@ -128,6 +129,13 @@ export const routes: Routes = [
   {
     path: 'dismissal-rankings',
     component: DismissalRanking
+  },
+
+  // head to head
+
+  {
+    path: 'head-to-head',
+    component: HeadToHead
   }
 ];
  

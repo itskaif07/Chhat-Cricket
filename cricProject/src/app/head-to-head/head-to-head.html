@@ -1,0 +1,767 @@
+<!-- ========================================================= -->
+<!-- HEAD TO HEAD -->
+<!-- ========================================================= -->
+
+<section class="mx-auto w-full px-1 sm:px-6 py-20 lg:px-10 bg-[#050B18]">
+
+    <!-- SECTION HEADER -->
+    <div class="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+
+        <div>
+            <p class="text-xs font-bold uppercase tracking-[0.3em] text-cyan-400">
+                Head To Head
+            </p>
+
+            <h2 class="mt-2 text-3xl font-black tracking-tight text-white lg:text-4xl">
+                Bat vs Ball
+            </h2>
+
+            <p class="mt-2 max-w-xl text-sm leading-6 text-zinc-400">
+                Career battle between a batsman and a bowler.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+    <div class="relative overflow-hidden rounded-4xl border border-white/10
+           bg-[#071224] shadow-[0_25px_80px_rgba(0,0,0,0.35)]">
+
+        <!-- Ambient glow -->
+        <div class="pointer-events-none absolute -left-32 -top-32 h-80 w-80
+             rounded-full bg-orange-500/10 blur-[110px]"></div>
+
+        <div class="pointer-events-none absolute -bottom-32 -right-32 h-80 w-80
+             rounded-full bg-purple-500/10 blur-[110px]"></div>
+
+
+        <div class="relative p-2 sm:p-8 lg:p-10">
+
+
+            <!-- PLAYER SELECTORS -->
+            <div class="space-y-3 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-end lg:gap-5 lg:space-y-0">
+
+                <!-- BATSMAN SELECTOR -->
+                <div class="rounded-2xl border border-white/10 bg-white/3 p-4">
+
+                    <p class="text-[10px] font-black uppercase tracking-[0.25em] text-orange-400">
+                        Batsman
+                    </p>
+
+                    <button type="button" (click)="openBatsmanSelector()" class="mt-3 flex w-full items-center justify-between
+                               rounded-xl border border-white/10
+                               bg-[#091526] px-4 py-4
+                               text-left transition-all
+                               hover:border-orange-400/30
+                               hover:bg-orange-400/5
+                               active:scale-[0.99]">
+
+                        <div class="flex items-center gap-3">
+
+                            @if (selectedPlayers.batsman) {
+
+                            <img [src]="selectedPlayers.batsman.photoURL || '/user.png'"
+                                [alt]="selectedPlayers.batsman.displayName" class="h-10 w-10 rounded-xl object-cover" />
+
+                            <div>
+                                <p class="text-sm font-black text-white">
+                                    {{ selectedPlayers.batsman.displayName }}
+                                </p>
+
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Batsman
+                                </p>
+                            </div>
+
+                            } @else {
+
+                            <div>
+                                <p class="text-sm font-black text-white">
+                                    Select Batsman
+                                </p>
+
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Choose a player
+                                </p>
+                            </div>
+
+                            }
+
+                        </div>
+
+                        <span class="text-orange-400 text-lg">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+                <!-- BATSMAN SELECTOR -->
+                @if (isBatsmanSelectorOpen) {
+
+                <div class="fixed inset-0 z-50 flex items-end justify-center
+                   bg-black/70 backdrop-blur-sm
+                   sm:items-center sm:p-4" (click)="closePlayerSelector()">
+
+                    <div class="w-full max-h-[85vh] overflow-hidden
+                     rounded-t-3xl border border-white/10
+                     bg-[#071224] shadow-2xl
+                     sm:max-w-lg sm:rounded-3xl" (click)="$event.stopPropagation()">
+
+                        <!-- HEADER -->
+                        <div class="flex items-center justify-between
+                       border-b border-white/[0.06]
+                       px-5 py-4">
+
+                            <div>
+
+                                <p class="text-[10px] font-black uppercase
+                           tracking-[0.25em] text-orange-400">
+                                    Batsman
+                                </p>
+
+                                <h3 class="mt-1 text-lg font-black text-white">
+                                    Select Player
+                                </h3>
+
+                            </div>
+
+
+                            <button type="button" (click)="closePlayerSelector()" class="flex h-9 w-9 items-center justify-center
+                         rounded-xl bg-white/[0.05]
+                         text-zinc-400
+                         active:scale-95">
+                                ✕
+                            </button>
+
+                        </div>
+
+
+                        <!-- PLAYER LIST -->
+                        <div class="max-h-[65vh] overflow-y-auto p-3">
+
+                            @for (player of players; track player.id) {
+
+                            <button type="button" (click)="selectBatsman(player)" class="flex w-full items-center gap-3
+                           rounded-2xl p-3 text-left
+                           transition-all duration-150
+                           hover:bg-orange-400/10
+                           active:scale-[0.99]">
+
+                                <!-- PHOTO -->
+                                <div class="h-12 w-12 shrink-0 overflow-hidden
+                             rounded-xl
+                             border border-orange-400/20
+                             bg-orange-400/10">
+
+                                    <img [src]="player.photoURL || '/user.png'" [alt]="player.displayName"
+                                        class="h-full w-full object-cover" />
+
+                                </div>
+
+
+                                <!-- PLAYER DETAILS -->
+                                <div class="min-w-0 flex-1">
+
+                                    <p class="truncate text-sm font-black text-white">
+                                        {{ player.displayName }}
+                                    </p>
+
+                                    <p class="mt-0.5 text-[9px] font-bold uppercase
+                               tracking-widest text-zinc-600">
+                                        Select as batsman
+                                    </p>
+
+                                </div>
+
+
+                                <!-- SELECTED -->
+                                @if (selectedPlayers.batsman?.id === player.id) {
+
+                                <div class="flex h-7 w-7 items-center justify-center
+                               rounded-full
+                               bg-orange-400/10
+                               text-orange-400">
+                                    ✓
+                                </div>
+
+                                }
+
+                            </button>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                }
+
+
+                <!-- VS -->
+                <div class="flex items-center justify-center py-0.5 lg:pb-3">
+
+                    <!-- Mobile separator -->
+                    <div class="flex w-full items-center gap-3 lg:hidden">
+
+                        <div class="h-px flex-1 bg-white/[0.06]"></div>
+
+                        <div class="relative flex h-9 w-9 shrink-0 items-center justify-center
+                               rounded-full
+                               border border-cyan-400/25
+                               bg-[#081426]
+                               shadow-[0_0_20px_rgba(34,211,238,0.12)]">
+
+                            <span class="text-[10px] font-black italic tracking-tight text-cyan-300">
+                                VS
+                            </span>
+
+                        </div>
+
+                        <div class="h-px flex-1 bg-white/[0.06]"></div>
+
+                    </div>
+
+
+                    <!-- Desktop VS -->
+                    <div class="relative hidden lg:flex items-center justify-center">
+
+                        <div class="absolute h-20 w-20 rounded-full
+                               bg-cyan-400/10 blur-2xl">
+                        </div>
+
+                        <div class="relative flex h-14 w-14 items-center justify-center
+                               rounded-full border border-cyan-400/30
+                               bg-[#081426]
+                               shadow-[0_0_30px_rgba(34,211,238,0.15)]">
+
+                            <span class="text-sm font-black italic tracking-tight text-cyan-300">
+                                VS
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOWLER SELECTOR -->
+                <div class="rounded-2xl border border-white/10 bg-white/3 p-4">
+
+                    <p class="text-[10px] font-black uppercase tracking-[0.25em] text-purple-300">
+                        Bowler
+                    </p>
+
+                    <button type="button" (click)="openBowlerSelector()" class="mt-3 flex w-full items-center justify-between
+                               rounded-xl border border-white/10
+                               bg-[#091526] px-4 py-4
+                               text-left transition-all
+                               hover:border-purple-400/30
+                               hover:bg-purple-400/5
+                               active:scale-[0.99]">
+
+                        <div class="flex items-center gap-3">
+
+                            @if (selectedPlayers.bowler) {
+
+                            <img [src]="selectedPlayers.bowler.photoURL || '/user.png'"
+                                [alt]="selectedPlayers.bowler.displayName" class="h-10 w-10 rounded-xl object-cover" />
+
+                            <div>
+                                <p class="text-sm font-black text-white">
+                                    {{ selectedPlayers.bowler.displayName }}
+                                </p>
+
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Bowler
+                                </p>
+                            </div>
+
+                            } @else {
+
+                            <div>
+                                <p class="text-sm font-black text-white">
+                                    Select Bowler
+                                </p>
+
+                                <p class="text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Choose a player
+                                </p>
+                            </div>
+
+                            }
+
+                        </div>
+
+                        <span class="text-purple-300 text-lg">
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <!-- BOWLER SELECTOR -->
+                @if (isBowlerSelectorOpen) {
+
+                <div class="fixed inset-0 z-50 flex items-end justify-center
+                   bg-black/70 backdrop-blur-sm
+                   sm:items-center sm:p-4" (click)="closePlayerSelector()">
+
+                    <div class="w-full max-h-[85vh] overflow-hidden
+                     rounded-t-3xl border border-white/10
+                     bg-[#071224] shadow-2xl
+                     sm:max-w-lg sm:rounded-3xl" (click)="$event.stopPropagation()">
+
+                        <!-- HEADER -->
+                        <div class="flex items-center justify-between
+                       border-b border-white/6
+                       px-5 py-4">
+
+                            <div>
+
+                                <p class="text-[10px] font-black uppercase
+                           tracking-[0.25em] text-purple-300">
+                                    Bowler
+                                </p>
+
+                                <h3 class="mt-1 text-lg font-black text-white">
+                                    Select Player
+                                </h3>
+
+                            </div>
+
+
+                            <button type="button" (click)="closePlayerSelector()" class="flex h-9 w-9 items-center justify-center
+                         rounded-xl bg-white/5
+                         text-zinc-400
+                         active:scale-95">
+                                ✕
+                            </button>
+
+                        </div>
+
+
+                        <!-- PLAYER LIST -->
+                        <div class="max-h-[65vh] overflow-y-auto p-3">
+
+                            @for (player of players; track player.id) {
+
+
+                            <button type="button" (click)="selectBowler(player)" class="flex w-full items-center gap-3
+                           rounded-2xl p-3 text-left
+                           transition-all duration-150
+                           hover:bg-purple-400/10
+                           active:scale-[0.99]">
+
+                                <!-- PHOTO -->
+                                <div class="h-12 w-12 shrink-0 overflow-hidden
+                             rounded-xl
+                             border border-purple-400/20
+                             bg-purple-400/10">
+
+                                    <img [src]="player.photoURL || '/user.png'" [alt]="player.displayName"
+                                        class="h-full w-full object-cover" />
+
+                                </div>
+
+
+                                <!-- PLAYER DETAILS -->
+                                <div class="min-w-0 flex-1">
+
+                                    <p class="truncate text-sm font-black text-white">
+                                        {{ player.displayName }}
+                                    </p>
+
+                                    <p class="mt-0.5 text-[9px] font-bold uppercase
+                               tracking-widest text-zinc-600">
+                                        Select as bowler
+                                    </p>
+
+                                </div>
+
+
+                                <!-- SELECTED -->
+                                @if (selectedPlayers.bowler?.id === player.id) {
+
+                                <div class="flex h-7 w-7 items-center justify-center
+                               rounded-full
+                               bg-purple-400/10
+                               text-purple-300">
+                                    ✓
+                                </div>
+
+                                }
+
+                            </button>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
+
+
+            <!-- ================================================ -->
+            <!-- HEAD TO HEAD STATS -->
+            <!-- ================================================ -->
+
+            <div class="mt-10 border-t border-white/10 pt-8">
+
+                <!-- ================================================ -->
+                <!-- H2H MATCHUP -->
+                <!-- ================================================ -->
+
+                <div class="overflow-hidden rounded-2xl border border-white/10 bg-[#091526]">
+
+                    <!-- MATCHUP HEADER -->
+                    <div class="grid grid-cols-[1fr_auto_1fr] items-center">
+
+                        <!-- BATSMAN -->
+                        <div class="px-5 py-5 text-right sm:px-8">
+
+                            <p class="text-xl font-black tracking-tight text-white sm:text-2xl">
+                                {{ selectedPlayers.batsman?.displayName || 'Select Batsman' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-black uppercase tracking-[0.25em] text-orange-400">
+                                Batsman
+                            </p>
+
+                        </div>
+
+
+                        <!-- VS -->
+                        <div class="flex h-full items-center border-x border-white/10 px-4 sm:px-6">
+
+                            <div
+                                class="flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/5">
+
+                                <span class="text-[10px] font-black text-cyan-400">
+                                    VS
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BOWLER -->
+                        <div class="px-5 py-5 text-left sm:px-8">
+
+                            <p class="text-xl font-black tracking-tight text-white sm:text-2xl">
+                                {{ selectedPlayers.bowler?.displayName || 'Select Bowler' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-black uppercase tracking-[0.25em] text-purple-300">
+                                Bowler
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- SHARED MATCHUP STATS -->
+                    <!-- ================================================ -->
+
+                    <div class="grid grid-cols-3 border-t border-white/10 bg-white/[0.02]">
+
+                        <!-- INNINGS -->
+                        <div class="border-r border-white/10 px-3 py-5 text-center">
+
+                            <p class="text-xl font-black text-white">
+                                {{ careerH2H.innings }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-600">
+                                Innings
+                            </p>
+
+                        </div>
+
+
+                        <!-- BALLS -->
+                        <div class="border-r border-white/10 px-3 py-5 text-center">
+
+                            <p class="text-xl font-black text-white">
+                                {{ careerH2H.balls }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-600">
+                                Balls
+                            </p>
+
+                        </div>
+
+
+                        <!-- RUNS -->
+                        <div class="px-3 py-5 text-center">
+
+                            <p class="text-xl font-black text-orange-400">
+                                {{ careerH2H.runs }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-zinc-600">
+                                Runs
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- BATTING / BOWLING LABELS -->
+                    <!-- ================================================ -->
+
+                    <div class="grid grid-cols-2 border-t border-white/10">
+
+                        <!-- BATTING -->
+                        <div class="border-r border-white/10 px-5 py-3 text-center">
+
+                            <span class="text-[9px] font-black uppercase tracking-[0.22em] text-orange-400">
+                                Batting
+                            </span>
+
+                        </div>
+
+
+                        <!-- BOWLING -->
+                        <div class="px-5 py-3 text-center">
+
+                            <span class="text-[9px] font-black uppercase tracking-[0.22em] text-purple-300">
+                                Bowling
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- 4s / 6s / WICKETS -->
+                    <!-- ================================================ -->
+
+                    <div class="grid grid-cols-2 border-t border-white/5">
+
+                        <!-- BATTING BOUNDARIES -->
+                        <div class="grid grid-cols-2 border-r border-white/5">
+
+                            <!-- 4s -->
+                            <div class="border-r border-white/5 px-4 py-4 text-center">
+
+                                <p class="text-lg font-black text-white">
+                                    {{ careerH2H.fours }}
+                                </p>
+
+                                <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    4s
+                                </p>
+
+                            </div>
+
+
+                            <!-- 6s -->
+                            <div class="px-4 py-4 text-center">
+
+                                <p class="text-lg font-black text-white">
+                                    {{ careerH2H.sixes }}
+                                </p>
+
+                                <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    6s
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- WICKETS -->
+                        <div class="px-4 py-4 text-center">
+
+                            <p class="text-lg font-black text-red-400">
+                                {{ careerH2H.wickets }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Wickets
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- STRIKE RATE -->
+                    <!-- ================================================ -->
+
+                    <div class="grid grid-cols-2 border-t border-white/5 bg-white/1.5">
+
+                        <!-- BATTING SR -->
+                        <div class="border-r border-white/5 px-5 py-4 text-center">
+
+                            <p class="text-base font-black text-cyan-300">
+                                {{ careerH2H.strikeRate | number:'1.2-2' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Batting SR
+                            </p>
+
+                        </div>
+
+
+                        <!-- BOWLING SR -->
+                        <div class="px-5 py-4 text-center">
+
+                            <p class="text-base font-black text-cyan-300">
+                                {{ careerH2H.bowlingStrikeRate | number:'1.2-2' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Bowling SR
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- AVERAGE -->
+                    <!-- ================================================ -->
+
+                    <div class="grid grid-cols-2 border-t border-white/5">
+
+                        <!-- BATTING AVERAGE -->
+                        <div class="border-r border-white/5 px-5 py-4 text-center">
+
+                            <p class="text-base font-black text-white">
+                                {{ careerH2H.battingAverage | number:'1.2-2' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Batting Avg
+                            </p>
+
+                        </div>
+
+
+                        <!-- BOWLING AVERAGE -->
+                        <div class="px-5 py-4 text-center">
+
+                            <p class="text-base font-black text-white">
+                                {{ careerH2H.bowlingAverage | number:'1.2-2' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Bowling Avg
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- ECONOMY / WICKET BREAKDOWN -->
+                    <!-- ================================================ -->
+
+                    <div class="grid grid-cols-2 border-t border-white/5">
+
+                        <!-- ECONOMY -->
+                        <div class="border-r border-white/5 px-5 py-4 text-center">
+
+                            <p class="text-base font-black text-purple-300">
+                                {{ careerH2H.economy | number:'1.2-2' }}
+                            </p>
+
+                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Economy
+                            </p>
+
+                        </div>
+
+
+                        <!-- WICKET BREAKDOWN -->
+                        <div class="px-4 py-4">
+
+                            <p class="mb-2 text-center text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                Wicket Breakdown
+                            </p>
+
+                            <div class="flex flex-wrap justify-center gap-2">
+
+                                <!-- BOWLED -->
+                                <span
+                                    class="rounded-lg border border-red-400/10 bg-red-400/5 px-2.5 py-1 text-[9px] font-bold text-red-400">
+
+                                    BO {{ careerH2H.dismissalTypes.bowled }}
+
+                                </span>
+
+
+                                <!-- CAUGHT -->
+                                <span
+                                    class="rounded-lg border border-blue-400/10 bg-blue-400/5 px-2.5 py-1 text-[9px] font-bold text-blue-400">
+
+                                    CO {{ careerH2H.dismissalTypes.caught }}
+
+                                </span>
+
+
+                                <!-- OFFSIDE -->
+                                <span
+                                    class="rounded-lg border border-amber-400/10 bg-amber-400/5 px-2.5 py-1 text-[9px] font-bold text-amber-400">
+
+                                    OO {{ careerH2H.dismissalTypes.offside }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================ -->
+                    <!-- FOOTER -->
+                    <!-- ================================================ -->
+
+                    <div class="flex items-center justify-center gap-2 border-t border-white/5 bg-white/2 px-4 py-4">
+
+                        <span class="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.7)]">
+                        </span>
+
+                        <span class="text-[10px] font-medium text-zinc-600">
+                            Based on recorded deliveries starting from October 2026
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

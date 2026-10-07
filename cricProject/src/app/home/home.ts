@@ -13,10 +13,11 @@ import { MatchService } from '../services/matchService/match-service';
 import { Player } from '../shared/models/player.model';
 import { OfflinePersistanceService } from '../services/offline-persistance/offline-persistance-service';
 import { DismissalRankingService } from '../services/dismissalRankingService/dismissal-ranking-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -70,6 +71,12 @@ export class Home implements OnInit {
 
   recordMode: 'personal'| 'allTime' = 'personal'
 
+  selectedH2HBatsmanId = '';
+  selectedH2HBowlerId = '';
+
+  selectedH2HBatsman: any = null;
+  selectedH2HBowler: any = null;
+
 
   
 
@@ -95,6 +102,8 @@ export class Home implements OnInit {
       this.retrieveMatches();
     });
   }
+
+ 
 
   async retrievePlayers() {
     this.loading = true
