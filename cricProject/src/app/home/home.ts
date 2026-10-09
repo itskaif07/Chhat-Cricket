@@ -153,7 +153,6 @@ export class Home implements OnInit {
     this.matchService.retrieveMatches().subscribe((data) => {
       this.matchesCount = data.length;
       this.matches = data;
-      console.log(data);
       this.aggregateTotalRuns();
       this.aggregateTotalWickets();
       this.aggregateCareerStats();

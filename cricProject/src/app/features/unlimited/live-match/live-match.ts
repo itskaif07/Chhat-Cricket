@@ -35,7 +35,7 @@ export class LiveMatch implements OnInit {
   retiredHurtPlayers: Player[] = [];
   unselectedPlayers: Player[] = []
   playerStats: { [playerId: string]: PlayerStats } = {};
-  deliveries: MatchDelivery [] = []
+  deliveries: MatchDelivery[] = []
   undoHistory: any[] = [];
   redoHistory: any[] = [];
 
@@ -107,7 +107,6 @@ export class LiveMatch implements OnInit {
   ngOnInit() {
     const saved = this.offlinePersistanceService.loadMatch<any>();
 
-    console.log('SAVED MATCH ON LOAD:', saved);
 
     this.startMatch()
     const restored = this.restoreMatchState();
@@ -158,6 +157,8 @@ export class LiveMatch implements OnInit {
     });
 
   }
+
+
 
   recordDelivery(
     type: DeliveryType,
@@ -513,6 +514,10 @@ export class LiveMatch implements OnInit {
     this.isShowingExtraPlayerDialog = false;
   }
 
+
+
+
+
   getUnselectedPlayers() {
 
     this.isLoading = true;
@@ -686,7 +691,6 @@ export class LiveMatch implements OnInit {
       null
     );
 
-    console.log(this.deliveries);
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -1009,6 +1013,19 @@ export class LiveMatch implements OnInit {
     this.dismissalType = null;
   }
 
+  isDuck: boolean = false
+  isGoldenDuck: boolean = false
+
+  showDuckCelebration(golden: boolean) {
+    this.isDuck = !golden;
+    this.isGoldenDuck = golden;
+  }
+
+  dismissDuckCelebration() {
+    this.isDuck = false;
+    this.isGoldenDuck = false;
+  }
+
 
   selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
 
@@ -1027,6 +1044,14 @@ export class LiveMatch implements OnInit {
         this.currentBowler.displayName || '';
 
       this.playerStats[this.currentBowler.id].wickets += 1;
+
+      if (this.playerStats[this.currentBatsman.id].runs === 0) {
+        this.voiceAnnouncementService.duck();
+
+        this.showDuckCelebration(
+          this.playerStats[this.currentBatsman.id].ballsFaced === 1
+        );
+      }
 
       const isHatTrick = this.isHatTrick();
 
@@ -1050,6 +1075,14 @@ export class LiveMatch implements OnInit {
     if (this.currentBatsman?.id && this.currentBowler?.id) {
 
       this.playerStats[this.currentBowler.id].wickets += 1;
+
+      if (this.playerStats[this.currentBatsman.id].runs === 0) {
+        this.voiceAnnouncementService.duck();
+
+        this.showDuckCelebration(
+          this.playerStats[this.currentBatsman.id].ballsFaced === 1
+        );
+      }
 
 
       this.addFiveFers();
@@ -1395,10 +1428,10 @@ export class LiveMatch implements OnInit {
 
       currentBatsman: this.currentBatsman,
       currentBowler: this.currentBowler,
-      
+
       selectedBatsman: this.selectedBatsman,
       selectedBowler: this.selectedBowler,
-      
+
       isInningsOver: this.isInningsOver,
       isOverComplete: this.isOverComplete,
       isWicketFallen: this.isWicketFallen,
@@ -1544,6 +1577,8 @@ export class LiveMatch implements OnInit {
       motm: this.Motm,
       teamACaptain: this.captainA,
       teamBCaptain: this.captainB,
+
+      deliveries: this.deliveries,
 
       innings: [
         {

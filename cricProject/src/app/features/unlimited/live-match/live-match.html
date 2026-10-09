@@ -1171,6 +1171,59 @@
     </div>
   </section>
 
+  @if (isDuck || isGoldenDuck) {
+  <div class="duck-overlay fixed inset-0 z-9999 flex items-center
+             justify-center px-5" [class.golden-overlay]="isGoldenDuck">
+    <div class="duck-card relative flex w-full max-w-sm flex-col
+                  items-center overflow-hidden rounded-4xl px-6
+                  pb-8 pt-7 text-center">
+  
+      <!-- Decorative glow -->
+      <div class="duck-glow"></div>
+  
+      <!-- Celebration label -->
+      <div class="relative z-10 rounded-full px-4 py-1.5 text-xs
+                 font-black uppercase tracking-[0.25em]" [class.golden-label]="isGoldenDuck"
+        [class.normal-label]="!isGoldenDuck">
+        {{ isGoldenDuck ? 'First Ball Dismissal' : 'Zero Runs' }}
+      </div>
+  
+      <!-- Duck artwork -->
+      <img [src]="isGoldenDuck
+            ? '/icons/goldenduck.png'
+            : '/icons/duck.png'" [alt]="isGoldenDuck ? 'Golden Duck' : 'Duck Out'" class="duck-art relative z-10 mt-4 w-64 max-w-full
+                 object-contain" [class.golden-art]="isGoldenDuck" />
+  
+      <!-- Main text -->
+      <h2 class="relative z-10 mt-1 text-4xl font-black uppercase
+                 italic tracking-tight" [class.golden-title]="isGoldenDuck" [class.normal-title]="!isGoldenDuck">
+        {{ isGoldenDuck ? 'GOLDEN DUCK!' : 'DUCK OUT!' }}
+      </h2>
+  
+      <p class="relative z-10 mt-2 text-sm font-semibold text-white/70">
+        {{ isGoldenDuck
+        ? 'One ball. Zero runs. Gone.'
+        : 'Quack quack! Back to the pavilion.' }}
+      </p>
+  
+      <!-- Bottom accent -->
+      <div class="relative z-10 mt-5 h-1 w-20 rounded-full" [class.golden-bar]="isGoldenDuck"
+        [class.normal-bar]="!isGoldenDuck"></div>
+
+        <button type="button" (click)="dismissDuckCelebration()" class="relative z-10 mt-6 rounded-xl bg-white px-7 py-3
+                     text-sm font-black uppercase tracking-wider text-slate-900
+                     shadow-lg transition-transform active:scale-95">
+          Continue Match →
+        </button>
+  
+    </div>
+
+   
+
+  </div>
+  }
+
+
   <!-- STRIKER DIALOG -->
   @if (showBatsmenDialog) {
   <div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4">

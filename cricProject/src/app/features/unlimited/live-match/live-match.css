@@ -351,3 +351,130 @@
 
   font-weight: 900;
 }
+
+
+.duck-overlay {
+  background: rgba(2, 6, 23, 0.82);
+  backdrop-filter: blur(8px);
+  animation: overlay-in 220ms ease-out both;
+}
+
+.duck-card {
+  isolation: isolate;
+  background: linear-gradient(155deg, #172033, #080e1c 75%);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow: 0 25px 90px rgba(0, 0, 0, 0.55);
+  animation: card-in 400ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.duck-glow {
+  position: absolute;
+  width: 230px;
+  height: 230px;
+  top: 20%;
+  border-radius: 9999px;
+  background: radial-gradient(circle,
+      rgba(250, 204, 21, 0.23),
+      transparent 70%);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.duck-art {
+  height: 230px;
+  object-fit: contain;
+  animation: duck-bounce 850ms ease-in-out infinite alternate;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.35));
+}
+
+.normal-label {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.13);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.normal-title {
+  color: #ffffff;
+  text-shadow: 0 3px 22px rgba(250, 204, 21, 0.2);
+}
+
+.normal-bar {
+  background: #fbbf24;
+}
+
+.golden-overlay {
+  background: rgba(18, 12, 2, 0.86);
+}
+
+.golden-overlay .duck-card {
+  background: linear-gradient(155deg, #3d2b08, #100d08 75%);
+  border-color: rgba(251, 191, 36, 0.55);
+  box-shadow: 0 0 70px rgba(245, 158, 11, 0.2);
+}
+
+.golden-overlay .duck-glow {
+  background: radial-gradient(circle,
+      rgba(251, 191, 36, 0.42),
+      transparent 70%);
+}
+
+.golden-label {
+  color: #fef3c7;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+}
+
+.golden-title {
+  color: #fbbf24;
+  text-shadow: 0 0 28px rgba(251, 191, 36, 0.3);
+}
+
+.golden-bar {
+  background: linear-gradient(90deg, #f59e0b, #fef3c7, #f59e0b);
+}
+
+.golden-art {
+  filter:
+    drop-shadow(0 0 20px rgba(251, 191, 36, 0.3)) drop-shadow(0 12px 18px rgba(0, 0, 0, 0.4));
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.75) translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes duck-bounce {
+  from {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  to {
+    transform: translateY(-9px) rotate(2deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .duck-overlay,
+  .duck-card,
+  .duck-art {
+    animation: none;
+  }
+}

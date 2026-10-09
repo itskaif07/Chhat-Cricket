@@ -10,8 +10,7 @@ export class VoiceAnnouncementService {
   speak(text: string, special = false) {
 
     const speech = new SpeechSynthesisUtterance(text);
-
-    speech.lang = 'en-IN';
+    speech.lang = 'hi-IN';
 
     if (special) {
       speech.rate = 0.8;
@@ -20,11 +19,15 @@ export class VoiceAnnouncementService {
     } else {
       speech.rate = 1;
       speech.pitch = 1;
-      speech.volume = 1;
+      speech.volume = 1; 
     }
 
     window.speechSynthesis.speak(speech);
+  }
 
+  duck(){
+    const duck = new Audio('./sounds/duck.mp3')
+    duck.play()
   }
 
   enable() {

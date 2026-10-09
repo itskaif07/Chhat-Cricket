@@ -478,7 +478,7 @@
                     <!-- SHARED MATCHUP STATS -->
                     <!-- ================================================ -->
 
-                    <div class="grid grid-cols-3 border-t border-white/10 bg-white/[0.02]">
+                    <div class="grid grid-cols-3 border-t border-white/10 bg-white/2">
 
                         <!-- INNINGS -->
                         <div class="border-r border-white/10 px-3 py-5 text-center">
@@ -644,13 +644,14 @@
 
 
                     <!-- ================================================ -->
-                    <!-- AVERAGE -->
+                    <!-- AVERAGE / ECONOMY / WICKET BREAKDOWN -->
                     <!-- ================================================ -->
 
                     <div class="grid grid-cols-2 border-t border-white/5">
 
-                        <!-- BATTING AVERAGE -->
-                        <div class="border-r border-white/5 px-5 py-4 text-center">
+                        <!-- BATTING SIDE -->
+
+                        <div class="border-r border-white/5 px-5 py-10 text-center flex flex-col items-center justify-center">
 
                             <p class="text-base font-black text-white">
                                 {{ careerH2H.battingAverage | number:'1.2-2' }}
@@ -663,76 +664,73 @@
                         </div>
 
 
-                        <!-- BOWLING AVERAGE -->
-                        <div class="px-5 py-4 text-center">
+                        <!-- BOWLING SIDE -->
 
-                            <p class="text-base font-black text-white">
-                                {{ careerH2H.bowlingAverage | number:'1.2-2' }}
-                            </p>
+                        <div>
 
-                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                                Bowling Avg
-                            </p>
+                            <!-- BOWLING AVERAGE -->
 
-                        </div>
+                            <div class="border-b border-white/5 px-5 py-4 text-center">
 
-                    </div>
+                                <p class="text-base font-black text-white">
+                                    {{ careerH2H.bowlingAverage | number:'1.2-2' }}
+                                </p>
 
+                                <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Bowling Avg
+                                </p>
 
-                    <!-- ================================================ -->
-                    <!-- ECONOMY / WICKET BREAKDOWN -->
-                    <!-- ================================================ -->
-
-                    <div class="grid grid-cols-2 border-t border-white/5">
-
-                        <!-- ECONOMY -->
-                        <div class="border-r border-white/5 px-5 py-4 text-center">
-
-                            <p class="text-base font-black text-purple-300">
-                                {{ careerH2H.economy | number:'1.2-2' }}
-                            </p>
-
-                            <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                                Economy
-                            </p>
-
-                        </div>
+                            </div>
 
 
-                        <!-- WICKET BREAKDOWN -->
-                        <div class="px-4 py-4">
+                            <!-- ECONOMY -->
 
-                            <p class="mb-2 text-center text-[9px] font-bold uppercase tracking-widest text-zinc-600">
-                                Wicket Breakdown
-                            </p>
+                            <div class="border-b border-white/5 px-5 py-4 text-center">
 
-                            <div class="flex flex-wrap justify-center gap-2">
+                                <p class="text-base font-black text-purple-300">
+                                    {{ careerH2H.economy | number:'1.2-2' }}
+                                </p>
 
-                                <!-- BOWLED -->
-                                <span
-                                    class="rounded-lg border border-red-400/10 bg-red-400/5 px-2.5 py-1 text-[9px] font-bold text-red-400">
+                                <p class="mt-1 text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Economy
+                                </p>
 
-                                    BO {{ careerH2H.dismissalTypes.bowled }}
-
-                                </span>
+                            </div>
 
 
-                                <!-- CAUGHT -->
-                                <span
-                                    class="rounded-lg border border-blue-400/10 bg-blue-400/5 px-2.5 py-1 text-[9px] font-bold text-blue-400">
+                            <!-- WICKET BREAKDOWN -->
 
-                                    CO {{ careerH2H.dismissalTypes.caught }}
+                            <div class="px-4 py-4">
 
-                                </span>
+                                <p
+                                    class="mb-2 text-center text-[9px] font-bold uppercase tracking-widest text-zinc-600">
+                                    Wicket Breakdown
+                                </p>
 
+                                <div class="flex flex-wrap justify-center gap-2">
 
-                                <!-- OFFSIDE -->
-                                <span
-                                    class="rounded-lg border border-amber-400/10 bg-amber-400/5 px-2.5 py-1 text-[9px] font-bold text-amber-400">
+                                    <!-- BOWLED -->
 
-                                    OO {{ careerH2H.dismissalTypes.offside }}
+                                    <span
+                                        class="rounded-lg border border-red-400/10 bg-red-400/5 px-2.5 py-1 text-[9px] font-bold text-red-400">
+                                        BO {{ careerH2H.dismissalTypes.bowled }}
+                                    </span>
 
-                                </span>
+                                    <!-- CAUGHT -->
+
+                                    <span
+                                        class="rounded-lg border border-blue-400/10 bg-blue-400/5 px-2.5 py-1 text-[9px] font-bold text-blue-400">
+                                        CO {{ careerH2H.dismissalTypes.caught }}
+                                    </span>
+
+                                    <!-- OFFSIDE -->
+
+                                    <span
+                                        class="rounded-lg border border-amber-400/10 bg-amber-400/5 px-2.5 py-1 text-[9px] font-bold text-amber-400">
+                                        OO {{ careerH2H.dismissalTypes.offside }}
+                                    </span>
+
+                                </div>
 
                             </div>
 

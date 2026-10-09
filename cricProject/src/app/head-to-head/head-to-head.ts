@@ -202,17 +202,199 @@ export class HeadToHead implements OnInit {
   }
 
 
-  // Calculate H2H
   calculateCareerH2H(): void {
 
-    if (
-      !this.selectedPlayers.batsman ||
-      !this.selectedPlayers.bowler
-    ) {
+    const batsman = this.selectedPlayers.batsman;
+    const bowler = this.selectedPlayers.bowler;
+
+    if (!batsman || !bowler) {
       this.resetH2H();
       return;
     }
 
+    // All deliveries between this batsman and bowler
+    const h2hDeliveries = this.matches
+      .flatMap((match: any) => match.deliveries || [])
+      .filter((delivery: any) =>
+        delivery.batsmanId === batsman.id &&
+        delivery.bowlerId === bowler.id
+      );
+
+    // No recorded H2H data
+    if (h2hDeliveries.length === 0) {
+      this.resetH2H();
+      return;
+    }
+
+    // -----------------------------
+    // BASIC BATTING STATS
+    // -----------------------------
+
+    const balls = h2hDeliveries.filter(
+      (delivery: any) => delivery.legalBall
+    ).length;
+
+    const runs = h2hDeliveries.reduce(
+      (total: number, delivery: any) =>
+        total + (delivery.batterRuns || 0),
+      0
+    );
+
+    const fours = h2hDeliveries.filter(
+      (delivery: any) =>
+        delivery.type === 'four' ||
+        delivery.batterRuns === 4
+    ).length;
+
+    const sixes = h2hDeliveries.filter(
+      (delivery: any) =>
+        delivery.type === 'six' ||
+        delivery.batterRuns === 6
+    ).length;
+
+
+    // -----------------------------
+    // WICKETS
+    // -----------------------------
+
+    const wicketDeliveries = h2hDeliveries.filter(
+      (delivery: any) =>
+        delivery.wicket === true &&
+        delivery.dismissedBatsmanId === batsman.id &&
+        (
+          delivery.dismissalType === 'bowled' ||
+          delivery.dismissalType === 'caught' ||
+          delivery.dismissalType === 'offside'
+        )
+    );
+
+    const wickets = wicketDeliveries.length;
+
+
+    // -----------------------------
+    // DISMISSAL BREAKDOWN
+    // -----------------------------
+
+    const bowled = wicketDeliveries.filter(
+      (delivery: any) =>
+        delivery.dismissalType === 'bowled'
+    ).length;
+
+    const caught = wicketDeliveries.filter(
+      (delivery: any) =>
+        delivery.dismissalType === 'caught'
+    ).length;
+
+    const offside = wicketDeliveries.filter(
+      (delivery: any) =>
+        delivery.dismissalType === 'offside'
+    ).length;
+
+
+    // -----------------------------
+    // BOWLING STATS
+    // -----------------------------
+
+    const runsConceded = h2hDeliveries.reduce(
+      (total: number, delivery: any) =>
+        total + (delivery.totalRuns || 0),
+      0
+    );
+
+
+    // -----------------------------
+    // UNIQUE INNINGS
+    // -----------------------------
+
+    const inningsSet = new Set<string>();
+
+    this.matches.forEach((match: any) => {
+
+      const deliveries = match.deliveries || [];
+
+      deliveries.forEach((delivery: any) => {
+
+        if (
+          delivery.batsmanId === batsman.id &&
+          delivery.bowlerId === bowler.id
+        ) {
+
+          const matchId =
+            match.id ||
+            match.createdAt ||
+            'unknown';
+
+          inningsSet.add(
+            `${matchId}-${delivery.innings}`
+          );
+
+        }
+
+      });
+
+    });
+
+    const innings = inningsSet.size;
+
+
+    // -----------------------------
+    // CALCULATIONS
+    // -----------------------------
+
+    const strikeRate =
+      balls > 0
+        ? (runs / balls) * 100
+        : 0;
+
+    const battingAverage =
+      wickets > 0
+        ? runs / wickets
+        : 0;
+
+    const economy =
+      balls > 0
+        ? runsConceded / (balls / 6)
+        : 0;
+
+    const bowlingStrikeRate =
+      wickets > 0
+        ? balls / wickets
+        : 0;
+
+    const bowlingAverage =
+      wickets > 0
+        ? runsConceded / wickets
+        : 0;
+
+
+    // -----------------------------
+    // UPDATE UI
+    // -----------------------------
+
+    this.careerH2H = {
+
+      innings,
+
+      // Batting
+      balls,
+      runs,
+      fours,
+      sixes,
+      strikeRate,
+      battingAverage,
+
+      // Bowling
+      runsConceded,
+      wickets,
+      dismissalTypes: {
+        bowled,
+        caught,
+        offside
+      },
+      economy,
+      bowlingStrikeRate,
+      bowlingAverage
+    };
 
   }
 
