@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatchService } from '../../services/matchService/match-service';
 import { RouterLink } from '@angular/router';
+import { SeoService } from '../../seoService/seo-service';
 
 @Component({
   selector: 'app-main-page',
@@ -12,6 +13,7 @@ export class MainPage implements OnInit {
   constructor(
     private matchService: MatchService,
     private cdr: ChangeDetectorRef,
+    private seoService: SeoService
   ) {}
 
   Math = Math;
@@ -19,6 +21,7 @@ export class MainPage implements OnInit {
   loading = false;
 
   ngOnInit() {
+    this.setSEO()
     this.getMatches();
   }
 
@@ -29,6 +32,14 @@ export class MainPage implements OnInit {
       this.loading = false;
       this.cdr.detectChanges();
     });
+  }
+
+  setSEO(): void {
+    this.seoService.setPage(
+      'Cricket Match History & Scorecards | Chhat Cricket',
+      'Browse past rooftop cricket matches, innings scores, match results and player of the match performances on Chhat Cricket.',
+      '/matches-history'
+    );
   }
 
   formatDate(timestamp: number) {

@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatchService } from '../../services/matchService/match-service';
 import { MatchSetupService } from '../../services/MatchSetup/match-setup-service';
 import { Player } from '../../shared/models/player.model';
+import { SeoService } from '../../seoService/seo-service';
 
 @Component({
   selector: 'app-scorecard',
@@ -15,7 +16,8 @@ export class Scorecard implements OnInit {
     private route: ActivatedRoute,
     private matchService: MatchService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private seoService: SeoService
+  ) { }
 
   matchData: any = [];
   selectedInnings: any;
@@ -38,8 +40,6 @@ export class Scorecard implements OnInit {
         this.matchService.getMatchById(id).subscribe((data) => {
           this.matchData = data;
 
-          // console.log(data);
-          this.selectedInnings = this.matchData.innings[0];
 
           this.getCaptains();
           this.loading = false;
@@ -51,6 +51,8 @@ export class Scorecard implements OnInit {
       console.log(e);
     }
   }
+
+
 
   totalExtras(wide: any, noBall: any) {
     const wides = Number(wide || 0);
@@ -75,7 +77,7 @@ export class Scorecard implements OnInit {
 
     return `${overs}.${deliveries}`;
   }
-  
+
 
   getBatters(playerStats: any) {
     return Object.values(playerStats || {}).filter(

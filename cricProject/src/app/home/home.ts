@@ -14,6 +14,7 @@ import { Player } from '../shared/models/player.model';
 import { OfflinePersistanceService } from '../services/offline-persistance/offline-persistance-service';
 import { DismissalRankingService } from '../services/dismissalRankingService/dismissal-ranking-service';
 import { CommonModule } from '@angular/common';
+import { SeoService } from '../seoService/seo-service';
 
 @Component({
   selector: 'app-home',
@@ -66,10 +67,10 @@ export class Home implements OnInit {
   mostWidesPlayer: any = null;
   mostNoBallsPlayer: any = null
   mostNoBalls: number = 0;
-  mostMaidens:number = 0
+  mostMaidens: number = 0
   mostMaidensPlayer: any = null
 
-  recordMode: 'personal'| 'allTime' = 'personal'
+  recordMode: 'personal' | 'allTime' = 'personal'
 
   selectedH2HBatsmanId = '';
   selectedH2HBowlerId = '';
@@ -78,7 +79,7 @@ export class Home implements OnInit {
   selectedH2HBowler: any = null;
 
 
-  
+
 
 
   constructor(
@@ -88,6 +89,7 @@ export class Home implements OnInit {
     private matchService: MatchService,
     private offlinePersistence: OfflinePersistanceService,
     private dismissalRankingService: DismissalRankingService,
+    private seoService: SeoService,
     private router: Router
   ) {
     onAuthStateChanged(this.auth, (user) => {
@@ -97,13 +99,19 @@ export class Home implements OnInit {
   }
 
   ngOnInit() {
+    this.setSEO()
     setTimeout(() => {
       this.retrievePlayers();
       this.retrieveMatches();
     });
   }
-
  
+
+  setSEO() {
+    this.seoService.setPage('Chhat Cricket | Rooftop Cricket Score & Player Stats',
+      'Track rooftop cricket matches, player statistics, scorecards, match history and rankings with Chhat Cricket.',
+      '/')
+  }
 
   async retrievePlayers() {
     this.loading = true
@@ -335,7 +343,7 @@ export class Home implements OnInit {
 
       this.dismissalRankingService.setCareerStats(this.careerStats)
     }
-  );
+    );
 
     this.updateDismissalSummary()
     this.getOrangeCap();

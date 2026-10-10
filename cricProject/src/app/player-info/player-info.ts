@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { CommonModule, NgClass } from '@angular/common';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { RetrievePlayersService } from '../services/retrievePlayer/retrieve-players-service';
@@ -10,6 +10,7 @@ import { MatchService } from '../services/matchService/match-service';
 import { Auth, onAuthStateChanged } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { getDownloadURL, ref, Storage, uploadBytes } from '@angular/fire/storage';
+import { SeoService } from '../seoService/seo-service';
 
 @Component({
   selector: 'app-player-info',
@@ -51,10 +52,13 @@ export class PlayerInfo implements OnInit {
     private matchService: MatchService,
     private auth: Auth,
     private fireStore: Firestore,
-    private storage: Storage
+    private storage: Storage,
+    private router: Router,
+    private seoService: SeoService
   ) { }
 
   ngOnInit(): void {
+    
     this.playerId = this.route.snapshot.paramMap.get('id') || '';
 
     onAuthStateChanged(this.auth, (user) => {
@@ -66,10 +70,23 @@ export class PlayerInfo implements OnInit {
     this.getStats();
   }
 
+  setSEO() {
+    if(!this.player){
+      return
+    }
+
+    this.seoService.setPage(
+      `${this.player.displayName || this.player.fullName} | Player Profile & Stats | Chhat Cricket`,
+      `View ${this.player.displayName || this.player.fullName}'s batting, bowling, match history and cricket statistics on Chhat Cricket.`,
+      this.router.url
+    );
+  }
+
   getPlayer() {
     this.loading = true;
     this.retrievePlayerService.getPlayer(this.playerId).subscribe((data: any) => {
       this.player = data;
+      this.setSEO()
       console.log(data)
       this.editedDisplayName = this.player.displayName
       this.editedFullName = this.player.fullName

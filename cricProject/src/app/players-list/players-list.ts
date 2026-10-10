@@ -3,6 +3,7 @@ import { collection, Firestore, getDocs, orderBy, query } from '@angular/fire/fi
 import { Router, RouterLink } from '@angular/router';
 import { Player } from '../shared/models/player.model';
 import { FormsModule } from '@angular/forms';
+import { SeoService } from '../seoService/seo-service';
 
 @Component({
   selector: 'app-players-list',
@@ -19,14 +20,22 @@ export class PlayersList implements OnInit {
 
   constructor(
     private firestore: Firestore,
-
+    private seoService: SeoService,
     private cdr: ChangeDetectorRef,
-
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.retrievePlayers();
+    this.setSEO()
+  }
+
+  setSEO(): void {
+    this.seoService.setPage(
+      'Cricket Players List | Chhat Cricket',
+      'Browse the Chhat Cricket players list to explore player profiles, photos, playing styles and individual cricket statistics.',
+      '/players-list'
+    );
   }
 
   async retrievePlayers() {
