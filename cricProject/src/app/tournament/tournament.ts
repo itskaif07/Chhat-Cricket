@@ -75,22 +75,22 @@ export class Tournament implements OnInit, OnDestroy {
   }
 
   get topRunScorers(): TournamentPlayer[] {
-    return [...this.tournamentPlayers].filter((player) => player.runs > 0).sort((a, b) => b.runs - a.runs || b.wickets - a.wickets).slice(0, 5);
+    return [...this.tournamentPlayers].filter((player) => player.runs > 0).sort((a, b) => b.runs - a.runs || b.wickets - a.wickets);
   }
 
   get topWicketTakers(): TournamentPlayer[] {
-    return [...this.tournamentPlayers].filter((player) => player.wickets > 0).sort((a, b) => b.wickets - a.wickets || this.economy(a) - this.economy(b)).slice(0, 5);
+    return [...this.tournamentPlayers].filter((player) => player.wickets > 0).sort((a, b) => b.wickets - a.wickets || this.economy(a) - this.economy(b)) ;
   }
 
   get bestEconomies(): TournamentPlayer[] {
     return [...this.tournamentPlayers]
       .filter((player) => player.ballsBowled >= 6)
       .sort((a, b) => this.economy(a) - this.economy(b) || b.wickets - a.wickets || b.ballsBowled - a.ballsBowled)
-      .slice(0, 5);
+       ;
   }
 
   get mostMotm(): TournamentPlayer[] {
-    return [...this.tournamentPlayers].filter((player) => player.motmAwards > 0).sort((a, b) => b.motmAwards - a.motmAwards || b.runs - a.runs || b.wickets - a.wickets).slice(0, 5);
+    return [...this.tournamentPlayers].filter((player) => player.motmAwards > 0).sort((a, b) => b.motmAwards - a.motmAwards || b.runs - a.runs || b.wickets - a.wickets) ;
   }
 
   onDateChange() {

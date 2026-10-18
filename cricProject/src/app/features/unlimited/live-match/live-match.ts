@@ -477,34 +477,51 @@ export class LiveMatch implements OnInit {
   }
 
   addExtraPlayerToTeam() {
+    console.log('BEFORE ADD', {
+      totalWickets: this.totalWickets,
+      outPlayersIds: [...this.outPlayersIds],
+      teamSize: this.currentBattingTeam.length,
+      isInningsOver: this.isInningsOver
+    });
+    const player = this.selectedExtraPlayer;
+    const team = this.selectedExtraPlayerTeam;
 
-    if (this.selectedExtraPlayerTeam === 'A') {
+    if (!player?.id || !team) return;
 
-      this.teamA = [
-        ...this.teamA,
-        this.selectedExtraPlayer!
-      ];
+    // Prevent adding the same player twice
+    if (this.allSelectedPlayers.some(p => p.id === player.id)) {
+      this.closeExtraPlayerDialog();
+      return;
+    }
 
+    // Add player to the selected team
+    if (team === 'A') {
+      this.teamA = [...this.teamA, player];
     } else {
-
-      this.teamB = [
-        ...this.teamB,
-        this.selectedExtraPlayer!
-      ];
-
+      this.teamB = [...this.teamB, player];
     }
 
     this.allSelectedPlayers = [
       ...this.allSelectedPlayers,
-      this.selectedExtraPlayer!
+      player
     ];
 
-    // Initialize stats for the new player only
-    this.createPlayerStats(this.selectedExtraPlayer!);
-    this.updateTeamInService()
+    // Never overwrite existing stats
+    if (!this.playerStats[player.id]) {
+      this.createPlayerStats(player);
+    }
 
-    this.closeExtraPlayerDialog()
+    this.updateTeamInService();
+    this.saveMatchState();
 
+    this.closeExtraPlayerDialog();
+
+    console.log('AFTER ADD', {
+      totalWickets: this.totalWickets,
+      outPlayersIds: [...this.outPlayersIds],
+      teamSize: this.currentBattingTeam.length,
+      isInningsOver: this.isInningsOver
+    });
   }
 
   closeExtraPlayerDialog() {

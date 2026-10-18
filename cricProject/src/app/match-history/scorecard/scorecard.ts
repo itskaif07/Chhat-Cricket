@@ -39,8 +39,7 @@ export class Scorecard implements OnInit {
       if (id) {
         this.matchService.getMatchById(id).subscribe((data) => {
           this.matchData = data;
-
-
+          this.selectedInnings = this.matchData?.innings?.[0] ?? null;
           this.getCaptains();
           this.loading = false;
           this.cdr.detectChanges();
