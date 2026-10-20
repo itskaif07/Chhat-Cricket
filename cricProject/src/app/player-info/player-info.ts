@@ -12,9 +12,16 @@ import { FormsModule } from '@angular/forms';
 import { getDownloadURL, ref, Storage, uploadBytes } from '@angular/fire/storage';
 import { SeoService } from '../seoService/seo-service';
 
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import {
+  ImageCropperComponent,
+  ImageCroppedEvent,
+  ImageTransform,
+} from 'ngx-image-cropper';
+
 @Component({
   selector: 'app-player-info',
-  imports: [FormsModule, CommonModule, NgClass],
+  imports: [FormsModule, CommonModule, NgClass, ImageCropperComponent],
   templateUrl: './player-info.html',
   styleUrl: './player-info.css',
 })
@@ -33,8 +40,24 @@ export class PlayerInfo implements OnInit {
   editedFullName = ''
   editedPhoto = ''
   editedStyle = ''
-  selectedFile: File | null = null
-  previewPhoto: string | null = null
+
+  selectedFile: File | null = null;
+  previewPhoto: string | SafeUrl | null = null;
+
+  // Image crop editor
+  cropperFile: File | null = null;
+  croppedBlob: Blob | null = null;
+  cropPreview: SafeUrl | null = null;
+  showCropper = false;
+
+  transform: ImageTransform = {
+    scale: 1,
+    rotate: 0,
+    flipH: false,
+    flipV: false,
+    translateH: 0,
+    translateV: 0,
+  };
 
 
   careerStats: any = {}
@@ -42,6 +65,7 @@ export class PlayerInfo implements OnInit {
   matchesCount: number = 0;
   isOrangeCapHolder: boolean = false
   isPurpleCapHolder: boolean = false
+  isHighestScoreNotOut: boolean = false
   mostRuns: any = {}
   mostWickets: any = 0
 
@@ -54,11 +78,12 @@ export class PlayerInfo implements OnInit {
     private fireStore: Firestore,
     private storage: Storage,
     private router: Router,
+    private sanitizer: DomSanitizer,
     private seoService: SeoService
   ) { }
 
   ngOnInit(): void {
-    
+
     this.playerId = this.route.snapshot.paramMap.get('id') || '';
 
     onAuthStateChanged(this.auth, (user) => {
@@ -71,7 +96,7 @@ export class PlayerInfo implements OnInit {
   }
 
   setSEO() {
-    if(!this.player){
+    if (!this.player) {
       return
     }
 
@@ -185,68 +210,146 @@ export class PlayerInfo implements OnInit {
   }
 
 
-  onPhotoSelected(event: any) {
-
-    const file = event.target.files[0];
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
 
     if (!file) return;
 
-    this.selectedFile = file;
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      alert('Please select a JPG, PNG, or WebP image.');
+      input.value = '';
+      return;
+    }
 
-    const reader = new FileReader();
+    this.cropperFile = file;
+    this.croppedBlob = null;
+    this.cropPreview = null;
 
-    reader.onload = () => {
-
-      this.previewPhoto =
-        reader.result as string;
-
+    this.transform = {
+      scale: 1,
+      rotate: 0,
+      flipH: false,
+      flipV: false,
+      translateH: 0,
+      translateV: 0,
     };
 
-    reader.readAsDataURL(file);
+    this.showCropper = true;
+
+    // Same image can be selected again later.
+    input.value = '';
   }
-  async savePhoto() {
+
+  imageCropped(event: ImageCroppedEvent): void {
+    if (!event.blob || !event.objectUrl) return;
+
+    this.croppedBlob = event.blob;
+    this.cropPreview = this.sanitizer.bypassSecurityTrustUrl(
+      event.objectUrl,
+    );
+  }
+
+  zoomIn(): void {
+    const scale = this.transform.scale ?? 1;
+
+    this.transform = {
+      ...this.transform,
+      scale: Math.min(3, Number((scale + 0.15).toFixed(2))),
+    };
+  }
+
+  zoomOut(): void {
+    const scale = this.transform.scale ?? 1;
+
+    this.transform = {
+      ...this.transform,
+      scale: Math.max(0.7, Number((scale - 0.15).toFixed(2))),
+    };
+  }
+
+  resetCrop(): void {
+    this.transform = {
+      scale: 1,
+      rotate: 0,
+      flipH: false,
+      flipV: false,
+      translateH: 0,
+      translateV: 0,
+    };
+  }
+
+  useCroppedPhoto(): void {
+    if (!this.croppedBlob || !this.cropPreview) return;
+
+    this.selectedFile = new File(
+      [this.croppedBlob],
+      `player-photo-${Date.now()}.jpg`,
+      { type: 'image/jpeg' },
+    );
+
+    this.previewPhoto = this.cropPreview;
+    this.showCropper = false;
+    this.cropperFile = null;
+  }
+
+  cancelCrop(): void {
+    this.showCropper = false;
+    this.cropperFile = null;
+    this.croppedBlob = null;
+    this.cropPreview = null;
+  }
+
+  loadImageFailed(): void {
+    this.showCropper = false;
+    this.cropperFile = null;
+
+    alert('Image could not be loaded. Please select another image.');
+  }
+
+
+  async savePhoto(): Promise<void> {
+    if (!this.selectedFile) return;
+
     try {
-
-      if (!this.selectedFile) return;
-
       const filePath =
         `players/${Date.now()}_${this.selectedFile.name}`;
 
-      const storageRef =
-        ref(this.storage, filePath);
+      const storageRef = ref(this.storage, filePath);
 
-      await uploadBytes(
-        storageRef,
-        this.selectedFile
-      );
+      await uploadBytes(storageRef, this.selectedFile);
 
-      const imageURL =
-        await getDownloadURL(storageRef);
+      const imageURL = await getDownloadURL(storageRef);
 
       await updateDoc(
         doc(this.fireStore, 'players', this.playerId),
-        {
-          photoURL: imageURL
-        }
+        { photoURL: imageURL },
       );
 
       this.player.photoURL = imageURL;
 
       this.previewPhoto = null;
       this.selectedFile = null;
+      this.cropperFile = null;
+      this.croppedBlob = null;
+      this.cropPreview = null;
+      this.showCropper = false;
 
-    } catch (e) {
-
-      console.log(e);
-
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Failed to update player photo:', error);
+      alert('Photo update failed. Please try again.');
     }
   }
 
-  cancelPhotoEdit() {
-
+  cancelPhotoEdit(): void {
     this.previewPhoto = null;
     this.selectedFile = null;
 
+    this.cropperFile = null;
+    this.croppedBlob = null;
+    this.cropPreview = null;
+    this.showCropper = false;
   }
 
 
@@ -329,10 +432,18 @@ export class PlayerInfo implements OnInit {
                 careerStats[playerId].dismissals['retired-out']++;
               }
 
-              careerStats[playerId].highestScore = Math.max(
-                careerStats[playerId].highestScore,
-                stats.runs || 0,
-              );
+              const runs = Number(stats.runs || 0);
+              const isNotOut = !stats.dismissalType && runs > 0;
+
+              if (runs > careerStats[playerId].highestScore) {
+                careerStats[playerId].highestScore = runs;
+                careerStats[playerId].highestScoreNotOut = isNotOut;
+              } else if (
+                runs === careerStats[playerId].highestScore &&
+                isNotOut
+              ) {
+                careerStats[playerId].highestScoreNotOut = true;
+              }
 
               careerStats[playerId].totalWickets += stats.wickets || 0;
 

@@ -78,11 +78,107 @@
       <input
         type="file"
         id="playerPhoto"
-        accept="image/*"
+         accept="image/jpeg,image/png,image/webp"
         class="hidden"
         (change)="onImageSelect($event)"
       />
     </div>
+
+    <!-- Photo Crop Editor -->
+    @if (showCropper) {
+    <div class="fixed inset-0 z-100 flex items-center justify-center
+               bg-black/80 p-4 backdrop-blur-md">
+      <div class="max-h-[92vh] w-full max-w-xl overflow-y-auto
+                 rounded-3xl border border-white/10 bg-[#0b1220]
+                 p-5 text-white shadow-2xl sm:p-7">
+        <!-- Header -->
+        <div class="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.25em] text-[#94F505]">
+              Photo Studio
+            </p>
+    
+            <h2 class="mt-2 text-2xl font-black">
+              Adjust Your Photo
+            </h2>
+    
+            <p class="mt-2 text-sm text-zinc-400">
+              Drag the image to position it and zoom until it looks right.
+            </p>
+          </div>
+    
+          <button type="button" (click)="cancelCrop()" class="flex h-10 w-10 shrink-0 items-center justify-center
+                     rounded-full border border-white/10 bg-white/5
+                     text-xl text-zinc-300 transition hover:bg-white/10" aria-label="Cancel photo editing">
+            ×
+          </button>
+        </div>
+    
+        <!-- Cropper -->
+        <div class="overflow-hidden rounded-2xl border border-white/10
+                   bg-[#050B18] p-2">
+          <div class="h-80 w-full">
+            <image-cropper [imageFile]="cropperFile ?? undefined" [maintainAspectRatio]="true" [aspectRatio]="1" [roundCropper]="true"
+              [allowMoveImage]="true" [(transform)]="transform" format="jpeg" output="blob" [resizeToWidth]="512"
+              [imageQuality]="90" backgroundColor="#050B18" (imageCropped)="imageCropped($event)"
+              (loadImageFailed)="loadImageFailed()" class="block h-full w-full" style="
+                  --cropper-outline-color: rgba(148, 245, 5, 0.75);
+                  --cropper-border: 2px solid #94F505;
+                  --cropper-hover-border: 2px solid #94F505;
+                  --cropper-focus-border: 2px solid #94F505;
+                "></image-cropper>
+          </div>
+        </div>
+    
+        <!-- Zoom Controls -->
+        <div class="mt-5 rounded-2xl border border-white/10 bg-white/3 p-4">
+          <p class="mb-3 text-center text-xs font-bold uppercase
+                      tracking-[0.2em] text-zinc-400">
+            Adjust Zoom
+          </p>
+    
+          <div class="flex items-center justify-center gap-3">
+            <button type="button" (click)="zoomOut()" class="flex h-12 w-12 items-center justify-center rounded-xl
+                       border border-white/10 bg-white/5 text-2xl
+                       transition hover:bg-white/10" aria-label="Zoom out">
+              −
+            </button>
+    
+            <button type="button" (click)="resetCrop()" class="rounded-xl border border-white/10 bg-white/5
+                       px-5 py-3 text-sm font-bold text-zinc-300
+                       transition hover:bg-white/10">
+              Reset
+            </button>
+    
+            <button type="button" (click)="zoomIn()" class="flex h-12 w-12 items-center justify-center rounded-xl
+                       border border-[#94F505]/30 bg-[#94F505]/10
+                       text-2xl text-[#94F505] transition hover:bg-[#94F505]/20" aria-label="Zoom in">
+              +
+            </button>
+          </div>
+    
+          <p class="mt-3 text-center text-xs text-zinc-500">
+            The final photo will be saved in a square format.
+          </p>
+        </div>
+    
+        <!-- Actions -->
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          <button type="button" (click)="cancelCrop()" class="rounded-xl border border-white/10 bg-white/5
+                     px-4 py-3 font-bold text-zinc-300 transition
+                     hover:bg-white/10">
+            Cancel
+          </button>
+    
+          <button type="button" (click)="useCroppedImage()" [disabled]="!croppedBlob" class="rounded-xl bg-[#94F505] px-4 py-3 font-black
+                     text-black transition hover:bg-[#aaff20]
+                     disabled:cursor-not-allowed disabled:opacity-40">
+            Use This Photo
+          </button>
+        </div>
+      </div>
+    </div>
+    }
 
     <!-- FORM FIELDS -->
     <div class="w-full flex flex-col space-y-10">
