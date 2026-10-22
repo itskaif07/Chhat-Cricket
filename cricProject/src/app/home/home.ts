@@ -208,12 +208,14 @@ export class Home implements OnInit {
   aggregateCareerStats() {
     this.careerStats = {};
 
+
     this.matches.forEach((match: any) => {
+      const matchPlayers = new Set<string>();
       match.innings.forEach((innings: any, i: number) => {
 
 
         Object.entries(innings.playerStats || {}).forEach(([playerId, stats]: any) => {
-
+          matchPlayers.add(playerId);
 
           if (!this.careerStats[playerId]) {
             this.careerStats[playerId] = {
@@ -293,7 +295,6 @@ export class Home implements OnInit {
 
           this.careerStats[playerId].totalBallsFaced += stats.ballsFaced || 0;
 
-          this.careerStats[playerId].totalMatches += stats.matches || 0;
 
           this.careerStats[playerId].totalInnings += stats.innings || 0;
 
@@ -329,6 +330,10 @@ export class Home implements OnInit {
             }
           }
         });
+      });
+
+      matchPlayers.forEach((playerId: string) => {
+        this.careerStats[playerId].totalMatches++;
       });
 
       if (match.motm?.playerId) {
@@ -581,10 +586,23 @@ export class Home implements OnInit {
     this.highestScorePlayer = null;
 
     this.matches.forEach((match: any) => {
-      match.innings.forEach((inning: any) => {
+      (match.innings || []).forEach((inning: any) => {
         Object.values(inning.playerStats || {}).forEach((player: any) => {
-          if (player.runs > this.highestScore) {
-            this.highestScore = player.runs;
+          const currentRuns = Number(player.runs || 0);
+          const currentBalls = Number(player.ballsFaced ?? Infinity);
+          const bestBalls = Number(
+            this.highestScorePlayer?.ballsFaced ?? Infinity
+          );
+
+          if (
+            currentRuns > this.highestScore ||
+            (
+              currentRuns === this.highestScore &&
+              currentRuns > 0 &&
+              currentBalls < bestBalls
+            )
+          ) {
+            this.highestScore = currentRuns;
             this.highestScorePlayer = player;
           }
         });
@@ -708,112 +726,151 @@ export class Home implements OnInit {
     this.mostMaidens = this.mostMaidensPlayer.totalMaidens;
   }
 
-  getMostFifties() {
-    if (!this.careerStats) {
-      return;
-    }
 
-    const players = Object.values(this.careerStats);
+  getMostFifties() {
+    const players: any[] = Object.values(this.careerStats).filter(
+      (player: any) => player.totalFifties > 0
+    );
 
     if (players.length === 0) {
+      this.mostFifties = 0;
+      this.mostFiftiesPlayer = null;
       return;
     }
 
-    this.mostFiftiesPlayer = players.reduce((winner: any, challenger: any) => {
-      return challenger.totalFifties > winner.totalFifties ? challenger : winner;
-    });
+    this.mostFiftiesPlayer = players.reduce(
+      (winner: any, challenger: any) => {
+        // 1. More half-centuries ranks higher
+        if (challenger.totalFifties > winner.totalFifties) {
+          return challenger;
+        }
+
+        if (challenger.totalFifties < winner.totalFifties) {
+          return winner;
+        }
+
+        // 2. If tied, fewer innings ranks higher
+        if (challenger.totalInnings < winner.totalInnings) {
+          return challenger;
+        }
+
+        if (challenger.totalInnings > winner.totalInnings) {
+          return winner;
+        }
+
+        // 3. If still tied, higher batting average ranks higher
+        const winnerAverage =
+          winner.dismissed > 0
+            ? winner.totalRuns / winner.dismissed
+            : winner.totalRuns;
+
+        const challengerAverage =
+          challenger.dismissed > 0
+            ? challenger.totalRuns / challenger.dismissed
+            : challenger.totalRuns;
+
+        return challengerAverage > winnerAverage
+          ? challenger
+          : winner;
+      }
+    );
 
     this.mostFifties = this.mostFiftiesPlayer.totalFifties;
   }
 
   getMostHundreds() {
-
-    if (!this.careerStats) {
-      return;
-    }
-
-    const players = Object.values(this.careerStats);
+    const players: any[] = Object.values(this.careerStats).filter(
+      (player: any) => player.totalHundreds > 0
+    );
 
     if (players.length === 0) {
+      this.mostHundreds = 0;
+      this.mostHundredsPlayer = null;
       return;
     }
 
     this.mostHundredsPlayer = players.reduce(
       (winner: any, challenger: any) => {
-
-        if (
-          challenger.totalHundreds >
-          winner.totalHundreds
-        ) {
+        // 1. More centuries ranks higher
+        if (challenger.totalHundreds > winner.totalHundreds) {
           return challenger;
         }
 
-        if (
-          challenger.totalHundreds ===
-          winner.totalHundreds
-        ) {
+        if (challenger.totalHundreds < winner.totalHundreds) {
+          return winner;
+        }
 
-          if (
-            challenger.totalInnings <
-            winner.totalInnings
-          ) {
-            return challenger;
-          }
+        // 2. Tie: fewer innings ranks higher
+        if (challenger.totalInnings < winner.totalInnings) {
+          return challenger;
+        }
 
-          if (
-            challenger.totalInnings ===
-            winner.totalInnings
-          ) {
+        if (challenger.totalInnings > winner.totalInnings) {
+          return winner;
+        }
 
-            if (
-              challenger.totalBallsFaced <
-              winner.totalBallsFaced
-            ) {
-              return challenger;
-            }
+        // 3. Tie: higher batting average ranks higher
+        const winnerAverage =
+          winner.dismissed > 0
+            ? winner.totalRuns / winner.dismissed
+            : winner.totalRuns;
 
-            if (
-              challenger.totalBallsFaced ===
-              winner.totalBallsFaced
-            ) {
+        const challengerAverage =
+          challenger.dismissed > 0
+            ? challenger.totalRuns / challenger.dismissed
+            : challenger.totalRuns;
 
-              if (
-                challenger.totalRuns >
-                winner.totalRuns
-              ) {
-                return challenger;
-              }
+        if (challengerAverage > winnerAverage) {
+          return challenger;
+        }
 
-            }
+        if (challengerAverage < winnerAverage) {
+          return winner;
+        }
 
-          }
-
+        // 4. Tie: fewer balls faced ranks higher
+        if (challenger.totalBallsFaced < winner.totalBallsFaced) {
+          return challenger;
         }
 
         return winner;
-
       }
     );
 
-    this.mostHundreds =
-      this.mostHundredsPlayer.totalHundreds;
-
+    this.mostHundreds = this.mostHundredsPlayer.totalHundreds;
   }
 
   getMostCatches() {
-    if (!this.careerStats) {
-      return;
-    }
-
-    const players = Object.values(this.careerStats);
+    const players: any[] = Object.values(this.careerStats).filter(
+      (player: any) => player.totalCatches > 0
+    );
 
     if (players.length === 0) {
+      this.mostCatches = 0;
+      this.mostCatchesPlayer = null;
       return;
     }
 
-    this.mostCatchesPlayer = players.reduce((winner: any, challenger: any) => {
-      return challenger.totalCatches > winner.totalCatches ? challenger : winner;
-    });
+    this.mostCatchesPlayer = players.reduce(
+      (winner: any, challenger: any) => {
+        // 1. More catches ranks higher
+        if (challenger.totalCatches !== winner.totalCatches) {
+          return challenger.totalCatches > winner.totalCatches
+            ? challenger
+            : winner;
+        }
+
+        // 2. Tie: fewer matches ranks higher
+        if (challenger.totalMatches !== winner.totalMatches) {
+          return challenger.totalMatches < winner.totalMatches
+            ? challenger
+            : winner;
+        }
+
+
+        return winner;
+      }
+    );
 
     this.mostCatches = this.mostCatchesPlayer.totalCatches;
   }

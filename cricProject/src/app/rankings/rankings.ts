@@ -248,6 +248,8 @@ export class Rankings implements OnInit {
               totalHundreds: 0,
 
               highestScore: 0,
+              
+              highestScoreNotOut: false,
 
               highestScoreBalls: 0,
 
@@ -410,10 +412,10 @@ export class Rankings implements OnInit {
         return this.getBowlingStrikeRate(player).toFixed(2);
 
       case 'highest-score':
-        return `${player.highestScore} (${player.highestScoreBalls})`;
+        return `${player.highestScore}${player.highestScoreNotOut ? '*' : ''} (${player.highestScoreBalls})`;
 
       case 'all-time-highest-scores':
-        return `${player.runs} (${player.balls})`;
+        return `${player.runs}${player.notOut ? '*' : ''} (${player.balls})`;
 
       case 'all-time-best-figures':
         return `${player.wickets}/${player.runsConceded}`;
@@ -435,18 +437,29 @@ export class Rankings implements OnInit {
   }
 
   personalHighestScore(stats: any, playerId: string) {
-    const currentRuns = stats.runs || 0;
-    const currentBalls = stats.ballsFaced || 0;
+    const currentRuns = Number(stats.runs || 0);
+    const currentBalls = Number(stats.ballsFaced || 0);
+    const isNotOut = !stats.dismissalType && currentRuns > 0;
+
+    const player = this.careerStats[playerId];
 
     if (
-      currentRuns > this.careerStats[playerId].highestScore ||
+      currentRuns > player.highestScore ||
       (
-        currentRuns === this.careerStats[playerId].highestScore &&
-        currentBalls < this.careerStats[playerId].highestScoreBalls
+        currentRuns === player.highestScore &&
+        currentRuns > 0 &&
+        (
+          (isNotOut && !player.highestScoreNotOut) ||
+          (
+            isNotOut === player.highestScoreNotOut &&
+            currentBalls < player.highestScoreBalls
+          )
+        )
       )
     ) {
-      this.careerStats[playerId].highestScore = currentRuns;
-      this.careerStats[playerId].highestScoreBalls = currentBalls;
+      player.highestScore = currentRuns;
+      player.highestScoreBalls = currentBalls;
+      player.highestScoreNotOut = isNotOut;
     }
   }
 
@@ -725,8 +738,7 @@ export class Rankings implements OnInit {
   }
 
   updateAllTimeHighestScores(stats: any, playerId: string) {
-
-    const runs = stats.runs || 0;
+    const runs = Number(stats.runs || 0);
 
     if (runs === 0) return;
 
@@ -735,8 +747,9 @@ export class Rankings implements OnInit {
       playerName: stats.playerName,
       playerPhoto: stats.playerPhoto,
       runs,
-      balls: stats.ballsFaced,
-      innings: stats.innings
+      balls: Number(stats.ballsFaced || 0),
+      innings: stats.innings,
+      notOut: !stats.dismissalType,
     });
 
     this.highestScoreRecords.sort(
