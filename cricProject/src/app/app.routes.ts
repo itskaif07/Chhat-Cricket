@@ -17,8 +17,6 @@ import { LimitedLiveMatch } from './features/limited/live-match/live-match';
 import { LandingPage } from './about/landing-page/landing-page';
 import { DismissalRanking } from './dismissal-ranking/dismissal-ranking';
 import { Tournament } from './tournament/tournament';
-import { TournamentHub } from './tournament-hub/tournament-hub';
-import { TournamentDetail } from './tournament-detail/tournament-detail';
 import { HeadToHead } from './head-to-head/head-to-head';
 
 export const routes: Routes = [
@@ -64,15 +62,6 @@ export const routes: Routes = [
     component: Tournament,
   },
 
-  {
-    path: 'tournaments',
-    component: TournamentHub,
-  },
-
-  {
-    path: 'tournaments/:id',
-    component: TournamentDetail,
-  },
 
   // Unlimited Match
 

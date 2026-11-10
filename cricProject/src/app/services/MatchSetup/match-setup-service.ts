@@ -14,7 +14,6 @@ export class MatchSetupService {
   firstBowlingTeam: 'A' | 'B' | '' = '';
 
   selectedPlayers: Player[] = [];
-  private readonly tournamentStorageKey = 'pendingTournamentId';
 
   setMatchTossWinner(team: 'A' | 'B' | '') {
     this.tossWinner = team;
@@ -81,15 +80,4 @@ export class MatchSetupService {
     return this.selectedPlayers;
   }
 
-  setTournamentContext(tournamentId: string) {
-    localStorage.setItem(this.tournamentStorageKey, tournamentId);
-  }
-
-  getTournamentContext() {
-    return localStorage.getItem(this.tournamentStorageKey);
-  }
-
-  clearTournamentContext() {
-    localStorage.removeItem(this.tournamentStorageKey);
-  }
 }

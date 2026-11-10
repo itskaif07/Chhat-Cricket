@@ -570,12 +570,12 @@ export class Rankings implements OnInit {
         break;
 
       case 'economy':
-        this.players = this.players.filter((player) => player.totalBallsBowled >= 30);
+        this.players = this.players.filter((player) => player.totalBallsBowled >= 60);
         this.players.sort((a: any, b: any) => this.getEconomy(a) - this.getEconomy(b) || this.getBowlingAverage(a) - this.getBowlingAverage(b) || b.totalBallsBowled - a.totalBallsBowled || a.totalRunsConceded - b.totalRunsConceded);
         break;
 
       case 'batting-average':
-        this.players = this.players.filter((player) => player.totalBallsFaced >= 30);
+        this.players = this.players.filter((player) => player.totalBallsFaced >= 60 && player.totalInnings >= 10);
 
         this.players.sort(
           (a: any, b: any) =>
@@ -587,7 +587,7 @@ export class Rankings implements OnInit {
       case 'bowling-average':
         this.players = this.players.filter(
           (player) =>
-            player.totalBallsBowled >= 30 &&
+            player.totalBallsBowled >= 60 &&
             player.totalWickets > 0
         );
 

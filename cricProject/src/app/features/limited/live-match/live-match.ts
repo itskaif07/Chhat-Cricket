@@ -9,6 +9,7 @@ import { MatchService } from '../../../services/matchService/match-service';
 import { OfflinePersistanceService } from '../../../services/offline-persistance/offline-persistance-service';
 import { VoiceAnnouncementService } from '../../../services/voiceAnnouncement/voice-announcement-service';
 import { RetrievePlayersService } from '../../../services/retrievePlayer/retrieve-players-service';
+import { DeliveryType, DismissalType, MatchDelivery } from '../../../shared/models/delivery.model';
 
 @Component({
   selector: 'app-limited-live-match',
@@ -35,6 +36,9 @@ export class LimitedLiveMatch implements OnInit {
   retiredHurtPlayers: Player[] = [];
   unselectedPlayers: Player[] = []
   playerStats: { [playerId: string]: PlayerStats } = {};
+  deliveries: MatchDelivery[] = [];
+  undoHistory: any[] = [];
+  redoHistory: any[] = [];
 
   tossWinner: 'A' | 'B' | '' = '';
   battingFirst: 'A' | 'B' | '' = '';
@@ -85,7 +89,8 @@ export class LimitedLiveMatch implements OnInit {
   selectedBowler: Player | null = null;
   selectedExtraPlayer: Player | null = null
 
-  matchHistory: any[] = [];
+  isDuck = false;
+  isGoldenDuck = false;
 
   //scores
 
@@ -153,6 +158,44 @@ export class LimitedLiveMatch implements OnInit {
 
   }
 
+
+  recordDelivery(
+    type: DeliveryType,
+    batterRuns: number,
+    totalRuns: number,
+    legalBall: boolean,
+    wicket = false,
+    dismissalType: DismissalType = null,
+    dismissedBatsmanId: string | null = null,
+    caughtById: string | null = null,
+  ) {
+    if (!this.currentBatsman?.id || !this.currentBowler?.id) return;
+
+    this.deliveries.push({
+      innings: this.currentInnings,
+      deliveryNumber: this.deliveries.length + 1,
+      overNumber: Math.floor((this.totalDeliveries - (legalBall ? 1 : 0)) / 6) + 1,
+      ballNumber: legalBall ? ((this.totalDeliveries - 1) % 6) + 1 : (this.totalDeliveries % 6) + 1,
+      batsmanId: this.currentBatsman.id,
+      bowlerId: this.currentBowler.id,
+      type,
+      batterRuns,
+      totalRuns,
+      legalBall,
+      wicket,
+      dismissalType,
+      dismissedBatsmanId,
+      caughtById,
+    });
+  }
+
+  updateLastDelivery(dismissalType: DismissalType, caughtById: string | null = null) {
+    const lastDelivery = this.deliveries[this.deliveries.length - 1];
+    if (!lastDelivery) return;
+
+    lastDelivery.dismissalType = dismissalType;
+    lastDelivery.caughtById = caughtById;
+  }
   createPlayerStats(player: Player) {
 
     if (!player.id) return;
@@ -494,36 +537,32 @@ export class LimitedLiveMatch implements OnInit {
   }
 
   addExtraPlayerToTeam() {
+    const player = this.selectedExtraPlayer;
+    const team = this.selectedExtraPlayerTeam;
 
-    if (this.selectedExtraPlayerTeam === 'A') {
+    if (!player?.id || !team) return;
 
-      this.teamA = [
-        ...this.teamA,
-        this.selectedExtraPlayer!
-      ];
-
-    } else {
-
-      this.teamB = [
-        ...this.teamB,
-        this.selectedExtraPlayer!
-      ];
-
+    if (this.allSelectedPlayers.some((selected) => selected.id === player.id)) {
+      this.closeExtraPlayerDialog();
+      return;
     }
 
-    this.allSelectedPlayers = [
-      ...this.allSelectedPlayers,
-      this.selectedExtraPlayer!
-    ];
+    if (team === 'A') {
+      this.teamA = [...this.teamA, player];
+    } else {
+      this.teamB = [...this.teamB, player];
+    }
 
-    // Initialize stats for the new player only
-    this.createPlayerStats(this.selectedExtraPlayer!);
-    this.updateTeamInService()
+    this.allSelectedPlayers = [...this.allSelectedPlayers, player];
 
-    this.closeExtraPlayerDialog()
+    if (!this.playerStats[player.id]) {
+      this.createPlayerStats(player);
+    }
 
+    this.updateTeamInService();
+    this.saveMatchState();
+    this.closeExtraPlayerDialog();
   }
-
   closeExtraPlayerDialog() {
     this.selectedExtraPlayer = null;
     this.selectedExtraPlayerTeam = null;
@@ -574,6 +613,7 @@ export class LimitedLiveMatch implements OnInit {
 
   selectBatsman(player: Player) {
     this.selectedBatsman = player;
+    this.saveMatchState();
   }
 
   selectBowler(player: Player) {
@@ -581,6 +621,7 @@ export class LimitedLiveMatch implements OnInit {
       return;
     }
     this.selectedBowler = player;
+    this.saveMatchState();
   }
 
   //confirm selection
@@ -611,84 +652,55 @@ export class LimitedLiveMatch implements OnInit {
 
   // Score
 
-  saveSnapshot() {
-    this.matchHistory.push(
-      structuredClone({
+  getCurrentSnapshot() {
+    return structuredClone({
+      matchType: this.matchType,
+      maxOvers: this.maxOvers,
+      selectedOversOption: this.selectedOversOption,
+      customOversInput: this.customOversInput,
+      totalRuns: this.totalRuns,
+      totalWickets: this.totalWickets,
+      totalDeliveries: this.totalDeliveries,
+      playerStats: this.playerStats,
+      currentBatsman: this.currentBatsman,
+      currentBowler: this.currentBowler,
+      selectedBatsman: this.selectedBatsman,
+      selectedBowler: this.selectedBowler,
+      outPlayersIds: this.outPlayersIds,
+      currentBatsmanRuns: this.currentBatsmanRuns,
+      currentBatsmanBalls: this.currentBatsmanBalls,
+      currentBowlerRunsConceded: this.currentBowlerRunsConceded,
+      currentBowlerBalls: this.currentBowlerBalls,
+      currentBowlerWickets: this.currentBowlerWickets,
+      recentDeliveries: this.recentDeliveries,
+      deliveries: this.deliveries,
+      lastAction: this.lastAction,
+      currentInnings: this.currentInnings,
+      isWicketFallen: this.isWicketFallen,
+      isOverComplete: this.isOverComplete,
+      isInningsOver: this.isInningsOver,
+      showBatsmenDialog: this.showBatsmenDialog,
+      showBowlerDialog: this.showBowlerDialog,
+      isShowingOversDialog: this.isShowingOversDialog,
+      dismissalType: this.dismissalType,
+      selectedNoBallRuns: this.selectedNoBallRuns,
 
-        // SCORE
-        matchType: this.matchType,
-      tournamentId: this.matchSetupService.getTournamentContext(),
+      firstInningRuns: this.firstInningRuns,
+      firstInningsBalls: this.firstInningsBalls,
+      firstInningsWickets: this.firstInningsWickets,
+      firstInningsPlayerStats: this.firstInningsPlayerStats,
+      firstInningsBattingTeam: this.firstInningsBattingTeam,
+      firstInningsBowlingTeam: this.firstInningsBowlingTeam,
+      firstInningsOutPlayerIds: this.firstInningsOutPlayerIds,
+      retiredHurtPlayers: this.retiredHurtPlayers,
       matchResult: this.matchResult,
-      winningTeam: this.winningTeam,
-        maxOvers: this.maxOvers,
-        selectedOversOption: this.selectedOversOption,
-        customOversInput: this.customOversInput,
-        totalRuns: this.totalRuns,
-        totalWickets: this.totalWickets,
-        totalDeliveries: this.totalDeliveries,
-
-        // PLAYER STATS
-        playerStats: this.playerStats,
-
-        // CURRENT PLAYERS
-        currentBatsman: this.currentBatsman,
-        currentBowler: this.currentBowler,
-
-        selectedBatsman: this.selectedBatsman,
-        selectedBowler: this.selectedBowler,
-
-        // OUT PLAYERS
-        outPlayersIds: this.outPlayersIds,
-
-        // CURRENT BATSMAN STATS
-        currentBatsmanRuns: this.currentBatsmanRuns,
-        currentBatsmanBalls: this.currentBatsmanBalls,
-
-        // CURRENT BOWLER STATS
-        currentBowlerRunsConceded: this.currentBowlerRunsConceded,
-        currentBowlerBalls: this.currentBowlerBalls,
-        currentBowlerWickets: this.currentBowlerWickets,
-
-        // DELIVERY HISTORY
-        recentDeliveries: this.recentDeliveries,
-        lastAction: this.lastAction,
-
-        // MATCH FLOW
-        currentInnings: this.currentInnings,
-
-        isWicketFallen: this.isWicketFallen,
-        isOverComplete: this.isOverComplete,
-        isInningsOver: this.isInningsOver,
-
-        // DIALOGS
-        showBatsmenDialog: this.showBatsmenDialog,
-        showBowlerDialog: this.showBowlerDialog,
-        isShowingOversDialog: this.isShowingOversDialog,
-
-        isDismissalDialogOpen: this.isDismissalDialogOpen,
-        isShowingCatchingDialog: this.isShowingCatchingDialog,
-        isShowingNoBallDialog: this.isShowingNoBallDialog,
-
-        // DISMISSAL
-        dismissalType: this.dismissalType,
-        selectedNoBallRuns: this.selectedNoBallRuns,
-
-        // 1ST INNINGS DATA
-        firstInningRuns: this.firstInningRuns,
-        firstInningsBalls: this.firstInningsBalls,
-        firstInningsWickets: this.firstInningsWickets,
-        firstInningsPlayerStats: this.firstInningsPlayerStats,
-        firstInningsBattingTeam: this.firstInningsBattingTeam,
-        firstInningsBowlingTeam: this.firstInningsBowlingTeam,
-        firstInningsOutPlayerIds: this.firstInningsOutPlayerIds,
-        retiredHurtPlayers: this.retiredHurtPlayers,
-
-        // RESULT
-        matchResults: this.matchResult
-      })
-    );
+    });
   }
 
+  saveSnapshot() {
+    this.undoHistory.push(this.getCurrentSnapshot());
+    this.redoHistory = [];
+  }
   addDot() {
     if (this.scoringClosed) return;
 
@@ -704,6 +716,8 @@ export class LimitedLiveMatch implements OnInit {
       this.playerStats[this.currentBatsman?.id].ballsFaced += 1;
       this.playerStats[this.currentBowler?.id].ballsDelivered += 1;
     }
+
+    this.recordDelivery('dot', 0, 0, true);
 
     this.saveMatchState();
     this.manageOversChange();
@@ -730,6 +744,8 @@ export class LimitedLiveMatch implements OnInit {
     }
 
     this.isShowingNoBallDialog = false;
+
+    this.recordDelivery('noball', 0, 0, false);
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -760,6 +776,8 @@ export class LimitedLiveMatch implements OnInit {
       this.playerStats[this.currentBowler?.id].ballsDelivered += 1;
       this.playerStats[this.currentBowler?.id].runsConceded += 4;
     }
+
+    this.recordDelivery('four', 4, 4, true);
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -798,6 +816,8 @@ export class LimitedLiveMatch implements OnInit {
 
     this.isShowingNoBallDialog = false;
 
+    this.recordDelivery('noball', 4, 4, false);
+
     this.saveMatchState();
     this.manageBattingMilestone();
     this.checkMatchResult();
@@ -827,6 +847,8 @@ export class LimitedLiveMatch implements OnInit {
       this.playerStats[this.currentBowler?.id].ballsDelivered += 1;
       this.playerStats[this.currentBowler?.id].runsConceded += 6;
     }
+
+    this.recordDelivery('six', 6, 6, true);
 
     this.saveMatchState();
     this.manageBattingMilestone();
@@ -866,6 +888,8 @@ export class LimitedLiveMatch implements OnInit {
 
     this.isShowingNoBallDialog = false;
 
+    this.recordDelivery('noball', 6, 6, false);
+
     this.saveMatchState();
     this.manageBattingMilestone();
     this.checkMatchResult();
@@ -900,6 +924,8 @@ export class LimitedLiveMatch implements OnInit {
     if (this.currentBowler?.id) {
       this.playerStats[this.currentBowler?.id].wides += 1
     }
+    this.recordDelivery('wide', 0, 0, false);
+
     this.saveMatchState();
   }
 
@@ -912,7 +938,8 @@ export class LimitedLiveMatch implements OnInit {
   addNoBall() {
     if (this.scoringClosed) return;
 
-    this.isShowingNoBallDialog = true
+    this.isShowingNoBallDialog = true;
+    this.saveMatchState();
   }
 
 
@@ -951,6 +978,8 @@ export class LimitedLiveMatch implements OnInit {
     });
 
 
+    this.recordDelivery('wicket', 0, 0, true, true, null, this.currentBatsman?.id || null);
+
     this.saveMatchState();
     this.manageOversChange();
 
@@ -962,8 +991,19 @@ export class LimitedLiveMatch implements OnInit {
     }
 
     this.dismissalType = null;
+    this.saveMatchState();
   }
 
+
+  showDuckCelebration(golden: boolean) {
+    this.isDuck = !golden;
+    this.isGoldenDuck = golden;
+  }
+
+  dismissDuckCelebration() {
+    this.isDuck = false;
+    this.isGoldenDuck = false;
+  }
 
   selectDismissalType(type: 'caught' | 'bowled' | 'offside' | null) {
 
@@ -984,6 +1024,11 @@ export class LimitedLiveMatch implements OnInit {
 
       this.playerStats[this.currentBowler.id].wickets += 1;
 
+      if (this.playerStats[this.currentBatsman.id].runs === 0) {
+        this.voiceAnnouncementService.duck();
+        this.showDuckCelebration(this.playerStats[this.currentBatsman.id].ballsFaced === 1);
+      }
+
       const isHatTrick = this.isHatTrick();
 
       if (this.currentBowler?.id && isHatTrick) {
@@ -994,6 +1039,7 @@ export class LimitedLiveMatch implements OnInit {
 
 
     }
+    this.updateLastDelivery(type);
 
     this.continueAfterDismissal();
   }
@@ -1003,6 +1049,11 @@ export class LimitedLiveMatch implements OnInit {
     if (this.currentBatsman?.id && this.currentBowler?.id) {
 
       this.playerStats[this.currentBowler.id].wickets += 1;
+
+      if (this.playerStats[this.currentBatsman.id].runs === 0) {
+        this.voiceAnnouncementService.duck();
+        this.showDuckCelebration(this.playerStats[this.currentBatsman.id].ballsFaced === 1);
+      }
 
 
       this.addFiveFers();
@@ -1019,6 +1070,7 @@ export class LimitedLiveMatch implements OnInit {
 
       this.playerStats[this.currentBatsman.id].caughtBy = player;
     }
+    this.updateLastDelivery('caught', player.id || null);
 
     // CLOSE DIALOG
 
@@ -1029,6 +1081,23 @@ export class LimitedLiveMatch implements OnInit {
     this.continueAfterDismissal();
   }
 
+  unavailablePlayer() {
+    if (this.scoringClosed || !this.currentBatsman?.id) return;
+    this.saveSnapshot();
+    const playerId = this.currentBatsman.id;
+    if (this.playerStats[playerId].innings > 0) this.playerStats[playerId].innings -= 1;
+    this.totalWickets++;
+    this.outPlayersIds.push(playerId);
+    this.isWicketFallen = true;
+    this.selectedBatsman = null;
+    this.currentBatsman = null;
+    this.currentBatsmanRuns = 0;
+    this.currentBatsmanBalls = 0;
+    this.showBatsmenDialog = false;
+    this.lastAction = 'UN';
+    this.continueAfterDismissal();
+    this.saveMatchState();
+  }
   retireOut() {
     if (this.scoringClosed) return;
 
@@ -1111,6 +1180,7 @@ export class LimitedLiveMatch implements OnInit {
     // OTHERWISE
 
     this.showBatsmenDialog = true;
+    this.saveMatchState();
   }
 
   addFiveFers() {
@@ -1222,23 +1292,28 @@ export class LimitedLiveMatch implements OnInit {
   }
 
   undo() {
-
-    const previousSnapshot = this.matchHistory.pop();
-
-    if (!previousSnapshot) {
-      return;
-    }
-
+    const previousSnapshot = this.undoHistory.pop();
+    if (!previousSnapshot) return;
+    this.redoHistory.push(this.getCurrentSnapshot());
     Object.assign(this, previousSnapshot);
-
-    // Never restore temporary dialogs/animations
     this.isShowingNoBallDialog = false;
     this.isDismissalDialogOpen = false;
     this.isShowingCatchingDialog = false;
-
+    this.reconcileLimitedInningsState();
     this.saveMatchState();
   }
 
+  redo() {
+    const nextSnapshot = this.redoHistory.pop();
+    if (!nextSnapshot) return;
+    this.undoHistory.push(this.getCurrentSnapshot());
+    Object.assign(this, nextSnapshot);
+    this.isShowingNoBallDialog = false;
+    this.isDismissalDialogOpen = false;
+    this.isShowingCatchingDialog = false;
+    this.reconcileLimitedInningsState();
+    this.saveMatchState();
+  }
   manageOversChange() {
     if (this.inningsLimitReached) {
       this.finishInningsByOversLimit();
@@ -1263,6 +1338,7 @@ export class LimitedLiveMatch implements OnInit {
       // RESET FOR NEXT OVER
 
       this.currentBowlerRunsConceded = 0;
+      this.saveMatchState();
     }
 
   }
@@ -1287,7 +1363,6 @@ export class LimitedLiveMatch implements OnInit {
   saveMatchState() {
     this.offlinePersistanceService.saveMatch({
       matchType: this.matchType,
-      tournamentId: this.matchSetupService.getTournamentContext(),
       matchResult: this.matchResult,
       winningTeam: this.winningTeam,
       maxOvers: this.maxOvers,
@@ -1321,28 +1396,63 @@ export class LimitedLiveMatch implements OnInit {
 
       outPlayersIds: this.outPlayersIds,
       recentDeliveries: this.recentDeliveries,
+      deliveries: this.deliveries,
 
       currentBatsman: this.currentBatsman,
       currentBowler: this.currentBowler,
 
       selectedBatsman: this.selectedBatsman,
       selectedBowler: this.selectedBowler,
+      currentBatsmanRuns: this.currentBatsmanRuns,
+      currentBatsmanBalls: this.currentBatsmanBalls,
+      currentBowlerRunsConceded: this.currentBowlerRunsConceded,
+      currentBowlerBalls: this.currentBowlerBalls,
+      currentBowlerWickets: this.currentBowlerWickets,
+      lastAction: this.lastAction,
+
+      isInningsOver: this.isInningsOver,
+      isOverComplete: this.isOverComplete,
+      isWicketFallen: this.isWicketFallen,
+      showBatsmenDialog: this.showBatsmenDialog,
+      showBowlerDialog: this.showBowlerDialog,
+      isDismissalDialogOpen: this.isDismissalDialogOpen,
+      isShowingCatchingDialog: this.isShowingCatchingDialog,
+      isShowingNoBallDialog: this.isShowingNoBallDialog,
+      dismissalType: this.dismissalType,
+      selectedNoBallRuns: this.selectedNoBallRuns,
+      isShowingOversDialog: this.isShowingOversDialog,
+      isShowingScoreCard: this.isShowingScoreCard,
+      isShowingMatchInfo: this.isShowingMatchInfo,
+      changeInningsDisplay: this.changeInningsDisplay,
+      isShowingExtraPlayerDialog: this.isShowingExtraPlayerDialog,
+      selectedExtraPlayer: this.selectedExtraPlayer,
+      selectedExtraPlayerTeam: this.selectedExtraPlayerTeam,
     });
   }
 
   restoreMatchState() {
     const saved = this.offlinePersistanceService.loadMatch<any>();
-
-    if (!saved || saved.matchType !== 'limited') {
-      return false;
-    }
+    if (!saved || saved.matchType !== 'limited') return false;
 
     Object.assign(this, saved);
+    this.restoreLimitedDialogState();
     this.reconcileLimitedInningsState();
-
     return true;
   }
 
+  private restoreLimitedDialogState() {
+    if (this.matchResult || this.isInningsOver) return;
+    if (this.isDismissalDialogOpen || this.isShowingCatchingDialog || this.isShowingNoBallDialog || this.showBatsmenDialog || this.showBowlerDialog) return;
+
+    if (!this.currentBatsman) {
+      this.showBatsmenDialog = true;
+      return;
+    }
+
+    if (!this.currentBowler || this.isOverComplete) {
+      this.showBowlerDialog = true;
+    }
+  }
   reconcileLimitedInningsState() {
     if (!this.inningsLimitReached) {
       return;
@@ -1366,40 +1476,29 @@ export class LimitedLiveMatch implements OnInit {
   }
 
   checkMatchResult() {
-
-    if (this.currentInnings !== 2) {
-      return;
-    }
-
-
-    // WIN
+    if (this.currentInnings !== 2 || this.matchResult) return;
 
     if (this.totalRuns > this.firstInningRuns) {
       this.matchResult = 'won';
-      this.voiceAnnouncementService.speak("Match Over");
+      this.voiceAnnouncementService.speak('Match Over');
+      this.saveMatchState();
       return;
     }
-
-    // LOSS
 
     const inningsComplete = this.totalWickets >= this.maxWickets || this.inningsLimitReached;
-
     if (this.totalRuns < this.firstInningRuns && inningsComplete) {
       this.matchResult = 'lost';
-      this.voiceAnnouncementService.speak("Match Over");
+      this.voiceAnnouncementService.speak('Match Over');
+      this.saveMatchState();
       return;
     }
-
-    // TIE
 
     if (this.totalRuns === this.firstInningRuns && inningsComplete) {
       this.matchResult = 'tie';
-      this.voiceAnnouncementService.speak("Match Over");
+      this.voiceAnnouncementService.speak('Match Over');
+      this.saveMatchState();
     }
-
-
   }
-
   startSecondInnings() {
     this.saveSnapshot()
 
@@ -1484,13 +1583,13 @@ export class LimitedLiveMatch implements OnInit {
 
       year: new Date().getFullYear(),
       matchType: this.matchType,
-      tournamentId: this.matchSetupService.getTournamentContext(),
       matchResult: this.matchResult,
       winningTeam: this.winningTeam,
       maxOvers: this.maxOvers,
       teamA: this.teamA,
       teamB: this.teamB,
       motm: this.Motm,
+      deliveries: this.deliveries,
       teamACaptain: this.captainA,
       teamBCaptain: this.captainB,
 
@@ -1520,25 +1619,23 @@ export class LimitedLiveMatch implements OnInit {
 
   clearMatch() {
     this.offlinePersistanceService.clearMatch()
-    this.matchSetupService.clearTournamentContext()
     this.router.navigate(['/'])
 
   }
 
 
   async saveCompletedMatch() {
+    this.isLoading = true;
+
     try {
       const matchData = this.buildMatchObject();
-
-
       await this.matchService.saveMatch(matchData);
-
       this.offlinePersistanceService.clearMatch();
-      this.matchSetupService.clearTournamentContext();
-
-      this.router.navigate(['/']);
+      await this.router.navigate(['/']);
     } catch (error) {
       console.log('Error Saving Match', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 }

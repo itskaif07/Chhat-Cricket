@@ -349,7 +349,9 @@ export class HeadToHead implements OnInit {
     const battingAverage =
       wickets > 0
         ? runs / wickets
-        : 0;
+        : runs > 0
+          ? runs
+          : 0;
 
     const economy =
       balls > 0

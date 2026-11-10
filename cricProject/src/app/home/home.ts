@@ -437,7 +437,7 @@ export class Home implements OnInit {
       return;
     }
 
-    const MIN_BALLS = 30;
+    const MIN_BALLS = 60;
 
     const players = Object.values(this.careerStats).filter(
       (player: any) => player.totalBallsDelivered >= MIN_BALLS
@@ -500,7 +500,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsFaced >= 30)
+    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsFaced >= 60 && player.totalInnings >= 10)
 
     if (players.length === 0) {
       return;
@@ -524,7 +524,7 @@ export class Home implements OnInit {
       return;
     }
 
-    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsDelivered >= 30)
+    let players = Object.values(this.careerStats).filter((player: any) => player.totalBallsDelivered >= 60)
 
     if (players.length === 0) {
       return;

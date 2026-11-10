@@ -618,7 +618,6 @@ export class LiveMatch implements OnInit {
   getCurrentSnapshot() {
     return structuredClone({
       matchType: this.matchType,
-      tournamentId: this.matchSetupService.getTournamentContext(),
 
       totalRuns: this.totalRuns,
       totalWickets: this.totalWickets,
@@ -1413,7 +1412,6 @@ export class LiveMatch implements OnInit {
   saveMatchState() {
     this.offlinePersistanceService.saveMatch({
       matchType: this.matchType,
-      tournamentId: this.matchSetupService.getTournamentContext(),
       allSelectedPlayers: this.allSelectedPlayers,
       teamA: this.teamA,
       teamB: this.teamB,
@@ -1586,7 +1584,6 @@ export class LiveMatch implements OnInit {
 
       year: new Date().getFullYear(),
       matchType: this.matchType,
-      tournamentId: this.matchSetupService.getTournamentContext(),
       matchResult: this.matchResult,
       winningTeam: this.winningTeam,
       teamA: this.teamA,
@@ -1623,7 +1620,6 @@ export class LiveMatch implements OnInit {
 
   clearMatch() {
     this.offlinePersistanceService.clearMatch()
-    this.matchSetupService.clearTournamentContext()
     this.router.navigate(['/'])
 
   }
@@ -1640,7 +1636,6 @@ export class LiveMatch implements OnInit {
       await this.matchService.saveMatch(matchData);
 
       this.offlinePersistanceService.clearMatch();
-      this.matchSetupService.clearTournamentContext();
 
       await this.router.navigate(['/']);
 
