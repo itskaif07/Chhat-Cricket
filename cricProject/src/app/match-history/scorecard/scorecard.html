@@ -79,6 +79,8 @@
     </div>
   </div>
 
+
+
   <!-- INNINGS BUTTONS -->
   <div class="flex gap-3 mt-6 lg:w-4/5 lg:mx-auto">
     <!-- INNINGS 1 -->
@@ -173,6 +175,30 @@
     </div>
     }
     }
+
+    @if (getDidNotBatPlayers().length > 0) {
+    <div class="mt-8 flex flex-col items-end justify-center lg:w-4/5 mx-auto">
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
+          ⏳
+        </div>
+
+        <h1 class="text-white font-black text-lg">
+          Did Not Bat
+        </h1>
+      </div>
+
+      <div class="flex flex-wrap gap-2 justify-end items-center">
+        @for (player of getDidNotBatPlayers(); track player.id) {
+        <div class="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-zinc-300 font-semibold text-sm">
+          {{ player.displayName }}
+        </div>
+        }
+      </div>
+
+    </div>
+    }
   </div>
 
   <h1 class="text-3xl uppercase font-black my-10 text-center text-[#93C5FD] tracking-[0.25em]">
@@ -262,5 +288,322 @@
     </div>
     }
     }
+
+    @if (getDidNotBowlPlayers().length > 0) {
+    <div class="mt-8 flex flex-col items-end justify-center lg:w-4/5 mx-auto">
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-2xl bg-cyan-500/15 flex items-center justify-center">
+          ⏳
+        </div>
+
+        <h1 class="text-white font-black text-lg">
+          Did Not Bowl
+        </h1>
+      </div>
+
+      <div class="flex flex-wrap gap-2 justify-end items-center">
+        @for (player of getDidNotBowlPlayers(); track player.id) {
+        <div class="px-4 py-2 rounded-2xl bg-white/5 border border-white/10 text-zinc-300 font-semibold text-sm">
+          {{ player.displayName }}
+        </div>
+        }
+      </div>
+
+    </div>
+    }
   </div>
+
+  <!-- VIEW SQUADS BUTTON -->
+  <div class="lg:w-4/5 mx-auto mt-6 flex justify-center">
+    <button (click)="openSquadsDialog()" class="w-full sm:w-auto px-8 py-4 rounded-2xl
+                         bg-white/5 border border-blue-400/20
+                         text-blue-300 font-black
+                         hover:bg-blue-400/10 hover:border-blue-400/40
+                         transition-all duration-300 cursor-pointer">
+
+      👥 View Squads & Captains
+    </button>
+  </div>
+
+  <div class="w-full h-full flex items-center justify-between ">
+
+    <!-- SQUADS MODAL -->
+    @if (isSquadsDialogOpen) {
+    <div class="fixed inset-0 z-100 bg-black/80 backdrop-blur-md
+                  flex items-center justify-center p-3 sm:p-6">
+
+      <div class="w-full max-w-5xl max-h-[90vh] overflow-hidden
+                    rounded-4xl border border-white/10
+                    bg-[#09111F] shadow-2xl flex flex-col">
+
+        <!-- HEADER -->
+        <div class="px-6 py-5 border-b border-white/10
+                      flex items-center justify-between">
+
+          <div>
+            <p class="text-blue-400 text-xs font-black
+                        uppercase tracking-[0.25em]">
+              Match Information
+            </p>
+
+            <h2 class="text-2xl sm:text-3xl font-black mt-1">
+              Playing Squads
+            </h2>
+          </div>
+
+        </div>
+
+
+
+        <!-- SQUADS -->
+        <div class="p-4 sm:p-6 overflow-y-auto">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+            <!-- TEAM A -->
+            <div class="rounded-3xl border border-blue-400/20
+                          bg-blue-400/5 overflow-hidden">
+
+              <div class="px-5 py-4 border-b border-blue-400/15">
+                <h3 class="text-blue-300 text-xl font-black">
+                  TEAM A
+                </h3>
+                <p class="text-zinc-500 text-xs mt-1">
+                  {{ matchData?.teamA?.length || 0 }} Players
+                </p>
+              </div>
+
+
+
+              <!-- PLAYER LIST -->
+              <div class="p-4 space-y-2">
+
+                @for (player of (matchData?.teamA || []); track player.id) {
+                <div class="flex items-center gap-3 p-3 rounded-2xl
+                              bg-white/5 border border-white/5">
+
+                  <img [src]="player.photoURL" class="w-11 h-11 rounded-xl object-cover" />
+
+                  <div class="flex-1 min-w-0">
+                    <p class="font-bold truncate">
+                      {{ player.displayName }}
+                    </p>
+
+                    <p class="text-zinc-500 text-xs">
+                      {{ player.id === captainA?.id ? 'Captain' : 'Squad Member' }}
+                    </p>
+                  </div>
+
+                  @if (player.id === captainA?.id) {
+                  <span class="text-yellow-300 text-xs font-black
+                                 px-3 py-1 rounded-full bg-yellow-400/10">
+                    C
+                  </span>
+                  }
+                </div>
+                }
+
+              </div>
+            </div>
+
+            <!-- TEAM B -->
+            <div class="rounded-3xl border border-purple-400/20
+                          bg-purple-400/5 overflow-hidden">
+
+              <div class="px-5 py-4 border-b border-purple-400/15">
+                <h3 class="text-purple-300 text-xl font-black">
+                  TEAM B
+                </h3>
+                <p class="text-zinc-500 text-xs mt-1">
+                  {{ matchData?.teamB?.length || 0 }} Players
+                </p>
+              </div>
+
+
+
+              <!-- PLAYER LIST -->
+              <div class="p-4 space-y-2">
+
+                @for (player of (matchData?.teamB || []); track player.id) {
+                <div class="flex items-center gap-3 p-3 rounded-2xl
+                              bg-white/5 border border-white/5">
+
+                  <img [src]="player.photoURL" class="w-11 h-11 rounded-xl object-cover" />
+
+                  <div class="flex-1 min-w-0">
+                    <p class="font-bold truncate">
+                      {{ player.displayName }}
+                    </p>
+
+                    <p class="text-zinc-500 text-xs">
+                      {{ player.id === captainB?.id ? 'Captain' : 'Squad Member' }}
+                    </p>
+                  </div>
+
+                  @if (player.id === captainB?.id) {
+                  <span class="text-yellow-300 text-xs font-black
+                                 px-3 py-1 rounded-full bg-yellow-400/10">
+                    C
+                  </span>
+                  }
+                </div>
+                }
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="p-4 border-t border-white/10">
+          <button (click)="closeSquadsDialog()" class="w-full py-4 rounded-2xl bg-blue-400
+                     text-black font-black hover:bg-blue-300
+                     transition cursor-pointer">
+            CLOSE
+          </button>
+        </div>
+
+      </div>
+    </div>
+    }
+    <!-- MATCH COMMENTARY -->
+    <div class="lg:w-4/5 mx-auto mt-12 mb-10">
+
+      <!-- HEADER BUTTON -->
+      <button (click)="toggleCommentary()" class="w-full rounded-3xl border border-white/10
+                 bg-white/5 p-5 flex items-center justify-between
+                 hover:bg-white/10 transition-all cursor-pointer">
+
+        <div class="flex items-center gap-4">
+
+          <div class="w-12 h-12 rounded-2xl
+                        bg-cyan-400/10 text-cyan-300
+                        flex items-center justify-center text-2xl">
+            🎙️
+          </div>
+
+          <div class="text-left">
+            <h1 class="text-xl sm:text-2xl font-black text-white">
+              Match Commentary
+            </h1>
+
+            <p class="text-zinc-500 text-sm mt-1">
+              Complete ball-by-ball match timeline
+            </p>
+          </div>
+
+        </div>
+
+        <span class="text-cyan-300 font-black text-xl">
+          {{ isCommentaryOpen ? '−' : '+' }}
+        </span>
+
+      </button>
+
+      <!-- COMMENTARY BODY -->
+      @if (isCommentaryOpen) {
+
+      <div class="mt-5 space-y-6">
+
+        @for (
+        inning of matchData?.innings || [];
+        track inning.inning
+        ) {
+
+        @if (
+        (commentaryByInnings[inning.inning] || []).length > 0
+        ) {
+
+        <div class="rounded-3xl border border-white/10
+                            bg-white/5 overflow-hidden">
+
+          <!-- INNINGS HEADER -->
+          <div class="px-5 py-4 bg-white/5
+                              border-b border-white/10">
+
+            <h2 class="text-cyan-300 font-black text-lg">
+              {{ inning.inning === 1 ? 'FIRST INNINGS' : 'SECOND INNINGS' }}
+            </h2>
+
+            <p class="text-zinc-500 text-xs mt-1">
+              {{ commentaryByInnings[inning.inning].length }}
+              Deliveries
+            </p>
+
+          </div>
+
+          <!-- BALL-BY-BALL -->
+          <div class="divide-y divide-white/5">
+
+            @for (
+            ball of commentaryByInnings[inning.inning];
+            track ball.deliveryNumber
+            ) {
+
+            <div class="px-5 py-4 flex items-start gap-4">
+
+              <!-- OVER -->
+              <div class="shrink-0 min-w-14">
+
+                <span class="text-cyan-300 font-black text-sm">
+                  {{ ball.overLabel }}
+                </span>
+
+                <p class="text-zinc-600 text-[10px] font-bold">
+                  OVER
+                </p>
+
+              </div>
+
+              <!-- COMMENTARY -->
+              <div class="flex-1 min-w-0">
+
+                <p class="text-zinc-300 text-sm leading-relaxed">
+
+                  <span class="font-bold text-white">
+                    {{ ball.bowlerName }}
+                  </span>
+
+                  bowling to
+
+                  <span class="font-bold text-white">
+                    {{ ball.batterName }}
+                  </span>:
+
+                  <span class="font-black" [class.text-green-400]="ball.type === 'four' || ball.type === 'six'"
+                    [class.text-red-400]="ball.wicket"
+                    [class.text-amber-300]="ball.type === 'wide' || ball.type === 'noball'"
+                    [class.text-zinc-400]="ball.type === 'dot'">
+                    {{ ball.commentary }}
+                  </span>
+
+                </p>
+
+              </div>
+
+            </div>
+
+            }
+
+          </div>
+
+        </div>
+
+        }
+
+        }
+
+      </div>
+
+      }
+
+    </div>
+
+  </div>
+
+
+
+
 </div>

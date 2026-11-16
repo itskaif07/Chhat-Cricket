@@ -31,6 +31,7 @@ type MatchPerformance = {
   ballsBowled: number;
   matchId: string;
   matchTime: string;
+  fifer: number;
 };
 
 @Component({
@@ -88,6 +89,7 @@ export class Tournament implements OnInit, OnDestroy {
               wickets: Number(stats.wickets || 0),
               runsConceded: Number(stats.runsConceded || 0),
               ballsBowled: Number(stats.ballsDelivered || 0),
+              fifer: Number(stats.fifer || 0),
               matchId: match.id,
               matchTime: this.getMatchTime(match.createdAt),
             });
@@ -134,6 +136,24 @@ export class Tournament implements OnInit, OnDestroy {
     return player.ballsFaced
       ? (player.runs / player.ballsFaced) * 100
       : 0;
+  }
+
+  get fiferPerformers(): MatchPerformance[] {
+    return this.matchPerformances
+      .filter((p) => p.fifer > 0)
+      .sort(
+        (a, b) =>
+          b.wickets - a.wickets ||
+          a.runsConceded - b.runsConceded
+      )
+      .filter(
+        (p, index, all) =>
+          all.findIndex(
+            (other) =>
+              other.playerId === p.playerId &&
+              other.matchId === p.matchId
+          ) === index
+      );
   }
 
   get centuries(): MatchPerformance[] {

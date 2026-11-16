@@ -154,7 +154,7 @@
     </section>
 
   <!-- Today's Achievements: Hall of Fame -->
-  @if (centuries.length || halfCenturies.length || hatTrickPerformers.length) {
+  @if (centuries.length || halfCenturies.length || hatTrickPerformers.length || fiferPerformers.length) {
   <section class="relative mt-12 overflow-hidden rounded-3xl border border-amber-300/20
              bg-gradient-to-br from-[#171329] via-[#0b1224] to-[#080d19]
              p-5 shadow-[0_0_60px_rgba(245,158,11,0.08)] sm:p-8">
@@ -204,7 +204,7 @@
           {{ formatDate(selectedDate) }}
         </p>
         <p class="mt-1 text-xs text-amber-300">
-          {{ centuries.length + halfCenturies.length + hatTrickPerformers.length }}
+          {{ centuries.length + halfCenturies.length + hatTrickPerformers.length + fiferPerformers.length }}
           achievements
         </p>
       </div>
@@ -486,6 +486,95 @@
           <p class="text-center text-[10px] font-bold uppercase
                         tracking-[0.22em] text-purple-300/60">
             ✦ Bowling at its finest ✦
+          </p>
+        </div>
+      </article>
+      }
+
+      <!-- FIVE WICKET HAUL -->
+      @if (fiferPerformers.length) {
+      <article class="group relative overflow-hidden rounded-2xl border
+               border-emerald-400/25 bg-gradient-to-br
+               from-emerald-400/[0.10] via-white/[0.035] to-transparent
+               p-5 transition duration-300 hover:-translate-y-1
+               hover:border-emerald-300/50
+               hover:shadow-[0_12px_35px_rgba(52,211,153,0.12)]">
+        <div class="pointer-events-none absolute -right-8 -top-8 h-32 w-32
+                    rounded-full bg-emerald-400/10 blur-2xl"></div>
+      
+        <div class="relative flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="flex h-12 w-12 items-center justify-center
+                        rounded-xl border border-emerald-300/20
+                        bg-emerald-300/10">
+              <span class="text-2xl">🏆</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-white">Five-Wicket Haul</h3>
+              <p class="text-xs text-emerald-200/70">
+                A bowler's dream performance
+              </p>
+            </div>
+          </div>
+      
+          <span class="rounded-full border border-emerald-300/20
+                       bg-emerald-300/10 px-3 py-1 text-xs
+                       font-black text-emerald-300">
+            {{ fiferPerformers.length }}
+          </span>
+        </div>
+      
+        <div class="relative mt-5 space-y-3">
+          @for (player of fiferPerformers; track player.playerId + player.matchId) {
+          <div class="rounded-xl border border-emerald-300/15
+                      bg-black/20 p-4 transition hover:bg-black/30">
+      
+            <div class="flex items-center gap-3">
+              <img [src]="player.playerPhoto" [alt]="player.playerName" class="h-14 w-14 shrink-0 rounded-full border-2
+                       border-emerald-300/40 bg-zinc-900 object-cover" />
+      
+              <div class="min-w-0 flex-1">
+                <p class="truncate font-extrabold text-white">
+                  {{ player.playerName }}
+                </p>
+                <p class="mt-1 text-[10px] font-bold uppercase
+                          tracking-[0.16em] text-emerald-300/80">
+                  Five-wicket club
+                </p>
+                <p class="mt-1 text-xs text-zinc-400">
+                  {{ player.matchTime }}
+                </p>
+              </div>
+      
+              <div class="shrink-0 text-right">
+                <p class="text-3xl font-black leading-none text-emerald-300">
+                  {{ player.wickets }}/{{ player.runsConceded }}
+                </p>
+                <p class="mt-2 text-[9px] font-black uppercase
+                          tracking-[0.18em] text-emerald-100/50">
+                  Bowling Figures
+                </p>
+              </div>
+            </div>
+      
+            <div class="mt-4 flex items-center justify-center gap-2
+                        rounded-lg border border-emerald-300/10
+                        bg-emerald-300/6 px-3 py-3">
+              <span>🏆</span>
+              <span class="text-xs font-black uppercase
+                           tracking-[0.17em] text-emerald-200">
+                Fifer Hero
+              </span>
+              <span>🏆</span>
+            </div>
+          </div>
+          }
+        </div>
+      
+        <div class="relative mt-4 border-t border-emerald-300/10 pt-3">
+          <p class="text-center text-[10px] font-bold uppercase
+                    tracking-[0.22em] text-emerald-300/60">
+            ✦ A spell to remember ✦
           </p>
         </div>
       </article>
