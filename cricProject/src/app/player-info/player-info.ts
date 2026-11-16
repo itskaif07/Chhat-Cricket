@@ -43,6 +43,7 @@ export class PlayerInfo implements OnInit {
 
   selectedFile: File | null = null;
   previewPhoto: string | SafeUrl | null = null;
+  activeBadgeDescription: string | null = null;
 
   // Image crop editor
   cropperFile: File | null = null;
@@ -68,6 +69,12 @@ export class PlayerInfo implements OnInit {
   isHighestScoreNotOut: boolean = false
   mostRuns: any = {}
   mostWickets: any = 0
+
+  playerArchetypes: {
+    name: string;
+    category: 'Batting' | 'Bowling' | 'All-Rounder' | 'Impact';
+    description: string;
+  }[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -122,7 +129,10 @@ export class PlayerInfo implements OnInit {
     });
   }
 
-
+  toggleBadgeDescription(name: string): void {
+    this.activeBadgeDescription =
+      this.activeBadgeDescription === name ? null : name;
+  }
 
   retrieveMatches() {
     this.matchService.retrieveMatches().subscribe((data) => {
@@ -385,6 +395,7 @@ export class PlayerInfo implements OnInit {
                   totalFifers: 0,
                   totalWides: 0,
                   totalNoBalls: 0,
+                  totalMotmAwards: 0,
                   recentRuns: [],
                   recentWickets: [],
                   dismissals: {
@@ -460,9 +471,16 @@ export class PlayerInfo implements OnInit {
             });
           });
 
-          matchPlayers.forEach((playerId: any) => {
+          matchPlayers.forEach((playerId: string) => {
             careerStats[playerId].totalMatches++;
           });
+
+          // Once per match, not once per player
+          const motmPlayerId = match.motm?.playerId;
+
+          if (motmPlayerId && careerStats[motmPlayerId]) {
+            careerStats[motmPlayerId].totalMotmAwards++;
+          }
         });
 
         this.stats = careerStats[this.playerId] || {};
@@ -481,6 +499,7 @@ export class PlayerInfo implements OnInit {
 
 
         this.aggregateCareerStats();
+        this.calculatePlayerArchetypes(careerStats);
 
 
 
@@ -596,6 +615,377 @@ export class PlayerInfo implements OnInit {
       (a: any, b: any) => b.totalWickets - a.totalWickets,
     )[0];
   }
+
+
+
+  calculatePlayerArchetypes(allCareerStats: Record<string, any>): void {
+    const s = this.stats || {};
+
+    const allPlayers = Object.values(allCareerStats || {}) as any[];
+
+    // Minimum participation safeguards, not performance thresholds.
+    const batters = allPlayers.filter(
+      p => p.totalInnings >= 3 && p.totalBallsFaced >= 12
+    );
+
+    const bowlers = allPlayers.filter(
+      p => p.totalBallsDelivered >= 12
+    );
+
+    const motmPlayers = allPlayers.filter(
+      p => p.totalMatches >= 3
+    );
+
+    // Relative percentile rank.
+    // Higher is better by default.
+    // For economy, average and bowling strike rate, lower is better.
+    const rank = (
+      value: number,
+      population: number[],
+      higherIsBetter = true
+    ): number => {
+      const valid = population.filter(Number.isFinite);
+
+      if (valid.length < 4 || !Number.isFinite(value)) return 0;
+
+      const count = valid.filter(candidate =>
+        higherIsBetter
+          ? candidate <= value
+          : candidate >= value
+      ).length;
+
+      return count / valid.length;
+    };
+
+    const mean = (values: number[]): number => {
+      const valid = values.filter(Number.isFinite);
+      return valid.length
+        ? valid.reduce((sum, value) => sum + value, 0) / valid.length
+        : 0;
+    };
+
+    // ==========================================
+    // METRICS
+    // ==========================================
+
+    const battingAverage = (p: any) =>
+      p.dismissed > 0
+        ? p.totalRuns / p.dismissed
+        : p.totalRuns;
+
+    const runsPerInnings = (p: any) =>
+      p.totalInnings > 0
+        ? p.totalRuns / p.totalInnings
+        : 0;
+
+    const strikeRate = (p: any) =>
+      p.totalBallsFaced > 0
+        ? (p.totalRuns / p.totalBallsFaced) * 100
+        : 0;
+
+    const sixRate = (p: any) =>
+      p.totalBallsFaced > 0
+        ? (p.totalSixes / p.totalBallsFaced) * 100
+        : 0;
+
+    const fourRate = (p: any) =>
+      p.totalBallsFaced > 0
+        ? (p.totalFours / p.totalBallsFaced) * 100
+        : 0;
+
+    const wicketsPerMatch = (p: any) =>
+      p.totalMatches > 0
+        ? p.totalWickets / p.totalMatches
+        : 0;
+
+    const economy = (p: any) =>
+      p.totalBallsDelivered > 0
+        ? (p.totalRunsConceded / p.totalBallsDelivered) * 6
+        : Infinity;
+
+    const bowlingAverage = (p: any) =>
+      p.totalWickets > 0
+        ? p.totalRunsConceded / p.totalWickets
+        : Infinity;
+
+    const bowlingStrikeRate = (p: any) =>
+      p.totalWickets > 0
+        ? p.totalBallsDelivered / p.totalWickets
+        : Infinity;
+
+    const motmRate = (p: any) =>
+      p.totalMatches > 0
+        ? p.totalMotmAwards / p.totalMatches
+        : 0;
+
+    // ==========================================
+    // RELATIVE RANK HELPERS
+    // ==========================================
+
+    const battingRank = (metric: (p: any) => number, player = s) =>
+      rank(
+        metric(player),
+        batters.map(metric)
+      );
+
+    const bowlingRank = (
+      metric: (p: any) => number,
+      player = s,
+      higherIsBetter = true
+    ) =>
+      rank(
+        metric(player),
+        bowlers.map(metric),
+        higherIsBetter
+      );
+
+    const badges: typeof this.playerArchetypes = [];
+
+    const addBadge = (
+      name: string,
+      category: typeof this.playerArchetypes[number]['category'],
+      description: string
+    ) => {
+      badges.push({ name, category, description });
+    };
+
+    const hasBattingSample =
+      s.totalInnings >= 3 && s.totalBallsFaced >= 12;
+
+    const hasBowlingSample =
+      s.totalBallsDelivered >= 12;
+
+    // ==========================================
+    // BATTING ARCHETYPES
+    // ==========================================
+
+    if (hasBattingSample && batters.length >= 4) {
+
+      const runRank = battingRank(runsPerInnings);
+      const averageRank = battingRank(battingAverage);
+      const strikeRank = battingRank(strikeRate);
+      const sixRank = battingRank(sixRate);
+      const fourRank = battingRank(fourRate);
+
+      const totalRunsRank = battingRank(
+        p => p.totalRuns
+      );
+
+      // RUN MACHINE
+      if (
+        totalRunsRank >= 0.75 &&
+        runRank >= 0.50
+      ) {
+        addBadge(
+          'Run Machine',
+          'Batting',
+          'Among the leading run scorers.'
+        );
+      }
+
+      // BRUTE
+      if (
+        strikeRank >= 0.75 &&
+        runRank >= 0.50
+      ) {
+        addBadge(
+          'Brute',
+          'Batting',
+          'Among the most aggressive batters by strike rate.'
+        );
+      }
+
+      // ANCHOR
+      if (
+        averageRank >= 0.75 &&
+        runRank >= 0.50
+      ) {
+        addBadge(
+          'Anchor',
+          'Batting',
+          'Among the most consistent batters by career average.'
+        );
+      }
+
+      // SIX MACHINE
+      if (
+        s.totalSixes > 0 &&
+        sixRank >= 0.75
+      ) {
+        addBadge(
+          'Six Machine',
+          'Batting',
+          'Among the most frequent six hitters.'
+        );
+      }
+
+      // FOUR SPECIALIST
+      if (
+        s.totalFours > 0 &&
+        s.totalFours > s.totalSixes &&
+        fourRank >= 0.75
+      ) {
+        addBadge(
+          'Four Specialist',
+          'Batting',
+          'Among the most frequent four hitters.'
+        );
+      }
+    }
+
+    // ==========================================
+    // BOWLING ARCHETYPES
+    // ==========================================
+
+    if (hasBowlingSample && bowlers.length >= 4) {
+
+      const wicketsRank = bowlingRank(wicketsPerMatch);
+      const averageRank = bowlingRank(bowlingAverage, s, false);
+      const strikeBowlingRank = bowlingRank(bowlingStrikeRate, s, false);
+      const economyRank = bowlingRank(economy, s, false);
+
+      // WICKET HUNTER
+      if (
+        s.totalWickets > 0 &&
+        wicketsRank >= 0.75 &&
+        averageRank >= 0.50
+      ) {
+        addBadge(
+          'Wicket Hunter',
+          'Bowling',
+          'Among the leading wicket takers relative to matches played.'
+        );
+      }
+
+      // STRIKE BOWLER
+      if (
+        s.totalWickets > 0 &&
+        strikeBowlingRank >= 0.75
+      ) {
+        addBadge(
+          'Strike Bowler',
+          'Bowling',
+          'Takes wickets at an excellent rate of deliveries.'
+        );
+      }
+
+      // ECONOMY KING
+      if (
+        economyRank >= 0.75
+      ) {
+        addBadge(
+          'Economy King',
+          'Bowling',
+          'Among the most economical bowlers.'
+        );
+      }
+    }
+
+    // ==========================================
+    // ALL-ROUND ARCHETYPES
+    // ==========================================
+
+    if (
+      hasBattingSample &&
+      hasBowlingSample &&
+      batters.length >= 4 &&
+      bowlers.length >= 4
+    ) {
+
+      const battingStrength = mean([
+        battingRank(runsPerInnings),
+        battingRank(battingAverage),
+        battingRank(strikeRate)
+      ]);
+
+      const bowlingStrength = mean([
+        bowlingRank(wicketsPerMatch),
+        bowlingRank(economy, s, false),
+        bowlingRank(bowlingAverage, s, false)
+      ]);
+
+      const difference = battingStrength - bowlingStrength;
+
+      // ELITE ALL-ROUNDER
+      if (
+        battingStrength >= 0.80 &&
+        bowlingStrength >= 0.80
+      ) {
+        addBadge(
+          'Elite All-Rounder',
+          'All-Rounder',
+          'Ranks among the best performers in both batting and bowling.'
+        );
+      }
+
+      // BATTING ALL-ROUNDER
+      if (
+        battingStrength >= 0.65 &&
+        bowlingStrength >= 0.40 &&
+        difference > 0.10
+      ) {
+        addBadge(
+          'Batting All-Rounder',
+          'All-Rounder',
+          'A stronger batter who also contributes with the ball.'
+        );
+      }
+
+      // BOWLING ALL-ROUNDER
+      if (
+        bowlingStrength >= 0.65 &&
+        battingStrength >= 0.40 &&
+        difference < -0.10
+      ) {
+        addBadge(
+          'Bowling All-Rounder',
+          'All-Rounder',
+          'A stronger bowler who also contributes with the bat.'
+        );
+      }
+
+      // BALANCED
+      if (
+        battingStrength >= 0.50 &&
+        bowlingStrength >= 0.50 &&
+        Math.abs(difference) <= 0.20
+      ) {
+        addBadge(
+          'Balanced',
+          'All-Rounder',
+          'Makes comparable contributions with both bat and ball.'
+        );
+      }
+    }
+
+    // ==========================================
+    // IMPACT ARCHETYPE
+    // ==========================================
+
+    if (
+      s.totalMatches >= 3 &&
+      s.totalMotmAwards > 0 &&
+      motmPlayers.length >= 4
+    ) {
+
+      const motmRank = rank(
+        motmRate(s),
+        motmPlayers.map(motmRate)
+      );
+
+      if (motmRank >= 0.75) {
+        addBadge(
+          'Match Winner',
+          'Impact',
+          'Ranks among the leading players in MOTM awards per match.'
+        );
+      }
+    }
+
+    this.playerArchetypes = badges;
+  }
+
+
 
   get battingAverage() {
     if (!this.stats?.totalRuns) {

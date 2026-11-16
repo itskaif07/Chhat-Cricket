@@ -23,7 +23,7 @@
 
 <main class="min-h-screen bg-[#050B18] text-white pb-12">
 
-  <section class="player-hero px-4 pt-10 pb-8 lg:px-12 lg:pt-14">
+  <section class=" player-hero relative z-30 overflow-visible px-4 pt-10 pb-32 lg:px-12 lg:pt-14">
     <div class="mx-auto flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="flex flex-col items-center gap-5 text-center lg:flex-row lg:text-left">
 
@@ -39,91 +39,92 @@
           <input #photoInput type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
             (change)="onPhotoSelected($event)" />
 
-            <!-- Player Photo Crop Editor -->
-            @if (showCropper) {
-            <div class="fixed inset-0 z-[100] flex items-center justify-center
+          <!-- Player Photo Crop Editor -->
+          @if (showCropper) {
+          <div class="fixed inset-0 z-100 flex items-center justify-center
                        bg-black/80 p-4 backdrop-blur-md">
-              <div class="max-h-[92vh] w-full max-w-xl overflow-y-auto
+            <div class="max-h-[92vh] w-full max-w-xl overflow-y-auto
                          rounded-3xl border border-white/10 bg-[#0b1220]
                          p-5 text-white shadow-2xl sm:p-7">
-                <!-- Header -->
-                <div class="mb-5 flex items-start justify-between gap-4">
-                  <div>
-                    <p class="text-xs font-black uppercase tracking-[0.25em] text-[#94F505]">
-                      Photo Studio
-                    </p>
-            
-                    <h2 class="mt-2 text-2xl font-black">
-                      Adjust Player Photo
-                    </h2>
-            
-                    <p class="mt-2 text-sm text-zinc-400">
-                      Drag the image to position it and zoom to frame the player.
-                    </p>
-                  </div>
-            
-                  <button type="button" (click)="cancelCrop()" class="flex h-10 w-10 shrink-0 items-center justify-center
+              <!-- Header -->
+              <div class="mb-5 flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-xs font-black uppercase tracking-[0.25em] text-[#94F505]">
+                    Photo Studio
+                  </p>
+
+                  <h2 class="mt-2 text-2xl font-black">
+                    Adjust Player Photo
+                  </h2>
+
+                  <p class="mt-2 text-sm text-zinc-400">
+                    Drag the image to position it and zoom to frame the player.
+                  </p>
+                </div>
+
+                <button type="button" (click)="cancelCrop()" class="flex h-10 w-10 shrink-0 items-center justify-center
                              rounded-full border border-white/10 bg-white/5
                              text-xl text-zinc-300 hover:bg-white/10" aria-label="Close photo editor">
-                    ×
-                  </button>
-                </div>
-            
-                <!-- Cropper -->
-                <div class="overflow-hidden rounded-2xl border border-white/10 bg-[#050B18] p-2">
-                  <div class="h-[320px] w-full">
-                    <image-cropper [imageFile]="cropperFile ?? undefined" [maintainAspectRatio]="true" [aspectRatio]="1"
-                      [roundCropper]="true" [allowMoveImage]="true" [(transform)]="transform" format="jpeg" output="blob"
-                      [resizeToWidth]="512" [imageQuality]="90" backgroundColor="#050B18" (imageCropped)="imageCropped($event)"
-                      (loadImageFailed)="loadImageFailed()" class="block h-full w-full"></image-cropper>
-                  </div>
-                </div>
-            
-                <!-- Zoom Controls -->
-                <div class="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                  <p class="mb-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
-                    Adjust Zoom
-                  </p>
-            
-                  <div class="flex items-center justify-center gap-3">
-                    <button type="button" (click)="zoomOut()" class="flex h-12 w-12 items-center justify-center rounded-xl
-                               border border-white/10 bg-white/5 text-2xl hover:bg-white/10" aria-label="Zoom out">
-                      −
-                    </button>
-            
-                    <button type="button" (click)="resetCrop()" class="rounded-xl border border-white/10 bg-white/5
-                               px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-white/10">
-                      Reset
-                    </button>
-            
-                    <button type="button" (click)="zoomIn()" class="flex h-12 w-12 items-center justify-center rounded-xl
-                               border border-[#94F505]/30 bg-[#94F505]/10
-                               text-2xl text-[#94F505] hover:bg-[#94F505]/20" aria-label="Zoom in">
-                      +
-                    </button>
-                  </div>
-            
-                  <p class="mt-3 text-center text-xs text-zinc-500">
-                    Your final player photo will be saved in a square format.
-                  </p>
-                </div>
-            
-                <!-- Actions -->
-                <div class="mt-5 grid grid-cols-2 gap-3">
-                  <button type="button" (click)="cancelCrop()" class="rounded-xl border border-white/10 bg-white/5
-                             px-4 py-3 font-bold text-zinc-300 hover:bg-white/10">
-                    Cancel
-                  </button>
-            
-                  <button type="button" (click)="useCroppedPhoto()" [disabled]="!croppedBlob" class="rounded-xl bg-[#94F505] px-4 py-3 font-black
-                             text-black hover:bg-[#aaff20]
-                             disabled:cursor-not-allowed disabled:opacity-40">
-                    Use This Photo
-                  </button>
+                  ×
+                </button>
+              </div>
+
+              <!-- Cropper -->
+              <div class="overflow-hidden rounded-2xl border border-white/10 bg-[#050B18] p-2">
+                <div class="h-[320px] w-full">
+                  <image-cropper [imageFile]="cropperFile ?? undefined" [maintainAspectRatio]="true" [aspectRatio]="1"
+                    [roundCropper]="true" [allowMoveImage]="true" [(transform)]="transform" format="jpeg" output="blob"
+                    [resizeToWidth]="512" [imageQuality]="90" backgroundColor="#050B18"
+                    (imageCropped)="imageCropped($event)" (loadImageFailed)="loadImageFailed()"
+                    class="block h-full w-full"></image-cropper>
                 </div>
               </div>
+
+              <!-- Zoom Controls -->
+              <div class="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <p class="mb-3 text-center text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">
+                  Adjust Zoom
+                </p>
+
+                <div class="flex items-center justify-center gap-3">
+                  <button type="button" (click)="zoomOut()" class="flex h-12 w-12 items-center justify-center rounded-xl
+                               border border-white/10 bg-white/5 text-2xl hover:bg-white/10" aria-label="Zoom out">
+                    −
+                  </button>
+
+                  <button type="button" (click)="resetCrop()" class="rounded-xl border border-white/10 bg-white/5
+                               px-5 py-3 text-sm font-bold text-zinc-300 hover:bg-white/10">
+                    Reset
+                  </button>
+
+                  <button type="button" (click)="zoomIn()" class="flex h-12 w-12 items-center justify-center rounded-xl
+                               border border-[#94F505]/30 bg-[#94F505]/10
+                               text-2xl text-[#94F505] hover:bg-[#94F505]/20" aria-label="Zoom in">
+                    +
+                  </button>
+                </div>
+
+                <p class="mt-3 text-center text-xs text-zinc-500">
+                  Your final player photo will be saved in a square format.
+                </p>
+              </div>
+
+              <!-- Actions -->
+              <div class="mt-5 grid grid-cols-2 gap-3">
+                <button type="button" (click)="cancelCrop()" class="rounded-xl border border-white/10 bg-white/5
+                             px-4 py-3 font-bold text-zinc-300 hover:bg-white/10">
+                  Cancel
+                </button>
+
+                <button type="button" (click)="useCroppedPhoto()" [disabled]="!croppedBlob" class="rounded-xl bg-[#94F505] px-4 py-3 font-black
+                             text-black hover:bg-[#aaff20]
+                             disabled:cursor-not-allowed disabled:opacity-40">
+                  Use This Photo
+                </button>
+              </div>
             </div>
-            }
+          </div>
+          }
 
           @if(isAdmin && !previewPhoto){
           <div (click)="photoInput.click()" class="absolute -bottom-2 left-1/2 flex h-10 w-10 cursor-pointer
@@ -318,11 +319,69 @@
         </div>
       </div>
     </div>
+
+    <!-- PLAYER ARCHETYPES -->
+    @if (playerArchetypes.length > 0) {
+    <div class="mt-10 max-w-2xl flex flex-col items-center justify-center">
+
+      <p class="text-[10px] sm:text-xs font-black uppercase text-center
+                  tracking-[0.3em] text-zinc-500 mb-3">
+        Player Archetypes
+      </p>
+
+      <div class="flex flex-wrap gap-2 justify-center lg:justify-start text-center">
+
+        @for (badge of playerArchetypes; track badge.name) {
+
+        <div class="relative group z-50">
+
+          <!-- BADGE -->
+          <button type="button" (click)="toggleBadgeDescription(badge.name)"
+            [attr.aria-expanded]="activeBadgeDescription === badge.name" class="rounded-full border px-3 py-2
+                     text-[10px] sm:text-xs font-black
+                     uppercase tracking-wider
+                     transition-all duration-300
+                     hover:scale-105 cursor-pointer" [ngClass]="{
+                'border-amber-400/30 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20':
+                  badge.category === 'Batting',
+        
+                'border-blue-400/30 bg-blue-400/10 text-blue-300 hover:bg-blue-400/20':
+                  badge.category === 'Bowling',
+        
+                'border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20':
+                  badge.category === 'All-Rounder',
+        
+                'border-purple-400/30 bg-purple-400/10 text-purple-300 hover:bg-purple-400/20':
+                  badge.category === 'Impact'
+              }">
+
+            {{ badge.name }}
+
+          </button>
+
+          <div class="absolute left-0 top-full mt-1 z-50
+                 hidden w-60 rounded-2xl
+                 border border-white/10 bg-black p-4
+                 shadow-xl group-hover:block" [style.display]="activeBadgeDescription === badge.name ? 'block' : null">
+
+            <p class="text-zinc-400 text-xs leading-relaxed mt-1">
+              {{ badge.description }}
+            </p>
+
+          </div>
+
+        </div>
+
+        }
+
+
+      </div>
+    </div>
+    }
   </section>
 
- 
 
-  <section class="mx-auto grid w-full lg:space-x-6 space-y-10 lg:space-y-0 px-2 lg:grid-cols-2 mt-10">
+  <section class="relative z-0 mx-auto grid w-full lg:space-x-6 space-y-10 lg:space-y-0 px-2 lg:grid-cols-2 mt-10">
     <article class="stat-panel stat-panel-batting">
       <div class="section-title">
         <div>
@@ -439,176 +498,176 @@
   </section>
 
 
+  <!-- Dismissal Breakdown -->
+  <section class="mx-auto flex h-full space-y-6 min-h-[99vh] w-full flex-col px-2 sm:px-6 py-6 lg:px-10">
 
-<!-- Dismissal Breakdown -->
-<section class="mx-auto flex h-full space-y-6 min-h-[99vh] w-full flex-col px-2 sm:px-6 py-6 lg:px-10">
+    <!-- Header -->
+    <div class="flex flex-none min-h-[18%] flex-col justify-center">
 
-  <!-- Header -->
-  <div class="flex flex-none min-h-[18%] flex-col justify-center">
+      <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#94F505]">
+        Dismissal Breakdown
+      </p>
 
-    <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#94F505]">
-      Dismissal Breakdown
-    </p>
+      <h2 class="mt-2 text-2xl font-black lg:text-3xl">
+        How They Get Out
+      </h2>
 
-    <h2 class="mt-2 text-2xl font-black lg:text-3xl">
-      How They Get Out
-    </h2>
+      <p class="mt-2 max-w-xl text-sm text-zinc-400">
+        A breakdown of this player's career dismissals.
+      </p>
 
-    <p class="mt-2 max-w-xl text-sm text-zinc-400">
-      A breakdown of this player's career dismissals.
-    </p>
-
-  </div>
-
-
-  <!-- Main Ranking Area -->
-  <div
-    class="flex min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-[#071224] shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
-
-    <div class="grid h-full w-full min-h-0 items-center gap-8 py-10 px-2 lg:grid-cols-2 lg:gap-12 lg:p-10">
-
-      <!-- Donut Chart -->
-      <div class="flex h-full min-h-0 items-center justify-center">
-
-        <div
-          class="relative h-[min(55vw,420px)] w-[min(55vw,420px)] max-h-105 max-w-105 rounded-full p-10 lg:p-12"
-          [style.background]="getDismissalChart()">
-
-          <!-- Inner Circle -->
-          <div class="flex h-full w-full flex-col items-center justify-center rounded-full bg-[#071224]">
-
-            <span class="text-4xl sm:text-5xl font-black text-white lg:text-6xl">
-              {{ dismissalBreakdown.total }}
-            </span>
-
-            <span class="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 lg:text-sm">
-              Dismissals
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
+    </div>
 
 
-      <!-- Breakdown -->
-      <div class="flex h-full min-h-0 flex-col justify-center space-y-4">
+    <!-- Main Ranking Area -->
+    <div
+      class="flex min-h-0 flex-1 overflow-hidden rounded-3xl border border-white/10 bg-[#071224] shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
 
-        <!-- Bowled -->
-        <div
-          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+      <div class="grid h-full w-full min-h-0 items-center gap-8 py-10 px-2 lg:grid-cols-2 lg:gap-12 lg:p-10">
 
-          <div class="flex items-center gap-4">
+        <!-- Donut Chart -->
+        <div class="flex h-full min-h-0 items-center justify-center">
 
-            <span class="h-4 w-4 shrink-0 rounded-full bg-red-500">
-            </span>
+          <div class="relative h-[min(55vw,420px)] w-[min(55vw,420px)] max-h-105 max-w-105 rounded-full p-10 lg:p-12"
+            [style.background]="getDismissalChart()">
 
-            <span class="text-base font-semibold text-white lg:text-lg">
-              Bowled
-            </span>
+            <!-- Inner Circle -->
+            <div class="flex h-full w-full flex-col items-center justify-center rounded-full bg-[#071224]">
 
-          </div>
+              <span class="text-4xl sm:text-5xl font-black text-white lg:text-6xl">
+                {{ dismissalBreakdown.total }}
+              </span>
 
-          <div class="flex items-center gap-4 lg:gap-6">
+              <span class="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-zinc-500 lg:text-sm">
+                Dismissals
+              </span>
 
-            <span class="text-lg font-black text-white lg:text-xl">
-              {{ dismissalBreakdown.bowled }}
-            </span>
-
-            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
-              {{ getDismissalPercentage(dismissalBreakdown.bowled) }}%
-            </span>
+            </div>
 
           </div>
 
         </div>
 
 
-        <!-- Caught -->
-        <div
-          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+        <!-- Breakdown -->
+        <div class="flex h-full min-h-0 flex-col justify-center space-y-4">
 
-          <div class="flex items-center gap-4">
+          <!-- Bowled -->
+          <div
+            class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
 
-            <span class="h-4 w-4 shrink-0 rounded-full bg-blue-700">
-            </span>
+            <div class="flex items-center gap-4">
 
-            <span class="text-base font-semibold text-white lg:text-lg">
-              Caught
-            </span>
+              <span class="h-4 w-4 shrink-0 rounded-full bg-red-500">
+              </span>
 
-          </div>
+              <span class="text-base font-semibold text-white lg:text-lg">
+                Bowled
+              </span>
 
-          <div class="flex items-center gap-4 lg:gap-6">
+            </div>
 
-            <span class="text-lg font-black text-white lg:text-xl">
-              {{ dismissalBreakdown.caught }}
-            </span>
+            <div class="flex items-center gap-4 lg:gap-6">
 
-            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
-              {{ getDismissalPercentage(dismissalBreakdown.caught) }}%
-            </span>
+              <span class="text-lg font-black text-white lg:text-xl">
+                {{ dismissalBreakdown.bowled }}
+              </span>
 
-          </div>
+              <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+                {{ getDismissalPercentage(dismissalBreakdown.bowled) }}%
+              </span>
 
-        </div>
-
-
-        <!-- Offside -->
-        <div
-          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
-
-          <div class="flex items-center gap-4">
-
-            <span class="h-4 w-4 shrink-0 rounded-full bg-amber-400">
-            </span>
-
-            <span class="text-base font-semibold text-white lg:text-lg">
-              Offside
-            </span>
+            </div>
 
           </div>
 
-          <div class="flex items-center gap-4 lg:gap-6">
 
-            <span class="text-lg font-black text-white lg:text-xl">
-              {{ dismissalBreakdown.offside }}
-            </span>
+          <!-- Caught -->
+          <div
+            class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
 
-            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
-              {{ getDismissalPercentage(dismissalBreakdown.offside) }}%
-            </span>
+            <div class="flex items-center gap-4">
+
+              <span class="h-4 w-4 shrink-0 rounded-full bg-blue-700">
+              </span>
+
+              <span class="text-base font-semibold text-white lg:text-lg">
+                Caught
+              </span>
+
+            </div>
+
+            <div class="flex items-center gap-4 lg:gap-6">
+
+              <span class="text-lg font-black text-white lg:text-xl">
+                {{ dismissalBreakdown.caught }}
+              </span>
+
+              <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+                {{ getDismissalPercentage(dismissalBreakdown.caught) }}%
+              </span>
+
+            </div>
 
           </div>
 
-        </div>
 
+          <!-- Offside -->
+          <div
+            class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
 
-        <!-- Retired Out -->
-        <div
-          class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
+            <div class="flex items-center gap-4">
 
-          <div class="flex items-center gap-4">
+              <span class="h-4 w-4 shrink-0 rounded-full bg-amber-400">
+              </span>
 
-            <span class="h-4 w-4 shrink-0 rounded-full bg-gray-500">
-            </span>
+              <span class="text-base font-semibold text-white lg:text-lg">
+                Offside
+              </span>
 
-            <span class="text-base font-semibold text-white lg:text-lg">
-              Retired Out
-            </span>
+            </div>
+
+            <div class="flex items-center gap-4 lg:gap-6">
+
+              <span class="text-lg font-black text-white lg:text-xl">
+                {{ dismissalBreakdown.offside }}
+              </span>
+
+              <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+                {{ getDismissalPercentage(dismissalBreakdown.offside) }}%
+              </span>
+
+            </div>
 
           </div>
 
-          <div class="flex items-center gap-4 lg:gap-6">
 
-            <span class="text-lg font-black text-white lg:text-xl">
-              {{ dismissalBreakdown.retiredOut }}
-            </span>
+          <!-- Retired Out -->
+          <div
+            class="flex items-center justify-between rounded-2xl border border-white/5 bg-white/3 px-5 py-5 lg:px-6 lg:py-6">
 
-            <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
-              {{ getDismissalPercentage(dismissalBreakdown.retiredOut) }}%
-            </span>
+            <div class="flex items-center gap-4">
+
+              <span class="h-4 w-4 shrink-0 rounded-full bg-gray-500">
+              </span>
+
+              <span class="text-base font-semibold text-white lg:text-lg">
+                Retired Out
+              </span>
+
+            </div>
+
+            <div class="flex items-center gap-4 lg:gap-6">
+
+              <span class="text-lg font-black text-white lg:text-xl">
+                {{ dismissalBreakdown.retiredOut }}
+              </span>
+
+              <span class="min-w-20 rounded-full bg-white/5 px-3 py-2 text-center text-sm font-bold text-zinc-300">
+                {{ getDismissalPercentage(dismissalBreakdown.retiredOut) }}%
+              </span>
+
+            </div>
 
           </div>
 
@@ -618,9 +677,7 @@
 
     </div>
 
-  </div>
-
-</section>
+  </section>
 
   <section class="mx-auto w-full px-2 py-8">
     <div class="mb-5 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
