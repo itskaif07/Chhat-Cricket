@@ -23,7 +23,7 @@
 
 <main class="min-h-screen bg-[#050B18] text-white pb-12">
 
-  <section class=" player-hero relative z-30 overflow-visible px-4 pt-10 pb-32 lg:px-12 lg:pt-14">
+  <section class=" player-hero relative z-30 overflow-visible px-4 pt-10 pb-8 lg:px-12 lg:pt-14">
     <div class="mx-auto flex max-w-7xl flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
       <div class="flex flex-col items-center gap-5 text-center lg:flex-row lg:text-left">
 
@@ -320,64 +320,209 @@
       </div>
     </div>
 
-    <!-- PLAYER ARCHETYPES -->
-    @if (playerArchetypes.length > 0) {
-    <div class="mt-10 max-w-2xl flex flex-col items-center justify-center">
+    <!--
 
-      <p class="text-[10px] sm:text-xs font-black uppercase text-center
-                  tracking-[0.3em] text-zinc-500 mb-3">
-        Player Archetypes
+    
+    <div class="mt-8 max-w-2xl">
+    
+      <p class="mb-3 text-center text-[10px] font-black uppercase
+                tracking-[0.3em] text-zinc-500 lg:text-left">
+        Player Category
       </p>
-
-      <div class="flex flex-wrap gap-2 justify-center lg:justify-start text-center">
-
-        @for (badge of playerArchetypes; track badge.name) {
-
-        <div class="relative group z-50">
-
-          <!-- BADGE -->
-          <button type="button" (click)="toggleBadgeDescription(badge.name)"
-            [attr.aria-expanded]="activeBadgeDescription === badge.name" class="rounded-full border px-3 py-2
-                     text-[10px] sm:text-xs font-black
-                     uppercase tracking-wider
-                     transition-all duration-300
-                     hover:scale-105 cursor-pointer" [ngClass]="{
-                'border-amber-400/30 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20':
-                  badge.category === 'Batting',
-        
-                'border-blue-400/30 bg-blue-400/10 text-blue-300 hover:bg-blue-400/20':
-                  badge.category === 'Bowling',
-        
-                'border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:bg-emerald-400/20':
-                  badge.category === 'All-Rounder',
-        
-                'border-purple-400/30 bg-purple-400/10 text-purple-300 hover:bg-purple-400/20':
-                  badge.category === 'Impact'
-              }">
-
-            {{ badge.name }}
-
-          </button>
-
-          <div class="absolute left-0 top-full mt-1 z-50
-                 hidden w-60 rounded-2xl
-                 border border-white/10 bg-black p-4
-                 shadow-xl group-hover:block" [style.display]="activeBadgeDescription === badge.name ? 'block' : null">
-
-            <p class="text-zinc-400 text-xs leading-relaxed mt-1">
-              {{ badge.description }}
-            </p>
-
-          </div>
-
-        </div>
-
+    
+      <div class="flex justify-center lg:justify-start">
+    
+        <span class="rounded-full border px-5 py-2 text-xs font-black
+                 uppercase tracking-wider" [ngClass]="{
+            'border-amber-400/30 bg-amber-400/10 text-amber-300':
+              playerCategory === 'Batsman',
+    
+            'border-blue-400/30 bg-blue-400/10 text-blue-300':
+              playerCategory === 'Bowler',
+    
+            'border-emerald-400/30 bg-emerald-400/10 text-emerald-300':
+              playerCategory === 'All-Rounder'
+          }">
+          {{ playerCategory }}
+        </span>
+    
+      </div>
+    
+    </div>
+    
+   
+    <div class="mt-7 max-w-2xl">
+    
+      <p class="mb-3 text-center text-[10px] font-black uppercase
+                tracking-[0.3em] text-zinc-500 lg:text-left">
+        Performance Badges
+      </p>
+    
+      <div class="flex flex-wrap justify-center gap-2 lg:justify-start">
+    
+        @for (badge of performanceBadges; track badge.name) {
+    
+        <button type="button" (click)="openBadgeModal()" class="cursor-pointer rounded-full border px-3 py-2
+                   text-[10px] font-black uppercase tracking-wider
+                   transition-all duration-300 hover:scale-105 sm:text-xs" [ngClass]="{
+              'border-amber-400/30 bg-amber-400/10 text-amber-300 hover:bg-amber-400/20':
+                badge.category === 'Batting',
+    
+              'border-blue-400/30 bg-blue-400/10 text-blue-300 hover:bg-blue-400/20':
+                badge.category === 'Bowling',
+    
+              'border-purple-400/30 bg-purple-400/10 text-purple-300 hover:bg-purple-400/20':
+                badge.category === 'Impact'
+            }">
+          {{ badge.name }}
+        </button>
+    
         }
+    
+        @empty {
+        <p class="text-xs text-zinc-500">
+          No performance badges earned yet.
+        </p>
+        }
+    
+      </div>
+    
+      <div class="mt-4 text-center lg:text-left">
+    
+        <button type="button" (click)="openBadgeModal()" class="text-xs font-bold text-zinc-400
+                 transition hover:text-[#94F505]">
+          Explore all badges →
+        </button>
+    
+      </div>
+    
+    </div>
+  
 
-
+   
+    @if (showBadgeModal) {
+    
+    <div class="fixed inset-0 z-[100] flex items-center justify-center
+             bg-black/80 p-4 backdrop-blur-md" (click)="closeBadgeModal()">
+      <div role="dialog" aria-modal="true" aria-labelledby="badge-modal-title" class="relative w-full max-w-2xl max-h-[85vh] overflow-hidden
+               rounded-3xl border border-white/10 bg-[#0B1220] shadow-2xl" (click)="$event.stopPropagation()">
+    
+        
+        <div class="border-b border-white/10
+                    bg-gradient-to-r from-[#14251C] to-[#11102A] p-6">
+    
+          <div class="flex items-start justify-between gap-4">
+    
+            <div>
+              <p class="text-[10px] font-black uppercase
+                        tracking-[0.3em] text-[#94F505]">
+                Chhat Cricket
+              </p>
+    
+              <h2 id="badge-modal-title" class="mt-2 text-2xl font-black text-white">
+                Performance Badge Guide
+              </h2>
+    
+              <p class="mt-2 text-sm text-zinc-400">
+                Har badge ek alag cricketing strength ko represent karta hai.
+              </p>
+            </div>
+    
+            <button type="button" (click)="closeBadgeModal()" class="flex h-10 w-10 shrink-0 items-center justify-center
+                     rounded-full border border-white/10 bg-white/5
+                     text-xl text-zinc-300 hover:bg-white/10" aria-label="Close badge guide">
+              ×
+            </button>
+    
+          </div>
+    
+          <p class="mt-4 text-xs font-bold text-[#94F505]">
+            {{ performanceBadges.length }} / {{ badgeCatalog.length }} badges unlocked
+          </p>
+    
+        </div>
+    
+       
+        <div class="max-h-[calc(85vh-175px)] overflow-y-auto p-5 sm:p-7">
+    
+          @for (category of ['Batting', 'Bowling', 'Impact']; track category) {
+    
+          <section class="mb-7 last:mb-0">
+    
+            <div class="mb-3 flex items-center gap-3">
+    
+              <h3 class="text-xs font-black uppercase tracking-[0.25em]" [ngClass]="{
+                    'text-amber-300': category === 'Batting',
+                    'text-blue-300': category === 'Bowling',
+                    'text-purple-300': category === 'Impact'
+                  }">
+                {{ category }}
+              </h3>
+    
+              <div class="h-px flex-1 bg-white/10"></div>
+    
+            </div>
+    
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    
+              @for (badge of badgeCatalog; track badge.name) {
+    
+              @if (badge.category === category) {
+    
+              <article class="rounded-2xl border border-white/10
+                             bg-white/[0.03] p-4">
+    
+                <div class="mb-3 flex items-center justify-between gap-2">
+    
+                  <h4 class="text-sm font-black text-white">
+                    {{ badge.name }}
+                  </h4>
+    
+                  @if (hasEarnedBadge(badge.name)) {
+    
+                  <span class="shrink-0 rounded-full border
+                                   border-[#94F505]/20 bg-[#94F505]/10
+                                   px-2 py-1 text-[9px] font-black
+                                   uppercase text-[#94F505]">
+                    ✓ Unlocked
+                  </span>
+    
+                  } @else {
+    
+                  <span class="shrink-0 rounded-full border
+                                   border-white/10 bg-white/4
+                                   px-2 py-1 text-[9px] font-bold
+                                   uppercase text-zinc-500">
+                    Not earned
+                  </span>
+    
+                  }
+    
+                </div>
+    
+                <p class="text-xs leading-relaxed text-zinc-400">
+                  {{ badge.description }}
+                </p>
+    
+              </article>
+    
+              }
+    
+              }
+    
+            </div>
+    
+          </section>
+    
+          }
+    
+        </div>
+    
       </div>
     </div>
+    
     }
+  -->
   </section>
 
 
